@@ -1,8 +1,13 @@
 import numpy as np
+import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from matplotlib.gridspec import GridSpec
+from tkinter import *
+from tkinter.ttk import *
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 class Monitor:
     def __init__(self):
@@ -88,11 +93,17 @@ def emitter(p=0.03):
             yield (np.random.rand(1)[0],np.random.rand(1)[0],np.random.rand(1)[0])
 
 
+
+
+root = Tk()
+
 monitor = Monitor()
+
+canvas = FigureCanvasTkAgg(monitor.fig, root)
+canvas.get_tk_widget().grid(row=0, column=0)
 
 
 animation.FuncAnimation(monitor.fig, monitor.update, emitter, interval=1,blit=True)
 
-
-
-plt.show()
+root.mainloop()
+# plt.show()
