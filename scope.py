@@ -103,7 +103,7 @@ canvas = FigureCanvasTkAgg(monitor.fig, root)
 canvas.get_tk_widget().grid(row=0, column=0)
 
 
-animation.FuncAnimation(monitor.fig, monitor.update, emitter, interval=1,blit=True)
+animation.FuncAnimation(monitor.fig, monitor.update, emitter, interval=100,blit=True)
 
 root.mainloop()
 # plt.show()
