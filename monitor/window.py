@@ -4,7 +4,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
-from .datainput import DataInputDummy
+from .datahandler import DataHandlerDummy
 
 
 class Scope:
@@ -54,13 +54,13 @@ class Window:
         tk.Grid.columnconfigure(self.app, 0, weight=1)
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=1,column=0)
         #Graph Init 
-        self.input = DataInputDummy(self.timewindow,self.freq,(-30,105),(-100,100),(0,500))
+        self.data_handler = DataHandlerDummy(self.timewindow,self.freq,(-30,105),(-100,100),(0,500))
         
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
         self.xlim=(0,self.timewindow)
-        self.scope_pressure=Scope(self.ax_pressure,"Pression","mBar",self.xlim, self.timeresolution, (-30,105), self.input.pressure_handler)
-        self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, (-100,100), self.input.flow_handler)
-        self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, (0,500), self.input.volume_handler)
+        self.scope_pressure=Scope(self.ax_pressure,"Pression","mBar",self.xlim, self.timeresolution, (-30,105), self.data_handler.pressure_manager)
+        self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, (-100,100), self.data_handler.flow_manager)
+        self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, (0,500), self.data_handler.volume_manager)
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
         self.canvas_graph.get_tk_widget().grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
         
@@ -69,15 +69,15 @@ class Window:
 
 
     def update(self, frame):
-        index = self.input.get_index()
+        index = self.data_handler.get_index()
         sp_in_a,sp_in_b = self.scope_pressure.update(index)
         sp_fl_a,sp_fl_b = self.scope_flow.update(index)
         sp_vl_a,sp_vl_b = self.scope_volume.update(index)
         return sp_in_a,sp_in_b,sp_fl_a,sp_fl_b,sp_vl_a,sp_vl_b,
 
     def run(self):
-        self.input.start()
+        self.data_handler.start()
         self.app.mainloop()
         self.app.destroy()
-        self.input.stop()
+        self.data_handler.stop()
 

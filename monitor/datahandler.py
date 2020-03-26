@@ -2,13 +2,13 @@ import time
 from threading import Thread
 import numpy as np
 
-class DataHandler:
+class DataInputManager:
     def __init__(self, arraysize, data_range):
         self.ymin,self.ymax=data_range
         self.arraysize=arraysize
         self.data=np.arange(self.ymin,self.ymax, (self.ymax-self.ymin)/self.arraysize)
 
-class DataInput(Thread):
+class DataHandler(Thread):
 
     def __init__(self, xmax, freq, pressure_range, flow_range, volume_range):
         Thread.__init__(self)
@@ -20,12 +20,12 @@ class DataInput(Thread):
         self.freq=freq
         self.arraysize=xmax*freq
 
-        self.pressure_handler=DataHandler(self.arraysize, pressure_range)
-        self.flow_handler=DataHandler(self.arraysize, flow_range)
-        self.volume_handler=DataHandler(self.arraysize, volume_range)
+        self.pressure_manager=DataInputManager(self.arraysize, pressure_range)
+        self.flow_manager=DataInputManager(self.arraysize, flow_range)
+        self.volume_manager=DataInputManager(self.arraysize, volume_range)
     
     def get_data(self):
-        return [self.pressure_handler.data,self.flow_handler.data,self.volume_handler.data]
+        return [self.pressure_manager.data,self.flow_manager.data,self.volume_manager.data]
 
     def get_index(self):
         return self.index
@@ -40,10 +40,10 @@ class DataInput(Thread):
     def stop(self):
         self.running=False
 
-class DataInputDummy(DataInput):
+class DataHandlerDummy(DataHandler):
 
     def __init__(self, xmax, freq, pressure_range, flow_range, volume_range):
-        DataInput.__init__(self, xmax, freq, pressure_range, flow_range, volume_range)
+        DataHandler.__init__(self, xmax, freq, pressure_range, flow_range, volume_range)
 
     def run(self):
 
@@ -52,10 +52,10 @@ class DataInputDummy(DataInput):
             time.sleep(1.0/40)
             v = np.random.rand(4)
             if v[3] > 0.03:
-                self.pressure_handler.data[self.index]=0
-                self.flow_handler.data[self.index]=0
-                self.volume_handler.data[self.index]=0
+                self.pressure_manager.data[self.index]=0
+                self.flow_manager.data[self.index]=0
+                self.volume_manager.data[self.index]=0
             else:
-                self.pressure_handler.data[self.index]=self.pressure_handler.ymax*v[0]
-                self.flow_handler.data[self.index]=self.flow_handler.ymax*v[1]
-                self.volume_handler.data[self.index]=self.volume_handler.ymax*v[2]
+                self.pressure_manager.data[self.index]=self.pressure_manager.ymax*v[0]
+                self.flow_manager.data[self.index]=self.flow_manager.ymax*v[1]
+                self.volume_manager.data[self.index]=self.volume_manager.ymax*v[2]
