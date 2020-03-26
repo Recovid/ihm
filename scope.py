@@ -8,6 +8,8 @@ from tkinter.ttk import *
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import time
+
 
 class Monitor:
     def __init__(self):
@@ -33,6 +35,7 @@ class Monitor:
 class Scope:
     def __init__(self, ax):
         print("DEBUG C")
+        self.st = time.time()
         self.x_sec = 15
         self.ax = ax
         self.tdata = [0]
@@ -61,6 +64,9 @@ class Scope:
             self.ydata[self.iterator] = y
         else:
             self.iterator = 0
+            t = time.time()
+            print(str(t-self.st))
+            self.st=t
             # self.ax.figure.canvas.draw()
         
  
