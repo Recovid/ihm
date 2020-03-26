@@ -6,6 +6,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datahandler import DataHandler
 from .databackend import DataBackendDummy
+from .knob import Knob
 
 
 class Scope:
@@ -102,26 +103,21 @@ class Window:
             anchor='nw', fg='blue',bg='white').grid(row=4,column=10)
 
         #BOUTONS EN BAS
-        self.inputs1_frame = tk.Frame(self.app,height=100,width=100, \
-            bg='gray').grid(row=5,column=0)
-        tk.Label(self.inputs1_frame, font=("Helvetica", 18),text='FiO2 Vol%\n 250 ', \
-            anchor='nw', fg='blue',bg='gray').grid(row=5,column=0)
-        self.inputs2_frame = tk.Frame(self.app,height=100,width=100, \
-            bg='gray').grid(row=5,column=1)
-        tk.Label(self.values2_frame, font=("Helvetica", 18),text='VT mL\n 430 ', \
-            anchor='nw', fg='blue',bg='gray').grid(row=5,column=1)  
-        self.inputs3_frame = tk.Frame(self.app,height=100,width=100, \
-            bg='gray').grid(row=5,column=2)
-        tk.Label(self.values5_frame, font=("Helvetica", 18),text='FR/min\n 35 ', \
-            anchor='nw', fg='blue',bg='gray').grid(row=5,column=2)
-        self.inputs4_frame = tk.Frame(self.app,height=100,width=100, \
-            bg='gray').grid(row=5,column=3)
-        tk.Label(self.values5_frame, font=("Helvetica", 18),text='PEP mbar\n 5.0 ', \
-            anchor='nw', fg='blue',bg='gray').grid(row=5,column=3)
-        self.inputs5_frame = tk.Frame(self.app,height=100,width=100, \
-            bg='gray').grid(row=5,column=4)
-        tk.Label(self.values5_frame, font=("Helvetica", 18),text='Débit \n 60 ', \
-            anchor='nw', fg='blue',bg='gray').grid(row=5,column=4)
+     
+        btn1 = Knob(self.app, 0, 100,0,'FiO2 %')
+        btn1.canvas.grid(row=5,column=1)
+
+        btn2 = Knob(self.app, 0, 100,1,'VT')
+        btn2.canvas.grid(row=5,column=2)
+
+        btn3 = Knob(self.app, 0, 100,2,'FR')
+        btn3.canvas.grid(row=5,column=3)
+
+        btn4 = Knob(self.app, 0, 100,3,'PEP')
+        btn4.canvas.grid(row=5,column=4)
+
+        btn5 = Knob(self.app, 0, 100,4,'Debit')
+        btn5.canvas.grid(row=5,column=5)
 
 
 
