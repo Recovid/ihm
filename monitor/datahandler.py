@@ -24,9 +24,6 @@ class DataHandler(Thread):
         self.flow_manager=DataInputManager(self.arraysize, flow_range)
         self.volume_manager=DataInputManager(self.arraysize, volume_range)
     
-    def get_data(self):
-        return [self.pressure_manager.data,self.flow_manager.data,self.volume_manager.data]
-
     def get_index(self):
         return self.index
 

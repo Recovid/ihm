@@ -52,7 +52,7 @@ class Window:
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
         tk.Grid.rowconfigure(self.app, 0, weight=1)
         tk.Grid.columnconfigure(self.app, 0, weight=1)
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=1,column=0)
+        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=3,column=0)
         #Graph Init 
         self.data_handler = DataHandlerDummy(self.timewindow,self.freq,(-30,105),(-100,100),(0,500))
         
@@ -62,10 +62,28 @@ class Window:
         self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, (-100,100), self.data_handler.flow_manager)
         self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, (0,500), self.data_handler.volume_manager)
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
-        self.canvas_graph.get_tk_widget().grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
-        
-        
+        self.canvas_graph.get_tk_widget().grid(row=0, column=0, rowspan=3, sticky=tk.N+tk.S+tk.E+tk.W)
         matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution,blit=True)
+
+        value = tk.IntVar()
+        self.scale = tk.Scale(self.app, variable=value, label="FiO2")
+        self.scale.grid(row=0, column=1)
+
+        value = tk.IntVar()
+        self.scale = tk.Scale(self.app, variable=value, label="PEP")
+        self.scale.grid(row=0, column=2)
+
+        value = tk.IntVar()
+        self.scale = tk.Scale(self.app, variable=value, label="FR")
+        self.scale.grid(row=1, column=1)
+
+        value = tk.IntVar()
+        self.scale = tk.Scale(self.app, variable=value, label="VM")
+        self.scale.grid(row=1, column=2)
+
+        value = tk.IntVar()
+        self.scale = tk.Scale(self.app, variable=value, label="VTe")
+        self.scale.grid(row=2, column=1)
 
 
     def update(self, frame):
