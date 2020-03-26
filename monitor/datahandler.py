@@ -1,8 +1,9 @@
 import time
 from threading import Thread
 import numpy as np
+from .databackend import DataBackend, DataBackendHandler
 
-class DataInputManager:
+class TimeDataInputManager:
     def __init__(self, arraysize, data_range):
         self.ymin,self.ymax=data_range
         self.arraysize=arraysize
@@ -11,9 +12,39 @@ class DataInputManager:
         return (self.ymin,self.ymax)
 
 class DataInputs:
-    def __init__(self, xmax, freq, pressure_range, flow_range, volume_range):
+
+    class Handler(DataBackendHandler):
+        def __init__(self, parent):
+            self.parent=parent
+
+        def update_settings(self, **kwargs):
+            if kwargs is not None:
+                for key, value in kwargs.iteritems():
+                    if(hasattr(selfi.parent,key)):
+                        oldval=getattr(self.parent,key)
+                        if oldval != value:
+                            self.parent.changed=True
+                        setattr(self.parent,key,value)
+    
+        def update_timedata(self,timestamp, pressure, flow, volume):
+            self.parent.make_index(timestamp)
+            self.parent.pressure.data[self.parent.index]=pressure
+            self.parent.flow.data[self.parent.index]=flow
+            self.parent.volume.data[self.parent.index]=volume
+    
+    def __init__(self, xmax, freq):
         Thread.__init__(self)
         self.running=True
+        
+        self.fio=0
+        self.pep=0
+        self.fr=0
+        self.vm=0.0
+        self.vte=0
+
+        self.changed=False
+        self.handler = DataInputs.Handler(self)
+        
         self.index=0
         self.index_zero_time = 0
 
@@ -21,9 +52,15 @@ class DataInputs:
         self.freq=freq
         self.arraysize=xmax*freq
 
-        self.pressure=DataInputManager(self.arraysize, pressure_range)
-        self.flow=DataInputManager(self.arraysize, flow_range)
-        self.volume=DataInputManager(self.arraysize, volume_range)
+        self.pressure=TimeDataInputManager(self.arraysize, (-30,105))
+        self.flow=TimeDataInputManager(self.arraysize, (-100,100))
+        self.volume=TimeDataInputManager(self.arraysize, (0,500))
+
+    
+    def settings_changed(self,reset=True):
+        val = self.changed
+        self.changed=False
+        return val
 
     def get_index(self):
         return self.index
@@ -35,52 +72,41 @@ class DataInputs:
         else:
             diff=timestamp-self.index_zero_time
             self.index=int(diff*self.freq)
+    
 
 class DataOutputManager:
 
-    def __init__(self, vmin=0, vmax=100, default=0):
+    def __init__(self, backend, key, vmin=0, vmax=100, default=0):
         self.vmin=vmin
         self.vmax=vmax
         self.value=default
+        self.backend=backend
+        self.key=key
 
     def update(self,value):
         self.value=value
+        self.backend.set_setting(self.key,value)
 
 
 class DataOutputs:
 
-    def __init__(self):
-        self.fio2=DataOutputManager(default=22)
-        self.pep=DataOutputManager(default=10)
-        self.fr=DataOutputManager(default=22)
-        self.flow=DataOutputManager(0.0,30.0,6.0)
-        self.vt=DataOutputManager(0,1000,370)
+    def __init__(self, backend):
+        self.backend=backend
+        self.fio2=DataOutputManager(backend,backend.FIO2,default=22)
+        self.pep=DataOutputManager(backend,backend.FIO2,default=10)
+        self.fr=DataOutputManager(backend,backend.FIO2,default=22)
+        self.flow=DataOutputManager(backend,backend.FIO2,0.0,30.0,6.0)
+        self.vt=DataOutputManager(backend,backend.FIO2,0,1000,370)
 
-class DataHandler(Thread):
+class DataHandler():
 
-    def __init__(self):
+    def __init__(self,backend):
         Thread.__init__(self)
+        self.backend=backend
         self.inputs=None
-        self.outputs=DataOutputs()
-        self.running=False
+        self.outputs=DataOutputs(backend)
 
-    def stop(self):
-        self.running=False
+    def init_inputs(self, xmax, freq):
+        self.inputs=DataInputs(xmax,freq)
+        self.backend.set_handler(self.inputs.handler)
 
-class DataHandlerDummy(DataHandler):
-
-    def run(self):
-
-        self.running=True
-        while self.running:
-            self.inputs.make_index(time.time())
-            time.sleep(1.0/40)
-            v = np.random.rand(4)
-            if v[3] > 0.03:
-                self.inputs.pressure.data[self.inputs.index]=0
-                self.inputs.flow.data[self.inputs.index]=0
-                self.inputs.volume.data[self.inputs.index]=0
-            else:
-                self.inputs.pressure.data[self.inputs.index]=self.inputs.pressure.ymax*v[0]
-                self.inputs.flow.data[self.inputs.index]=self.inputs.flow.ymax*v[1]
-                self.inputs.volume.data[self.inputs.index]=self.inputs.volume.ymax*v[2]

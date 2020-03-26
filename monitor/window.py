@@ -4,7 +4,8 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
-from .datahandler import DataHandlerDummy, DataInputs
+from .datahandler import DataHandler
+from .databackend import DataBackendDummy
 
 
 class Scope:
@@ -126,8 +127,9 @@ class Window:
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=9)
         #Graph Init 
-        self.data_handler = DataHandlerDummy()
-        self.data_handler.inputs=DataInputs(self.timewindow,self.freq,(-30,105),(-100,100),(0,500))
+        self.data_backend = DataBackendDummy(100,100,500);
+        self.data_handler = DataHandler(self.data_backend)
+        self.data_handler.init_inputs(self.timewindow,self.freq)
 
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
         self.xlim=(0,self.timewindow)
@@ -162,8 +164,8 @@ class Window:
         return sp_in_a,sp_in_b,sp_fl_a,sp_fl_b,sp_vl_a,sp_vl_b,
 
     def run(self):
-        self.data_handler.start()
+        self.data_backend.start()
         self.app.mainloop()
         self.app.destroy()
-        self.data_handler.stop()
+        self.data_backend.stop()
 
