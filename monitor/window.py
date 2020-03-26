@@ -59,7 +59,7 @@ class Window:
         self.app = tk.Tk()
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
         tk.Grid.rowconfigure(self.app, 6, weight=1)
-        tk.Grid.columnconfigure(self.app, 11, weight=1)
+        tk.Grid.columnconfigure(self.app, 12, weight=1)
 
 
         #TITLE
@@ -119,7 +119,11 @@ class Window:
         btn5 = Knob(self.app, 0, 100,4,'Debit')
         btn5.canvas.grid(row=5,column=5)
 
-
+        #Boutons Pause
+        #btn_frame = tk.Frame(self.app,bg='res').grid(column=11)
+        # tk.Button(btn_frame,text ="geler courbes", font=("Helvetica", 22)).grid(row=1,column=11)
+        # tk.Button(btn_frame,text ="pause inspi", font=("Helvetica", 22)).grid(row=2,column=11)
+        # tk.Button(btn_frame,text ="pause exspi", font=("Helvetica", 22)).grid(row=3,column=11)
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=9)
         #Graph Init 
@@ -137,20 +141,6 @@ class Window:
         self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=8, sticky=tk.N+tk.S+tk.E+tk.W)
         matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution,blit=True)
 
-        # self.range_fio2=RangeSetter(self.app, tk.IntVar(), "FiO2", self.data_handler.outputs.fio2)
-        # self.range_fio2.scale.grid(row=0, column=1)
-
-        # self.range_pep=RangeSetter(self.app, tk.IntVar(), "PEP", self.data_handler.outputs.pep)
-        # self.range_pep.scale.grid(row=0, column=2)
-
-        # self.range_fr=RangeSetter(self.app, tk.IntVar(), "FR", self.data_handler.outputs.fr)
-        # self.range_fr.scale.grid(row=1, column=1)
-
-        # self.range_flow=RangeSetter(self.app, tk.IntVar(), "Debit", self.data_handler.outputs.flow)
-        # self.range_flow.scale.grid(row=1, column=2)
-
-        # self.range_vt=RangeSetter(self.app, tk.IntVar(), "VT", self.data_handler.outputs.vt)
-        # self.range_vt.scale.grid(row=2, column=1)
 
     def update(self, frame):
         index = self.data_handler.inputs.get_index()

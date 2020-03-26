@@ -49,7 +49,6 @@ class Knob:
 	def onClick(self,event):
 		self.state = 1
 		self.canvas.itemconfigure('knob_circle'+str(self.id), fill='green')
-				
 		
 
 	def motion(self,event):
