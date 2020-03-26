@@ -27,10 +27,11 @@ class DataInputs:
                         setattr(self.parent,key,value)
     
         def update_timedata(self,timestamp, pressure, flow, volume):
-            self.parent.make_index(timestamp)
-            self.parent.pressure.data[self.parent.index]=pressure
-            self.parent.flow.data[self.parent.index]=flow
-            self.parent.volume.data[self.parent.index]=volume
+            if not self.parent.freeze:
+                self.parent.make_index(timestamp)
+                self.parent.pressure.data[self.parent.index]=pressure
+                self.parent.flow.data[self.parent.index]=flow
+                self.parent.volume.data[self.parent.index]=volume
     
     def __init__(self, xmax, freq):
         Thread.__init__(self)
@@ -47,7 +48,7 @@ class DataInputs:
         
         self.index=0
         self.index_zero_time = 0
-
+        self.freeze=False
         self.xmax=xmax
         self.freq=freq
         self.arraysize=xmax*freq
@@ -72,7 +73,8 @@ class DataInputs:
         else:
             diff=timestamp-self.index_zero_time
             self.index=int(diff*self.freq)
-    
+    def timedata_freeze(self, freeze=True):
+        self.freeze=freeze
 
 class DataOutputManager:
 
