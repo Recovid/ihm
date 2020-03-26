@@ -2,20 +2,21 @@ import tkinter as tk
 import time
 
 class Knob:
-	def __init__(self,app,min_range,max_range,id,unit):
+	def __init__(self,app,min_range,max_range,id,unit,title):
 		self.value = 0.0
 		self.max_range = max_range
 		self.min_range = min_range
 		self.state = 0
 		self.id = id
 		self.unit = unit
+		self.title = title
 
 		self.width = 100
 		self.height = 100
 
 		self.canvas = tk.Canvas(app, height=self.height, width=self.width)
 		coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
-		self.arc_green = self.canvas.create_arc(coord, start=-45, extent=270, fill="green")
+		self.arc_green = self.canvas.create_arc(coord, start=-45, extent=270, fill="#4E69AB")
 
 		self.arc_grey = self.canvas.create_arc(coord, start=-45, extent=270, fill="grey",tags='knob_value'+str(self.id))
 
@@ -25,10 +26,14 @@ class Knob:
 		self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
 				font=("Helvetica", 22),fill='white', text=str(0),tags='knob_value_text'+str(self.id))
 		self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
-				font=("Helvetica", 12),fill='white', text=self.unit)
+				font=("Helvetica", 10),fill='white', text=self.unit,tags='knob_value_unit'+str(self.id))
+		self.canvas.create_text(int(self.width*0.5), int(self.height*0.98), anchor='s', \
+				font=("Helvetica", 15),fill='grey', text=self.title)		
 
+		
 		self.canvas.tag_bind('knob_circle'+str(self.id), '<ButtonPress-1>',self.onClick)
 		self.canvas.tag_bind('knob_value_text'+str(self.id), '<ButtonPress-1>',self.onClick)
+		self.canvas.tag_bind('knob_value_unit'+str(self.id), '<ButtonPress-1>',self.onClick)
 		self.canvas.bind('<Motion>', self.motion)
 		
 		self.timer()
@@ -48,7 +53,7 @@ class Knob:
 		
 	def onClick(self,event):
 		self.state = 1
-		self.canvas.itemconfigure('knob_circle'+str(self.id), fill='green')
+		self.canvas.itemconfigure('knob_circle'+str(self.id), fill='#c9d2e5')
 		
 
 	def motion(self,event):
@@ -71,9 +76,9 @@ class Knob:
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")
 
-# btn1 = Knob(app, 0, 400,0,'')
-# btn2 = Knob(app, 0, 400,1,'')
-# btn3 = Knob(app, 0, 400,2,'')
+# btn1 = Knob(app, 0, 400,0,'MLrfr','VT')
+# btn2 = Knob(app, 0, 30,1,'MLrfr','VT')
+# btn3 = Knob(app, 0, 50,2,'MLrfr','VT')
 # btn1.canvas.pack()
 # btn2.canvas.pack()
 # btn3.canvas.pack()
