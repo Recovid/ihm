@@ -28,20 +28,20 @@ class Mesure:
       		
 
 
-app = tk.Tk()
-app.wm_title("Graphe Matplotlib dans Tkinter")
+# app = tk.Tk()
+# app.wm_title("Graphe Matplotlib dans Tkinter")
 
-btn1 = Mesure(app,0,'MLrfr','VT')
-btn2 = Mesure(app, 0, 'MLrfr','VT')
-btn3 = Mesure(app, 0, 'MLrfr','VT')
-btn1.canvas.pack()
-btn2.canvas.pack()
-btn3.canvas.pack()
+# btn1 = Mesure(app,0,'MLrfr','VT')
+# btn2 = Mesure(app, 0, 'MLrfr','VT')
+# btn3 = Mesure(app, 0, 'MLrfr','VT')
+# btn1.canvas.pack()
+# btn2.canvas.pack()
+# btn3.canvas.pack()
 
-for i in range(0,400):
-    print('debug:',i)
-    btn1.update(i)
-    btn2.update(i)
-    btn3.update(i)
-    time.sleep(0.1)
-app.mainloop()
+# for i in range(0,400):
+#     print('debug:',i)
+#     btn1.update(i)
+#     btn2.update(i)
+#     btn3.update(i)
+#     time.sleep(0.1)
+# app.mainloop()

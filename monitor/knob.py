@@ -28,7 +28,13 @@ class Knob:
 		self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
 				font=("Helvetica", 10),fill='white', text=self.unit,tags='knob_value_unit'+str(self.id))
 		self.canvas.create_text(int(self.width*0.5), int(self.height*0.98), anchor='s', \
-				font=("Helvetica", 15),fill='grey', text=self.title)		
+				font=("Helvetica", 15),fill='grey', text=self.title)
+
+		self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
+				font=("Helvetica", 12),fill='grey', text=self.min_range)
+
+		self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
+				font=("Helvetica", 12),fill='grey', text=self.max_range)		
 
 		
 		self.canvas.tag_bind('knob_circle'+str(self.id), '<ButtonPress-1>',self.onClick)
@@ -71,7 +77,7 @@ class Knob:
 		
 
 
-#Programme de test
+# Programme de test
 
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")
