@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from .datahandler import DataHandler
 from .databackend import DataBackendDummy
 from .knob import Knob
+from .mesure import Mesure
 
 
 class Scope:
@@ -85,68 +86,60 @@ class Window:
 
         #TITLE
         self.title_frame = tk.Frame(self.app,height=50,width=1024, \
-            bg='white').grid(row=0,column=0,columnspan=11)
+            bg='#4E69AB').grid(row=0,column=0,columnspan=12)
         self.title = tk.Label(self.title_frame, font=("Helvetica", 22),text='RECOVID', \
-            anchor='nw', fg='blue',bg='white').grid(row=0,column=5)
+            anchor='nw', fg='white',bg='#4E69AB').grid(row=0,column=5)
 
         #VALEURS A GAUCHE
-        self.values1_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=1,column=9)
-        tk.Label(self.values1_frame, font=("Helvetica", 22),text='FiO2 Vol%\n 250 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=1,column=9)
-        self.values2_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=1,column=10)
-        tk.Label(self.values2_frame, font=("Helvetica", 22),text='PEP mbar\n 5.0 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=1,column=10)
-        self.values3_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=2,column=9)
-        tk.Label(self.values3_frame, font=("Helvetica", 22),text='FR/min\n 35 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=2,column=9)
-        self.values4_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=2,column=10)
-        tk.Label(self.values4_frame, font=("Helvetica", 22),text='Pplat mbar\n 0 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=2,column=10)
-        self.values5_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=3,column=9)
-        tk.Label(self.values5_frame, font=("Helvetica", 22),text='VM l/min\n 0.45 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=3,column=9)
-        self.values6_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=3,column=10)
-        tk.Label(self.values5_frame, font=("Helvetica", 22),text='Pcrete mbar\n 0.45 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=3,column=10)
-        self.values7_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=4,column=9)
-        tk.Label(self.values5_frame, font=("Helvetica", 22),text='VTe mL\n 463 ', \
-            anchor='nw', fg='blue',bg='white').grid(row=4,column=9)
-        self.values8_frame = tk.Frame(self.app,borderwidth=3, \
-            bg='blue').grid(row=4,column=10)
-        tk.Label(self.values5_frame, font=("Helvetica", 22),text='', \
-            anchor='nw', fg='blue',bg='white').grid(row=4,column=10)
+ 
+        m1 = Mesure(self.app,0,'%','FiO2 %')
+        m1.canvas.grid(row=1,column=9)
+        m2 = Mesure(self.app,0,'mbar','PEP')
+        m2.canvas.grid(row=1,column=10)
+
+        m3 = Mesure(self.app,0,'/min','FR')
+        m3.canvas.grid(row=2,column=9)
+        m4 = Mesure(self.app,0,'mbar','Pplat')
+        m4.canvas.grid(row=2,column=10)
+
+        m5 = Mesure(self.app,0,'L/min','VM')
+        m5.canvas.grid(row=3,column=9)
+        m6 = Mesure(self.app,0,'mbar','Pcrete')
+        m6.canvas.grid(row=3,column=10)
+
+        m7 = Mesure(self.app,0,'mL','VTe')
+        m7.canvas.grid(row=4,column=9)
+    
 
         #BOUTONS EN BAS
      
-        btn1 = Knob(self.app, 0, 100,0,'FiO2 %')
-        btn1.canvas.grid(row=5,column=1)
+        btn1 = Knob(self.app, 0, 100,0,'%','FiO2 %')
+        btn1.canvas.grid(row=5,column=2)
 
-        btn2 = Knob(self.app, 0, 100,1,'VT')
-        btn2.canvas.grid(row=5,column=2)
+        btn2 = Knob(self.app, 0, 1000,1,'ml','VT')
+        btn2.canvas.grid(row=5,column=3)
 
-        btn3 = Knob(self.app, 0, 100,2,'FR')
-        btn3.canvas.grid(row=5,column=3)
+        btn3 = Knob(self.app, 0, 50,2,'bpm','FR')
+        btn3.canvas.grid(row=5,column=4)
 
-        btn4 = Knob(self.app, 0, 100,3,'PEP')
-        btn4.canvas.grid(row=5,column=4)
+        btn4 = Knob(self.app, 0, 30,3,'cmH2O','PEP')
+        btn4.canvas.grid(row=5,column=5)
 
-        btn5 = Knob(self.app, 0, 100,4,'Debit')
-        btn5.canvas.grid(row=5,column=5)
+        btn5 = Knob(self.app, 0, 100,4,'L/min','Debit')
+        btn5.canvas.grid(row=5,column=6)
+
+        btn6 = Knob(self.app, 0, 100,4,'','Tplat')
+        btn6.canvas.grid(row=5,column=7)
 
         #Boutons Pause
-        #btn_frame = tk.Frame(self.app,bg='res').grid(column=11)
-        # tk.Button(btn_frame,text ="geler courbes", font=("Helvetica", 22)).grid(row=1,column=11)
-        # tk.Button(btn_frame,text ="pause inspi", font=("Helvetica", 22)).grid(row=2,column=11)
-        # tk.Button(btn_frame,text ="pause exspi", font=("Helvetica", 22)).grid(row=3,column=11)
+        btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=150,height=600).grid(column=11,row=1,rowspan=5)
 
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=9)
+        tk.Button(btn_frame,text ="geler courbes",font=("Helvetica", 18)).grid(row=1,column=11)
+        tk.Button(btn_frame,text ="pause inspi", font=("Helvetica", 18)).grid(row=2,column=11)
+        tk.Button(btn_frame,text ="pause exspi", font=("Helvetica", 18)).grid(row=3,column=11)
+
+        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
+
         #Graph Init 
         self.data_backend = DataBackendDummy(100,100,500);
         self.data_handler = DataHandler(self.data_backend)
