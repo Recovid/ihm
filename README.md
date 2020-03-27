@@ -1,8 +1,8 @@
 # Recovid IHM
 
 Vous trouverez ci-dessous une image de l'interface Recovid (ça vaut mieux qu'un long discours et pas le temps de faire mieux pour l'instant)
-![ihm](/images/2703_ihm.png)![ihm]
-(https://raw.githubusercontent.com/Recovid/ihm/master/images/2703_ihm.png?sanitize=true)
+
+
 
 On part sur le principe que l'on a un écran tactile pour sélectionner les boutons de paramétrages (en bas) et les boutons (à droite).
 
