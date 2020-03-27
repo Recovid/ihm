@@ -2,7 +2,7 @@
 
 Vous trouverez ci-dessous une image de l'interface Recovid (ça vaut mieux qu'un long discours et pas le temps de faire mieux pour l'instant)
 
-<Image de l'interface>
+![recovid-ihm](/images/2703_ihm.png)
 
 # Requirement
   Python 3
