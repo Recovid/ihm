@@ -1,5 +1,4 @@
 import time
-from threading import Thread
 import numpy as np
 from .databackend import DataBackend, DataBackendHandler
 
@@ -17,14 +16,14 @@ class DataInputs:
         def __init__(self, parent):
             self.parent=parent
 
-        def update_settings(self, **kwargs):
+        def update_inputs(self, **kwargs):
             if kwargs is not None:
-                for key, value in kwargs.iteritems():
-                    if(hasattr(selfi.parent,key)):
-                        oldval=getattr(self.parent,key)
+                for key, value in kwargs.items():
+                    if(key in self.parent.inputs):
+                        oldval=self.parent.inputs[key]
                         if oldval != value:
                             self.parent.changed=True
-                        setattr(self.parent,key,value)
+                            self.parent.inputs[key]=value
     
         def update_timedata(self,timestamp, pressure, flow, volume):
             if not self.parent.freeze:
@@ -34,14 +33,16 @@ class DataInputs:
                 self.parent.volume.data[self.parent.index]=volume
     
     def __init__(self, xmax, freq):
-        Thread.__init__(self)
         self.running=True
         
-        self.fio=0
-        self.pep=0
-        self.fr=0
-        self.vm=0.0
-        self.vte=0
+        self.inputs = {}
+        self.inputs[DataBackend.FIO2]=0
+        self.inputs[DataBackend.PEP]=0
+        self.inputs[DataBackend.FR]=0
+        self.inputs[DataBackend.PPLAT]=0
+        self.inputs[DataBackend.VM]=0
+        self.inputs[DataBackend.PCRETE]=0
+        self.inputs[DataBackend.VTE]=0
 
         self.changed=False
         self.handler = DataInputs.Handler(self)
@@ -78,9 +79,10 @@ class DataInputs:
 
 class DataOutputManager:
 
-    def __init__(self, backend, key, vmin=0, vmax=100, default=0):
+    def __init__(self, backend, key, vmin=0, vmax=100, default=0, step=1):
         self.vmin=vmin
         self.vmax=vmax
+        self.step=step
         self.value=default
         self.backend=backend
         self.key=key
@@ -89,24 +91,19 @@ class DataOutputManager:
         self.value=value
         self.backend.set_setting(self.key,value)
 
-
-class DataOutputs:
-
-    def __init__(self, backend):
-        self.backend=backend
-        self.fio2=DataOutputManager(backend,backend.FIO2,default=22)
-        self.pep=DataOutputManager(backend,backend.FIO2,default=10)
-        self.fr=DataOutputManager(backend,backend.FIO2,default=22)
-        self.flow=DataOutputManager(backend,backend.FIO2,0.0,30.0,6.0)
-        self.vt=DataOutputManager(backend,backend.FIO2,0,1000,370)
-
-class DataHandler():
+class DataController:
 
     def __init__(self,backend):
-        Thread.__init__(self)
         self.backend=backend
         self.inputs=None
-        self.outputs=DataOutputs(backend)
+        self.outputs={}
+
+        self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=22)
+        self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,0,1000,default=22, step=10)
+        self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,0,50,default=22)
+        self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,0,30,default=22)
+        self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,0,100,default=22)
+        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0,100,default=22)
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)

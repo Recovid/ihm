@@ -23,7 +23,7 @@ class Mesure:
     def update(self,value):
         self.value.set(value)
         self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
-        self.canvas.update()
+        self.canvas.update_idletasks()
 
       		
 

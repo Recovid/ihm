@@ -7,7 +7,7 @@ class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
         pass
 
-    def update_settings(self, **kwargs):
+    def update_inputs(self, **kwargs):
         pass
 
 
@@ -17,6 +17,12 @@ class DataBackend(Thread):
     VT="vt"
     FR="fr"
     FLOW="flow"
+    TPLAT="tplat"
+    VTE="vte"
+    PPLAT="pplat"
+    PCRETE="pcrete"
+    TPLAT="TPLAT"
+    VM="VM"
 
     def __init__(self):
         Thread.__init__(self)
@@ -24,11 +30,12 @@ class DataBackend(Thread):
         self.running=False
 
         self.settings={}
-        self.settings[type(self).PEP]=0
         self.settings[type(self).FIO2]=0
         self.settings[type(self).VT]=0
         self.settings[type(self).FR]=0
+        self.settings[type(self).PEP]=0
         self.settings[type(self).FLOW]=0
+        self.settings[type(self).TPLAT]=0
 
     def set_handler(self, handler):
         self.handler=handler
@@ -36,7 +43,7 @@ class DataBackend(Thread):
     def set_setting(self, key, value):
         if(key in self.settings):
             self.settings[key]=value
-            print("%s = %s", str(key), str(value))
+            print(str(key), str(value))
 
     def stop(self):
         self.running=False
@@ -60,17 +67,19 @@ class DataBackendDummy(DataBackend):
             else:
                 self.handler.update_timedata(time.time(),v[0]*self.pmax,v[1]*self.fmax,v[2]*self.vmax)
 
-    def set_value(self, key, value):
+    def set_setting(self, key, value):
         if(key in self.settings):
             self.settings[key]=value
             print(str(key), str(value))
             if(key==self.PEP):
-                self.handler.update_settings(pep=value)
+                self.handler.update_inputs(**{self.PEP:value})
             elif(key==self.FIO2):
-                self.handler.update_settings(fio2=value)
-            elif(key==self.vt):
-                self.handler.update_settings(vte=value)
+                self.handler.update_inputs(**{self.FIO2:value})
+            elif(key==self.VT):
+                self.handler.update_inputs(**{self.VTE:value})
             elif(key==self.FR):
-                self.handler.update_settings(fr=value)
+                self.handler.update_inputs(**{self.FR:value})
             elif(key==self.FLOW):
-                self.handler.update_settings(vm=value)
+                self.handler.update_inputs(**{self.PCRETE:value})
+            elif(key==self.TPLAT):
+                self.handler.update_inputs(**{self.PPLAT:value})

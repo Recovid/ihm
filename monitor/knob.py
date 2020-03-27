@@ -3,16 +3,16 @@ import time
 from .userinputs import UserInputHandler
 
 class Knob(UserInputHandler):
-    def __init__(self,app,userinputs,min_range,max_range,id,unit,title, step=1):
+    def __init__(self,app,userinputs, datamanager,unit,title):
         self.value = 0.0
-        self.max_range = max_range
-        self.min_range = min_range
-        self.step=step
+        self.max_range = datamanager.vmax
+        self.min_range = datamanager.vmin
+        self.step = datamanager.step
         self.selected = False
-        self.id = id
         self.unit = unit
         self.title = title
         self.userinputs=userinputs
+        self.datamanager=datamanager
 
         self.width = 100
         self.height = 100
@@ -21,15 +21,15 @@ class Knob(UserInputHandler):
         coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
         self.arc_green = self.canvas.create_arc(coord, start=-45, extent=270, fill="#4E69AB")
 
-        self.arc_grey = self.canvas.create_arc(coord, start=-45, extent=270, fill="grey",tags='knob_value'+str(self.id))
+        self.arc_grey = self.canvas.create_arc(coord, start=-45, extent=270, fill="grey",tags='knob_value')
 
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
-        self.circle = self.canvas.create_oval(coord, fill="grey", width=2,tags='knob_circle'+str(self.id))
+        self.circle = self.canvas.create_oval(coord, fill="grey", width=2,tags='knob_circle')
 
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
-                font=("Helvetica", 22),fill='white', text=str(0),tags='knob_value_text'+str(self.id))
+                font=("Helvetica", 22),fill='white', text=str(0),tags='knob_value_text')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
-                font=("Helvetica", 10),fill='white', text=self.unit,tags='knob_value_unit'+str(self.id))
+                font=("Helvetica", 10),fill='white', text=self.unit,tags='knob_value_unit')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.98), anchor='s', \
                 font=("Helvetica", 15),fill='grey', text=self.title)
 
@@ -38,11 +38,6 @@ class Knob(UserInputHandler):
 
         self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
                 font=("Helvetica", 12),fill='grey', text=self.max_range)        
-
-        
-        #self.canvas.tag_bind('knob_circle'+str(self.id), '<ButtonPress-1>',self.onClick)
-        #self.canvas.tag_bind('knob_value_text'+str(self.id), '<ButtonPress-1>',self.onClick)
-        #self.canvas.tag_bind('knob_value_unit'+str(self.id), '<ButtonPress-1>',self.onClick)
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
     
@@ -52,10 +47,10 @@ class Knob(UserInputHandler):
         self.update(self.value+self.step)
     def selected_handler(self):
         self.selected = True
-        self.canvas.itemconfigure('knob_circle'+str(self.id), fill='#c9d2e5')
+        self.canvas.itemconfigure('knob_circle', fill='#c9d2e5')
     def unselected_handler(self):
         self.selected = False
-        self.canvas.itemconfigure('knob_circle'+str(self.id), fill='gray')
+        self.canvas.itemconfigure('knob_circle', fill='gray')
 
 
 
@@ -63,11 +58,12 @@ class Knob(UserInputHandler):
         if value>self.min_range and value <=self.max_range:
             self.value = value
             self.value_norm = 270 - (((self.value/self.max_range) + self.min_range)*270)
-            item_txt = self.canvas.find_withtag("knob_value"+str(self.id))
+            item_txt = self.canvas.find_withtag("knob_value")
             self.canvas.itemconfigure(item_txt,extent=self.value_norm)
-            item_txt = self.canvas.find_withtag("knob_value_text"+str(self.id))
+            item_txt = self.canvas.find_withtag("knob_value_text")
             self.canvas.itemconfigure(item_txt,text=str(value))
-            self.canvas.update()
+            self.canvas.update_idletasks()
+            self.datamanager.update(value)
 
     def onClick(self,event):
         if self.selected:
