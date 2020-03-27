@@ -6,6 +6,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datahandler import DataHandler
 from .databackend import DataBackendDummy
+from .userinputs import KeyboardUserInputManager, UserInputHandler
 from .knob import Knob
 from .mesure import Mesure
 
@@ -70,7 +71,18 @@ class RangeSetter:
 
 
 class Window:
+    class UIHandler(UserInputHandler):
 
+        def __init__(self, parent):
+            self.parent=parent
+
+        def left_handler(self):
+            if(self.parent.freeze_time):
+                self.parent.delta_marker=self.parent.delta_marker+1
+        def right_handler(self):
+            if(self.parent.freeze_time and self.parent.delta_marker>0):
+                self.parent.delta_marker=self.parent.delta_marker-1
+    
     def __init__(self):
 
         self.timewindow=15
@@ -79,10 +91,12 @@ class Window:
 
         self.app = tk.Tk()
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
-        self.app.bind('<Key>',self.keyinput)
+        #self.app.bind('<Key>',self.keyinput)
         tk.Grid.rowconfigure(self.app, 6, weight=1)
         tk.Grid.columnconfigure(self.app, 12, weight=1)
-
+        
+        self.userinputs = KeyboardUserInputManager(self.app)
+        self.uihandler = Window.UIHandler(self)
 
         #TITLE
         self.title_frame = tk.Frame(self.app,height=50,width=1024, \
@@ -113,30 +127,46 @@ class Window:
 
         #BOUTONS EN BAS
      
-        btn1 = Knob(self.app, 0, 100,0,'%','FiO2 %')
+        btn1 = Knob(self.app, self.userinputs, 0, 100,0,'%','FiO2 %')
         btn1.canvas.grid(row=5,column=2)
-
-        btn2 = Knob(self.app, 0, 1000,1,'ml','VT')
+        self.userinputs.append_handler(btn1)
+        
+        btn2 = Knob(self.app, self.userinputs, 0, 1000,1,'ml','VT')
         btn2.canvas.grid(row=5,column=3)
+        self.userinputs.append_handler(btn2)
 
-        btn3 = Knob(self.app, 0, 50,2,'bpm','FR')
+        btn3 = Knob(self.app, self.userinputs, 0, 50,2,'bpm','FR')
         btn3.canvas.grid(row=5,column=4)
+        self.userinputs.append_handler(btn3)
 
-        btn4 = Knob(self.app, 0, 30,3,'cmH2O','PEP')
+        btn4 = Knob(self.app, self.userinputs, 0, 30,3,'cmH2O','PEP')
         btn4.canvas.grid(row=5,column=5)
+        self.userinputs.append_handler(btn4)
 
-        btn5 = Knob(self.app, 0, 100,4,'L/min','Debit')
+        btn5 = Knob(self.app, self.userinputs, 0, 100,4,'L/min','Debit')
         btn5.canvas.grid(row=5,column=6)
+        self.userinputs.append_handler(btn5)
 
-        btn6 = Knob(self.app, 0, 100,4,'','Tplat')
+        btn6 = Knob(self.app, self.userinputs, 0, 100,5,'','Tplat')
         btn6.canvas.grid(row=5,column=7)
+        self.userinputs.append_handler(btn6)
 
         #Boutons Pause
         btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=150,height=600).grid(column=11,row=1,rowspan=5)
 
-        tk.Button(btn_frame,text ="geler courbes",font=("Helvetica", 18)).grid(row=1,column=11)
-        tk.Button(btn_frame,text ="pause inspi", font=("Helvetica", 18)).grid(row=2,column=11)
-        tk.Button(btn_frame,text ="pause exspi", font=("Helvetica", 18)).grid(row=3,column=11)
+        self.bt_freeze = tk.Button(btn_frame,text ="geler courbes",font=("Helvetica", 18))
+        self.bt_freeze.grid(row=1,column=11)
+        self.bt_si = tk.Button(btn_frame,text ="pause inspi", font=("Helvetica", 18))
+        self.bt_si.grid(row=2,column=11)
+        self.bt_se = tk.Button(btn_frame,text ="pause exspi", font=("Helvetica", 18))
+        self.bt_se.grid(row=3,column=11)
+        
+        self.bt_freeze.bind('<Button-1>', self.event_bt_freeze)
+        
+        self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event)
+        self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event)
+        self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event)
+        self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event)
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
 
@@ -157,6 +187,35 @@ class Window:
 
         self.freeze_time=False
         self.delta_marker=None
+
+    def freeze_curve(self, freeze):
+        if freeze:
+            self.freeze_time=True
+            self.data_handler.inputs.timedata_freeze(self.freeze_time)
+            self.userinputs.select(self.uihandler)
+            self.delta_marker=0
+            self.bt_freeze.config(relief='sunken')
+        else:
+            self.freeze_time=False
+            self.data_handler.inputs.timedata_freeze(self.freeze_time)
+            self.userinputs.select(None)
+            self.delta_marker=None
+            self.bt_freeze.config(relief='raised')
+
+    def event_bt_freeze(self,e):
+        self.freeze_curve(not self.freeze_time)
+
+    def stop_ins_event(self, e):
+        if(e.type==tk.EventType.ButtonPress):
+            self.delta_marker=0
+        if(e.type==tk.EventType.ButtonRelease):
+            self.freeze_curve(True)
+    
+    def stop_exp_event(self, e):
+        if(e.type==tk.EventType.ButtonPress):
+            self.delta_marker=0
+        if(e.type==tk.EventType.ButtonRelease):
+            self.freeze_curve(True)
 
     def keyinput(self,event):
         #print(event)
