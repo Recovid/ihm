@@ -235,15 +235,15 @@ class Window:
 
     def stop_ins_event(self, e):
         if(e.type==tk.EventType.ButtonPress):
-            self.delta_marker=0
-        if(e.type==tk.EventType.ButtonRelease):
-            self.freeze_curve(True)
+            self.data_backend.stop_ins(True)
+        elif(e.type==tk.EventType.ButtonRelease):
+            self.data_backend.stop_ins(False)
     
     def stop_exp_event(self, e):
         if(e.type==tk.EventType.ButtonPress):
-            self.delta_marker=0
-        if(e.type==tk.EventType.ButtonRelease):
-            self.freeze_curve(True)
+            self.data_backend.stop_exp(True)
+        elif(e.type==tk.EventType.ButtonRelease):
+            self.data_backend.stop_exp(True)
 
     def keyinput(self,event):
         #print(event)
