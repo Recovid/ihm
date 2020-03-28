@@ -18,7 +18,8 @@ class Scope:
         self.handler=handler
         self.xstep=xstep
         self.ax=ax
-        self.ax.set_title(title,loc='left')
+        # self.ax.set_title(title,loc='left')
+        self.ax.set_title(title, x=0.46, y=1.0)
         self.ax.set_ylabel(ylabel)
         self.ax.set_xlim(xlim)
         self.ax.set_ylim(self.handler.get_range())
@@ -197,6 +198,7 @@ class Window:
         #Graph Init 
 
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
+        self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
         self.scope_pressure=Scope(self.ax_pressure,"Pression","mBar",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
         self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, self.data_controller.inputs.flow)
