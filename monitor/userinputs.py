@@ -1,9 +1,9 @@
 
 class UserInputHandler:
 
-    def left_handler(self):
+    def plus_handler(self, big=False):
         pass
-    def right_handler(self):
+    def minus_handler(self, big=False):
         pass
 
     def selected_handler(self):
@@ -14,11 +14,7 @@ class UserInputHandler:
 
 class UserInputManager:
     def __init__(self):
-        self.handlers=[]
         self.selected=None
-
-    def append_handler(self, handler):
-        self.handlers.append(handler)
 
     def select(self,handler):
         if(self.selected is not None):
@@ -38,7 +34,7 @@ class KeyboardUserInputManager(UserInputManager):
         #print(event)
         if self.selected is not None:
             if(event.keysym=="Left"):
-                self.selected.left_handler()
+                self.selected.minus_handler()
             elif(event.keysym=="Right"):
-                self.selected.right_handler()
+                self.selected.plus_handler()
 

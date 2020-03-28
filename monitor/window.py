@@ -9,7 +9,7 @@ from .databackend import DataBackend, DataBackendDummy
 from .userinputs import KeyboardUserInputManager, UserInputHandler
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button,ButtonPause,ButtonInputs
+from .button import Button,ButtonInputs
 
 
 class Scope:
@@ -18,7 +18,6 @@ class Scope:
         self.handler=handler
         self.xstep=xstep
         self.ax=ax
-        print('ax:',self.ax.get_aspect())
         self.ax.set_title(title,loc='left')
         self.ax.set_ylabel(ylabel)
         self.ax.set_xlim(xlim)
@@ -78,12 +77,14 @@ class Window:
         def __init__(self, parent):
             self.parent=parent
 
-        def left_handler(self):
+        def minus_handler(self,big=False):
             if(self.parent.freeze_time):
-                self.parent.delta_marker=self.parent.delta_marker+1
-        def right_handler(self):
+                inc = 10 if big else 1
+                self.parent.delta_marker=self.parent.delta_marker+inc
+        def plus_handler(self, big=False):
             if(self.parent.freeze_time and self.parent.delta_marker>0):
-                self.parent.delta_marker=self.parent.delta_marker-1
+                inc = 10 if big else 1
+                self.parent.delta_marker=self.parent.delta_marker-inc
     
     def __init__(self):
 
@@ -95,17 +96,16 @@ class Window:
 
         self.app = tk.Tk()
 
-        self.app.attributes("-fullscreen", True)
+        self.app.attributes("-fullscreen", False)
 
-        self.ws = self.app.winfo_screenwidth()
-        self.hw = self.app.winfo_screenheight()
-        # self.ws = 800
-        # self.hw = 600
+        #self.ws = self.app.winfo_screenwidth()
+        #self.hw = self.app.winfo_screenheight()
+        self.ws = 600
+        self.hw = 400
         
         print('ws:',self.ws,' hw:',self.hw)
 
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
-        #self.app.bind('<Key>',self.keyinput)
         tk.Grid.rowconfigure(self.app, 6, weight=1)
         tk.Grid.columnconfigure(self.app, 12, weight=1)
         
@@ -149,33 +149,27 @@ class Window:
      
         btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
         btn1.canvas.grid(row=5,column=2)
-        self.userinputs.append_handler(btn1)
         
         btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT')
         btn2.canvas.grid(row=5,column=3)
-        self.userinputs.append_handler(btn2)
 
         btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
         btn3.canvas.grid(row=5,column=4)
-        self.userinputs.append_handler(btn3)
 
         btn4 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
         btn4.canvas.grid(row=5,column=5)
-        self.userinputs.append_handler(btn4)
 
         btn5 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit')
         btn5.canvas.grid(row=5,column=6)
-        self.userinputs.append_handler(btn5)
 
         btn6 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
         btn6.canvas.grid(row=5,column=7)
-        self.userinputs.append_handler(btn6)
 
         #Boutons Pause
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=11,row=1,rowspan=5)
 
-        self.bt_freeze = ButtonPause(self.app,0,"Geler courbes")
+        self.bt_freeze = Button(self.app,0,"Geler courbes", "Resume")
         self.bt_freeze.canvas.grid(row=1,column=11)
         
 
@@ -185,18 +179,19 @@ class Window:
         self.bt_se = Button(self.app ,2,"Pause inspi")
         self.bt_se.canvas.grid(row=3,column=11)
 
-        self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze,self.bt_freeze.onClick)
+        self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze)
+        self.bt_freeze.canvas.bind('<ButtonRelease-1>', None)
 
-        self.bt_si.canvas.bind('<ButtonPress-1>',self.stop_ins_event,self.bt_si.onClick)
-        self.bt_si.canvas.bind('<ButtonRelease-1>',self.stop_ins_event,self.bt_si.onUnClick)
+        self.bt_si.canvas.bind('<ButtonPress-1>',self.stop_ins_event,'+')
+        self.bt_si.canvas.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
-        self.bt_se.canvas.bind('<ButtonPress-1>',self.stop_exp_event,self.bt_se.onClick)
-        self.bt_se.canvas.bind('<ButtonRelease-1>',self.stop_exp_event,self.bt_se.onUnClick)
+        self.bt_se.canvas.bind('<ButtonPress-1>',self.stop_exp_event,'+')
+        self.bt_se.canvas.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
 
         # Bouton --/-/+/++
-        self.btn_inputs = ButtonInputs(self.app)
+        self.btn_inputs = ButtonInputs(self.app, self.userinputs)
         self.btn_inputs.canvas.grid(row=5,column=9,columnspan=2)
 
         #Graph Init 
@@ -221,14 +216,12 @@ class Window:
             self.userinputs.select(self.uihandler)
             self.delta_marker=0
             self.bt_freeze.push()
-       
         else:
             self.freeze_time=False
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
             self.userinputs.select(None)
             self.delta_marker=None
             self.bt_freeze.release()
-        
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)
@@ -245,21 +238,6 @@ class Window:
         elif(e.type==tk.EventType.ButtonRelease):
             self.data_backend.stop_exp(True)
 
-    def keyinput(self,event):
-        #print(event)
-        if(event.keysym=='space'):
-            self.freeze_time= not self.freeze_time
-            self.data_controller.inputs.timedata_freeze(self.freeze_time)
-            if self.freeze_time:
-                self.delta_marker=0
-            else:
-                self.delta_marker=None
-        elif(event.keysym=="Left"):
-            if(self.freeze_time):
-                self.delta_marker=self.delta_marker+1
-        elif(event.keysym=="Right"):
-            if(self.freeze_time and self.delta_marker>0):
-                self.delta_marker=self.delta_marker-1
     def update(self, frame):
         index = self.data_controller.inputs.get_index()
         lp = self.scope_pressure.update(index,self.delta_marker)

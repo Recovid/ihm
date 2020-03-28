@@ -48,10 +48,12 @@ class Knob(UserInputHandler):
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
     
-    def left_handler(self):
-        self.update(self.value-self.step)
-    def right_handler(self):
-        self.update(self.value+self.step)
+    def minus_handler(self, big=False):
+        inc = 10 if big else 1
+        self.update(self.value-self.step*inc)
+    def plus_handler(self, big=False):
+        inc = 10 if big else 1
+        self.update(self.value+self.step*inc)
     def selected_handler(self):
         self.selected = True
         self.canvas.itemconfigure('knob_circle', fill='#c9d2e5')

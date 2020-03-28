@@ -50,6 +50,7 @@ class DataInputs:
         self.index=0
         self.index_zero_time = 0
         self.freeze=False
+        self.unfreeze=False
         self.xmax=xmax
         self.freq=freq
         self.arraysize=xmax*freq
@@ -68,14 +69,16 @@ class DataInputs:
         return self.index
 
     def make_index(self,timestamp):
-        if(timestamp-self.index_zero_time > self.xmax):
+        if(timestamp-self.index_zero_time > self.xmax or self.unfreeze):
             self.index=0
             self.index_zero_time=timestamp
+            self.unfreeze=False
         else:
             diff=timestamp-self.index_zero_time
             self.index=int(diff*self.freq)
     def timedata_freeze(self, freeze=True):
         self.freeze=freeze
+        self.unfreeze=True
 
 class DataOutputManager:
 

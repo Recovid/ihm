@@ -2,10 +2,11 @@ import tkinter as tk
 import time
 
 class Button():
-    def __init__(self,app,id,text):
+    def __init__(self,app,id,text, text_push=None):
         self.text = tk.StringVar()
         self.text.set(text)
         self.id = id
+        self.text_push = text_push if text_push else text
          
         self.width = int(app.winfo_screenwidth()*0.09)
         self.height = int(app.winfo_screenheight()*0.09)
@@ -21,7 +22,7 @@ class Button():
         self.canvas = tk.Canvas(app, height=self.height, width=self.width, bg="#c9d2e5",borderwidth=0)
         coord = int(self.width*0.0),int(self.height*0.0),int(self.width),int(self.height)
         self.frame = self.canvas.create_rectangle(coord,fill='grey',tags='frame')
-        self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
+        self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
         		font=("Helvetica", self.font_size),fill='white', text=self.text.get(),tags='text')
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
@@ -38,26 +39,17 @@ class Button():
 
     def push(self):
         self.canvas.itemconfigure('frame',fill="#c9d2e5")
+        self.canvas.itemconfigure(self.textid, text=self.text_push)
         self.canvas.update_idletasks()
     
     def release(self):
         self.canvas.itemconfigure('frame',fill="grey")
+        self.canvas.itemconfigure(self.textid, text=self.text.get())
         self.canvas.update_idletasks()
-    
-
-class ButtonPause(Button):
-
-    def onClick(self,event):
-        self.canvas.itemconfigure('frame',fill="#c9d2e5")
-        self.canvas.itemconfigure('text',"Resume")
-        self.canvas.update_idletasks()
-    
-    def onUnClick(self,event):
-        pass
-
 
 class ButtonInputs():
-    def __init__(self,app):
+    def __init__(self,app, userinputs):
+        self.userinputs=userinputs
         self.width = int(app.winfo_screenwidth()*0.2)
         self.height = int(app.winfo_screenheight()*0.09)
 
@@ -65,35 +57,48 @@ class ButtonInputs():
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width, bg="#c9d2e5",borderwidth=0)
         
-        self.buttons = ['-10','-1','+1','+10']
+        self.buttons = ['--','-','+','++']
+        self.ids_frame = [0,0,0,0]
+        self.ids_text = [0,0,0,0]
         for i in range(0,4):
             coord = int(self.width*i/4),int(self.height*0.0),int((i+1)*self.width/4),int(self.height)
-            self.canvas.create_rectangle(coord,fill='grey',tags='frame_'+str(i))
-            self.canvas.create_text(int(coord[0]+(coord[2]-coord[0])*0.5), int(self.height*0.5), anchor='c', \
+            self.ids_frame[i]=self.canvas.create_rectangle(coord,fill='grey',tags='frame_'+str(i))
+            self.ids_text[i]=self.canvas.create_text(int(coord[0]+(coord[2]-coord[0])*0.5), int(self.height*0.5), anchor='c', \
                 font=("Helvetica", self.font_size),fill='white', text=self.buttons[i],tags='text_'+str(i))
 
-            self.canvas.bind('<ButtonPress-1>',self.onClick)
-            self.canvas.bind('<ButtonRelease-1>',self.onUnClick)
-          
-            self.canvas.bind('<ButtonPress-1>',self.onClick)
-            self.canvas.bind('<ButtonRelease-1>',self.onUnClick)
-    
+        self.canvas.bind('<ButtonPress-1>',self.onClick)
+        self.canvas.bind('<ButtonRelease-1>',self.onUnClick)
+   
+    def find_idbutton(self,event):
+        iditem = event.widget.find_withtag('current')[0]
+        idbutton = None
+        try:
+            idbutton=self.ids_frame.index(iditem)
+        except:
+            pass
+        try:
+            idbutton=self.ids_text.index(iditem)
+        except:
+            pass
+        return idbutton
 
     def onClick(self,event):
-
-        item_tmp = event.widget.find_withtag('current')[0]
-        tags = self.canvas.gettags(item_tmp)
-        str_id = str(tags[0]).replace("frame_","")
-        str_id = str_id.replace("text_","")
-        self.canvas.itemconfigure('frame_'+str_id,fill="#c9d2e5")
+        idbutton = self.find_idbutton(event)
+        self.canvas.itemconfigure(self.ids_frame[idbutton],fill="#c9d2e5")
         self.canvas.update_idletasks()
+        if(self.userinputs.selected is not None):
+            if(idbutton==0):
+                self.userinputs.selected.minus_handler(big=True)
+            elif(idbutton==1):
+                self.userinputs.selected.minus_handler(big=False)
+            elif(idbutton==2):
+                self.userinputs.selected.plus_handler(big=False)
+            elif(idbutton==3):
+                self.userinputs.selected.plus_handler(big=True)
 
     def onUnClick(self,event):
-        item_tmp = event.widget.find_withtag('current')[0]
-        tags = self.canvas.gettags(item_tmp)
-        str_id = str(tags[0]).replace("frame_","")
-        str_id = str_id.replace("text_","")
-        self.canvas.itemconfigure('frame_'+str_id,fill="grey")
+        idbutton = self.find_idbutton(event)
+        self.canvas.itemconfigure(self.ids_frame[idbutton],fill="grey")
         self.canvas.update_idletasks()
 
 
