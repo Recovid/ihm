@@ -9,7 +9,7 @@ from .databackend import DataBackend, DataBackendDummy
 from .userinputs import KeyboardUserInputManager, UserInputHandler
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button,ButtonPause
+from .button import Button,ButtonPause,ButtonInputs
 
 
 class Scope:
@@ -112,13 +112,13 @@ class Window:
         self.userinputs = KeyboardUserInputManager(self.app)
         self.uihandler = Window.UIHandler(self)
 
-        self.data_backend = DataBackendDummy(100,100,500);
+        self.data_backend = DataBackendDummy(100,100,500)
         self.data_controller = DataController(self.data_backend)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
         #TITLE
         self.title_frame = tk.Frame(self.app,height=int(self.hw*0.1),width=self.ws, \
-            bg='#4E69AB').grid(row=0,column=0,columnspan=15)
+            bg='#4E69AB').grid(row=0,column=0,columnspan=12)
         self.title = tk.Label(self.title_frame, font=("Helvetica", 22),text='RECOVID', \
             anchor='nw', fg='white',bg='#4E69AB').grid(row=0,column=5)
 
@@ -172,18 +172,18 @@ class Window:
         self.userinputs.append_handler(btn6)
 
         #Boutons Pause
-        self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.2),\
-            height=int(self.hw*0.8)).grid(column=11,row=1,rowspan=5,columnspan=4)
+        self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
+            height=int(self.hw*0.9)).grid(column=11,row=1,rowspan=5)
 
         self.bt_freeze = ButtonPause(self.app,0,"Geler courbes")
-        self.bt_freeze.canvas.grid(row=1,column=11,columnspan=2)
+        self.bt_freeze.canvas.grid(row=1,column=11)
         
 
         self.bt_si = Button(self.app,1,"Pause inspi")
-        self.bt_si.canvas.grid(row=2,column=11,columnspan=2)
+        self.bt_si.canvas.grid(row=2,column=11)
 
         self.bt_se = Button(self.app ,2,"Pause inspi")
-        self.bt_se.canvas.grid(row=3,column=11,columnspan=2)
+        self.bt_se.canvas.grid(row=3,column=11)
 
         self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze,self.bt_freeze.onClick)
 
@@ -193,20 +193,11 @@ class Window:
         self.bt_se.canvas.bind('<ButtonPress-1>',self.stop_exp_event,self.bt_se.onClick)
         self.bt_se.canvas.bind('<ButtonRelease-1>',self.stop_exp_event,self.bt_se.onUnClick)
 
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=10)
+        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
 
-        # Bouton ++/+/-/--
-        self.bt_moinsmoins = Button(self.app,1,"-10")
-        self.bt_moinsmoins.canvas.grid(row=5,column=11)
-
-        self.bt_moins = Button(self.app,1,"-1")
-        self.bt_moins.canvas.grid(row=5,column=13)
-
-        self.bt_plus = Button(self.app,1,"+1")
-        self.bt_plus.canvas.grid(row=4,column=11)
-
-        self.bt_plusplus = Button(self.app,1,"+10")
-        self.bt_plusplus.canvas.grid(row=4,column=(13))
+        # Bouton --/-/+/++
+        self.btn_inputs = ButtonInputs(self.app)
+        self.btn_inputs.canvas.grid(row=5,column=9,columnspan=2)
 
         #Graph Init 
 
