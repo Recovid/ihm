@@ -7,9 +7,14 @@ class Button():
         self.text.set(text)
         self.id = id
          
+        self.width = int(app.winfo_screenwidth()*0.09)
+        self.height = int(app.winfo_screenheight()*0.09)
+        # self.width = int(800*0.09) #150
+        # self.height = int(600*0.09) #100
 
-        self.width = 150
-        self.height = 100
+        self.font_size = int(self.height*0.16)
+        
+        
 
         # self.userinputs=userinputs
 
@@ -17,7 +22,7 @@ class Button():
         coord = int(self.width*0.0),int(self.height*0.0),int(self.width),int(self.height)
         self.frame = self.canvas.create_rectangle(coord,fill='grey',tags='frame')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
-        		font=("Helvetica", 16),fill='black', text=self.text.get(),tags='text')
+        		font=("Helvetica", self.font_size),fill='white', text=self.text.get(),tags='text')
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
         self.canvas.bind('<ButtonRelease-1>',self.onUnClick)

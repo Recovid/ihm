@@ -86,11 +86,23 @@ class Window:
     
     def __init__(self):
 
+        
+
         self.timewindow=15
         self.freq=20
         self.timeresolution=1.0/self.freq
 
         self.app = tk.Tk()
+
+        self.app.attributes("-fullscreen", True)
+
+        self.ws = self.app.winfo_screenwidth()
+        self.hw = self.app.winfo_screenheight()
+        # self.ws = 800
+        # self.hw = 600
+        
+        print('ws:',self.ws,' hw:',self.hw)
+
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
         #self.app.bind('<Key>',self.keyinput)
         tk.Grid.rowconfigure(self.app, 6, weight=1)
@@ -104,25 +116,28 @@ class Window:
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
         #TITLE
-        self.title_frame = tk.Frame(self.app,height=50,width=1024, \
+        self.title_frame = tk.Frame(self.app,height=int(self.hw*0.1),width=self.ws, \
             bg='#4E69AB').grid(row=0,column=0,columnspan=12)
         self.title = tk.Label(self.title_frame, font=("Helvetica", 22),text='RECOVID', \
             anchor='nw', fg='white',bg='#4E69AB').grid(row=0,column=5)
 
-        #VALEURS A GAUCHE
+        #VALEURS A Droite
  
         self.m_fio2 = Mesure(self.app,0,'%','FiO2 %')
         self.m_fio2.canvas.grid(row=1,column=9)
+
         self.m_pep = Mesure(self.app,0,'mbar','PEP')
         self.m_pep.canvas.grid(row=1,column=10)
 
         self.m_fr = Mesure(self.app,0,'/min','FR')
         self.m_fr.canvas.grid(row=2,column=9)
+
         self.m_pplat = Mesure(self.app,0,'mbar','Pplat')
         self.m_pplat.canvas.grid(row=2,column=10)
 
         self.m_vm = Mesure(self.app,0,'L/min','VM')
         self.m_vm.canvas.grid(row=3,column=9)
+        
         self.m_pcrete = Mesure(self.app,0,'mbar','Pcrete')
         self.m_pcrete.canvas.grid(row=3,column=10)
 
@@ -132,7 +147,7 @@ class Window:
 
         #BOUTONS EN BAS
      
-        btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2 %')
+        btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
         btn1.canvas.grid(row=5,column=2)
         self.userinputs.append_handler(btn1)
         
@@ -157,16 +172,17 @@ class Window:
         self.userinputs.append_handler(btn6)
 
         #Boutons Pause
-        self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=150,height=600).grid(column=11,row=1,rowspan=5)
+        self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
+            height=int(self.hw*0.9)).grid(column=11,row=1,rowspan=5)
 
-        self.bt_freeze = ButtonPause(self.btn_frame ,0,"Geler courbes")
+        self.bt_freeze = ButtonPause(self.app,0,"Geler courbes")
         self.bt_freeze.canvas.grid(row=1,column=11)
         
 
-        self.bt_si = Button(self.btn_frame ,1,"Pause inspi")
+        self.bt_si = Button(self.app,1,"Pause inspi")
         self.bt_si.canvas.grid(row=2,column=11)
 
-        self.bt_se = Button(self.btn_frame ,2,"Pause inspi")
+        self.bt_se = Button(self.app ,2,"Pause inspi")
         self.bt_se.canvas.grid(row=3,column=11)
 
         self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze,self.bt_freeze.onClick)

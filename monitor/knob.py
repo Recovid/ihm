@@ -14,8 +14,15 @@ class Knob(UserInputHandler):
         self.userinputs=userinputs
         self.datamanager=datamanager
 
-        self.width = 100
-        self.height = 100
+      
+        self.width = int(app.winfo_screenwidth()*0.1)
+        self.height = int(app.winfo_screenwidth()*0.1)#120
+        # self.width = int(800*0.1)
+        # self.height = int(800*0.1)#120
+
+        self.font_size_value = int(self.height*0.2)#22
+        self.font_size_unit = int(self.height*0.1)#10
+        self.font_size_title = int(self.height*0.15)#15
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width)
         coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
@@ -27,11 +34,11 @@ class Knob(UserInputHandler):
         self.circle = self.canvas.create_oval(coord, fill="grey", width=2,tags='knob_circle')
 
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
-                font=("Helvetica", 22),fill='white', text=str(0),tags='knob_value_text')
+                font=("Helvetica", self.font_size_value),fill='white', text=str(0),tags='knob_value_text')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
-                font=("Helvetica", 10),fill='white', text=self.unit,tags='knob_value_unit')
+                font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.98), anchor='s', \
-                font=("Helvetica", 15),fill='grey', text=self.title)
+                font=("Helvetica", self.font_size_title),fill='grey', text=self.title)
 
         self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
                 font=("Helvetica", 12),fill='grey', text=self.min_range)

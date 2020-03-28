@@ -10,15 +10,20 @@ class Mesure:
         self.unit = unit
         self.title = title
 
-        self.width = 120
-        self.height = 120
+        self.width = int(app.winfo_screenwidth()*0.09)
+        self.height = int(app.winfo_screenwidth()*0.09)
+        # self.width = int(800*0.09)
+        # self.height = int(600*0.09)
+
+        self.font_size_value = int(self.height*0.4)
+        self.font_size_unit = int(self.height*0.1)
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg="#edf0f6")
         
         self.canvas.create_text(int(self.width*0.1), int(self.height*0.1), anchor='w', \
-        		font=("Helvetica", 14),fill='black', text=self.title +" "+self.unit)
+        		font=("Helvetica", self.font_size_unit),fill='black', text=self.title +" "+self.unit)
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
-        		font=("Helvetica", 44),fill='black', text=self.value.get(),tags='text'+str(self.id))
+        		font=("Helvetica", self.font_size_value),fill='black', text=self.value.get(),tags='text'+str(self.id))
         
     def update(self,value):
         self.value.set(value)
