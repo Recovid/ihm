@@ -83,20 +83,16 @@ class ButtonInputs():
 
         item_tmp = event.widget.find_withtag('current')[0]
         tags = self.canvas.gettags(item_tmp)
-        print(tags)
         str_id = str(tags[0]).replace("frame_","")
         str_id = str_id.replace("text_","")
-        print("x:",event.x," y:",event.y,"tags :",tags," str_id:",str_id)
         self.canvas.itemconfigure('frame_'+str_id,fill="#c9d2e5")
         self.canvas.update_idletasks()
 
     def onUnClick(self,event):
         item_tmp = event.widget.find_withtag('current')[0]
         tags = self.canvas.gettags(item_tmp)
-        print(tags)
         str_id = str(tags[0]).replace("frame_","")
         str_id = str_id.replace("text_","")
-        print("x:",event.x," y:",event.y,"tags :",tags," str_id:",str_id)
         self.canvas.itemconfigure('frame_'+str_id,fill="grey")
         self.canvas.update_idletasks()
 
