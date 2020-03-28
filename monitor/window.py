@@ -96,12 +96,12 @@ class Window:
 
         self.app = tk.Tk()
 
-        self.app.attributes("-fullscreen", False)
+        self.app.attributes("-fullscreen", True)
 
-        #self.ws = self.app.winfo_screenwidth()
-        #self.hw = self.app.winfo_screenheight()
-        self.ws = 600
-        self.hw = 400
+        self.ws = self.app.winfo_screenwidth()
+        self.hw = self.app.winfo_screenheight()
+        # self.ws = 600
+        # self.hw = 400
         
         print('ws:',self.ws,' hw:',self.hw)
 
