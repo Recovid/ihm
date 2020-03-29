@@ -20,9 +20,10 @@ def nominal_data(t_ms, fr_hz):
     d.number        = t_ms
     t_rad           = t_ms/1000 * fr_hz * 2*math.pi
     cos             = math.cos(t_rad)
-    d.volume_ml     = max(0, 250 + 250 * math.sin(t_rad))
-    d.debit_lpm     = max(0, 20 + 30 * cos)
-    d.paw_mbar      =        40 + 60 * cos
+    sin             = math.sin(t_rad)
+    d.volume_ml     = max(0, 500*sin)
+    d.debit_lpm     = max(10,50*cos)
+    d.paw_mbar      =        90*cos if cos>0 else 10*cos
     d.fio2_pct      = max(0, 50 + 2 * cos)
     d.vt_ml         = max(0, 1 + d.volume_ml)
     d.fr_pm         = max(0, fr_hz * 60 + 2 * cos) # sec
@@ -36,13 +37,14 @@ def checksum8(frame):
 
 def checked_frame(frame):
     assert isinstance(frame, str)
-    return frame + "%02X" % checksum8(frame)
+    frame += " CS8_:"
+    return frame + "%02X\n" % checksum8(frame)
 
 def data_frame(d):
     assert isinstance(d, Data)
     return checked_frame( \
-        "DATA msec:%05d Vol_:%03d Deb_:%03d Paw_:%s%03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d            " \
-        % (d.number, d.volume_ml, d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
+        "DATA msec:%05d Vol_:%03d Deb_:%s%03d Paw_:%s%03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d" \
+        % (d.number, d.volume_ml, '-' if d.debit_lpm<0 else '+', d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
 
 if __name__ == '__main__':
     fr_pm = 25
@@ -50,4 +52,4 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     with io.open('nominal_cycle.txt','w') as nominal_cycle:
         for t_ms in range(0, int(1000/fr_hz), int(1000/fr_pm)):
-            nominal_cycle.write(data_frame(nominal_data(t_ms, fr_hz))+'\n')
+            nominal_cycle.write(data_frame(nominal_data(t_ms, fr_hz)))
