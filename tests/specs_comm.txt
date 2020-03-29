@@ -25,7 +25,7 @@ On s'attends à recevoir @ 25 FPS les dernières valeurs de chaque variable calc
 'DATA '
 Suivi de chacun des champs et données suivants :
 
-'Frm#' 0000..9999
+'msec' 00000..99999
 NB: L'IHM affiche 15sec @ 60 FPS = 900 trames, l'ID de trame peut tourner % 10000 sur 4 digits.
 
 'Vol_' (Volume d'air) : 000..600 (mL)
@@ -39,11 +39,11 @@ NB: L'IHM affiche 15sec @ 60 FPS = 900 trames, l'ID de trame peut tourner % 1000
 'DebM' (Débit Maximum) : 30..90 (L/min)
 
 Specification sprintf: 
-"DATA Frm#:%04d Vol_:%03d Deb_:%03d Paw_:%+03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d            %02X"
+"DATA msec:%05d Vol_:%03d Deb_:%03d Paw_:%+03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d            %02X"
 
 Exemples:
-DATA Frm#:0123 Vol_:462 Deb_:051 Paw_:+053 Fi02:040 Vt__:0800 FR__:20 PEP_:10 DebM:60            C5|
-DATA Frm#:0124 Vol_:464 Deb_:051 Paw_:+053 Fi02:040 Vt__:0800 FR__:20 PEP_:10 DebM:60            C7|
+DATA msec:12300 Vol_:462 Deb_:051 Paw_:+053 Fi02:040 Vt__:0800 FR__:20 PEP_:10 DebM:60            C5|
+DATA msec:12400 Vol_:464 Deb_:051 Paw_:+053 Fi02:040 Vt__:0800 FR__:20 PEP_:10 DebM:60            C7|
 
 
 A.3. Alarmes
