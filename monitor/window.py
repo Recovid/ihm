@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib
 import tkinter as tk
@@ -6,10 +7,10 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy
-from .userinputs import KeyboardUserInputManager, UserInputHandler
+from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button,ButtonInputs
+from .button import Button
 
 
 class Scope:
@@ -110,7 +111,10 @@ class Window:
         tk.Grid.rowconfigure(self.app, 6, weight=1)
         tk.Grid.columnconfigure(self.app, 12, weight=1)
         
-        self.userinputs = KeyboardUserInputManager(self.app)
+        # Bouton --/-/+/++
+        self.userinputs = ButtonUserInputManager(self.app)
+        self.userinputs.canvas.grid(row=5,column=9,columnspan=2)
+        
         self.uihandler = Window.UIHandler(self)
 
         self.data_backend = DataBackendDummy(100,100,500)
@@ -174,10 +178,10 @@ class Window:
         self.bt_freeze.canvas.grid(row=1,column=11)
         
 
-        self.bt_si = Button(self.app,1,"Pause inspi")
+        self.bt_si = Button(self.app,1,"Pause Inspi")
         self.bt_si.canvas.grid(row=2,column=11)
 
-        self.bt_se = Button(self.app ,2,"Pause inspi")
+        self.bt_se = Button(self.app ,2,"Pause Expi")
         self.bt_se.canvas.grid(row=3,column=11)
 
         self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze)
@@ -191,9 +195,6 @@ class Window:
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
 
-        # Bouton --/-/+/++
-        self.btn_inputs = ButtonInputs(self.app, self.userinputs)
-        self.btn_inputs.canvas.grid(row=5,column=9,columnspan=2)
 
         #Graph Init 
 
@@ -215,7 +216,7 @@ class Window:
         if freeze:
             self.freeze_time=True
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
-            self.userinputs.select(self.uihandler)
+            self.userinputs.select(self.uihandler, arrows=True)
             self.delta_marker=0
             self.bt_freeze.push()
         else:
