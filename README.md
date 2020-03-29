@@ -18,10 +18,13 @@ Les courbes sont pour l'instant simulées.
   tkinter
   matplotlib
 
-# Tester
-
+# Install
+```
+sudo apt-get install libatlas-base-dev
 git clone https://github.com/Recovid/ihm.git
-
 cd ihm
-
+python3.7 -m venv venv
+. ./venv/bin/activate
+pip install -r requirements.txt
 python main.py
+```
