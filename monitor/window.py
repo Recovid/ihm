@@ -178,10 +178,10 @@ class Window:
         self.bt_freeze.canvas.grid(row=1,column=11)
         
 
-        self.bt_si = Button(self.app,1,"Pause inspi")
+        self.bt_si = Button(self.app,1,"Pause Inspi")
         self.bt_si.canvas.grid(row=2,column=11)
 
-        self.bt_se = Button(self.app ,2,"Pause inspi")
+        self.bt_se = Button(self.app ,2,"Pause Expi")
         self.bt_se.canvas.grid(row=3,column=11)
 
         self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze)
