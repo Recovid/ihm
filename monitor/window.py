@@ -6,10 +6,10 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy
-from .userinputs import KeyboardUserInputManager, UserInputHandler
+from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button,ButtonInputs
+from .button import Button
 
 
 class Scope:
@@ -110,7 +110,10 @@ class Window:
         tk.Grid.rowconfigure(self.app, 6, weight=1)
         tk.Grid.columnconfigure(self.app, 12, weight=1)
         
-        self.userinputs = KeyboardUserInputManager(self.app)
+        # Bouton --/-/+/++
+        self.userinputs = ButtonUserInputManager(self.app)
+        self.userinputs.canvas.grid(row=5,column=9,columnspan=2)
+        
         self.uihandler = Window.UIHandler(self)
 
         self.data_backend = DataBackendDummy(100,100,500)
@@ -191,9 +194,6 @@ class Window:
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
 
-        # Bouton --/-/+/++
-        self.btn_inputs = ButtonInputs(self.app, self.userinputs)
-        self.btn_inputs.canvas.grid(row=5,column=9,columnspan=2)
 
         #Graph Init 
 
@@ -215,7 +215,7 @@ class Window:
         if freeze:
             self.freeze_time=True
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
-            self.userinputs.select(self.uihandler)
+            self.userinputs.select(self.uihandler, arrows=True)
             self.delta_marker=0
             self.bt_freeze.push()
         else:
