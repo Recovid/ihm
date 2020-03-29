@@ -47,7 +47,7 @@ class ButtonUserInputManager():
 
         self.font_size = int(self.height*0.35)
 
-        self.canvas = tk.Canvas(app, height=self.height, width=self.width, bg="#c9d2e5",borderwidth=0)
+        self.canvas = tk.Canvas(app, height=self.height, width=self.width, bg="white",borderwidth=0)
         
         self.signs = ['--','-','+','++']
         self.arrows = ['<<','<','>','>>']
