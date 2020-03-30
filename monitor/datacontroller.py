@@ -45,8 +45,6 @@ class DataInputs:
         self.inputs[DataBackend.VM]=0
         self.inputs[DataBackend.PCRETE]=0
         self.inputs[DataBackend.VTE]=0
-        self.inputs[DataBackend.Pmin]=0
-        self.inputs[DataBackend.Pmax]=0
 
         self.changed=False
         self.handler = DataInputs.Handler(self)
@@ -111,8 +109,9 @@ class DataController:
         self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,0,30,default=5)
         self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,0,100,default=60)
         self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0,100,default=0)
-        self.outputs[backend.Pmin]=DataOutputManager(backend,backend.Pmin,0,100,default=-1)
-        self.outputs[backend.Pmax]=DataOutputManager(backend,backend.Pmax,0,100,default=-1)
+        self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,100,default=30)
+        self.outputs[backend.PMAX]=DataOutputManager(backend,backend.PMAX,0,100,default=90)
+        self.outputs[backend.VMIN]=DataOutputManager(backend,backend.VMIN,0,100,default=300, step=10)
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)

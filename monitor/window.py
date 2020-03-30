@@ -145,20 +145,12 @@ class Window:
         self.m_vm = Mesure(self.app,0,'L/min','VM')
         self.m_vm.canvas.grid(row=3,column=9)
         
-        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete')
+        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', amin=self.data_controller.outputs[DataBackend.PMIN], amax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
         self.m_pcrete.canvas.grid(row=3,column=10)
 
-        self.m_vte = Mesure(self.app,0,'mL','VTe')
+        self.m_vte = Mesure(self.app,0,'mL','VTe', amin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
         self.m_vte.canvas.grid(row=4,column=9)
 
-        btn_pmax = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.Pmax], 'cmH2O','PMAX/pmin')
-        btn_pmax.canvas.grid(row=4,column=10)
-        btn_pmax.canvas.grid_forget()
-        btn_pmin = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.Pmin], 'cmH2O','pmax/PMIN')
-        btn_pmin.canvas.grid(row=4,column=10)
-        # btn_pmin.canvas.grid_forget()
-
-    
         #BOUTONS EN BAS
      
         btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
@@ -166,10 +158,6 @@ class Window:
         
         btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT/vte')
         btn2.canvas.grid(row=5,column=3)
-
-        btn_Vte = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.Pmin], 'cmH2O','vt/VTE')
-        btn_Vte.canvas.grid(row=5,column=3)
-        btn_Vte.canvas.grid_forget()
 
         btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
         btn3.canvas.grid(row=5,column=4)
@@ -260,8 +248,6 @@ class Window:
         lf = self.scope_flow.update(index,self.delta_marker)
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
-            self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.Pmax])
-            self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.Pmin])
             self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])

@@ -14,8 +14,6 @@ class DataBackendHandler:
 
 
 class DataBackend(Thread):
-    Pmax="Pmax"
-    Pmin="Pmin"
     PEP="pep"
     FIO2="fio2"
     VT="vt"
@@ -23,9 +21,11 @@ class DataBackend(Thread):
     FLOW="flow"
     TPLAT="tplat"
     VTE="vte"
+    VMIN="vmin"
     PPLAT="pplat"
     PCRETE="pcrete"
-    TPLAT="TPLAT"
+    PMAX="pmax"
+    PMIN="pmin"
     VM="VM"
 
     def __init__(self):
@@ -40,8 +40,9 @@ class DataBackend(Thread):
         self.settings[type(self).PEP]=0
         self.settings[type(self).FLOW]=0
         self.settings[type(self).TPLAT]=0
-        self.settings[type(self).Pmax]=0
-        self.settings[type(self).Pmin]=0
+        self.settings[type(self).PMIN]=0
+        self.settings[type(self).PMAX]=0
+        self.settings[type(self).VMIN]=0
 
     def set_handler(self, handler):
         self.handler=handler
@@ -99,10 +100,6 @@ class DataBackendFromFile(DataBackend):
                 self.handler.update_inputs(**{self.PCRETE:value})
             elif(key==self.TPLAT):
                 self.handler.update_inputs(**{self.PPLAT:value})
-            elif(key==self.Pmax):
-                self.handler.update_inputs(**{self.Pmax:value})
-            elif(key==self.Pmin):
-                self.handler.update_inputs(**{self.Pmin:value})
             
 
 class DataBackendDummy(DataBackend):
@@ -140,7 +137,3 @@ class DataBackendDummy(DataBackend):
                 self.handler.update_inputs(**{self.PCRETE:value})
             elif(key==self.TPLAT):
                 self.handler.update_inputs(**{self.PPLAT:value})
-            elif(key==self.Pmax):
-                self.handler.update_inputs(**{self.Pmax:value})
-            elif(key==self.Pmin):
-                self.handler.update_inputs(**{self.Pmin:value})
