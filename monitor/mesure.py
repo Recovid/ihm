@@ -32,8 +32,6 @@ class Mesure:
         self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
         self.canvas.update_idletasks()
 
-      		
-
 
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")

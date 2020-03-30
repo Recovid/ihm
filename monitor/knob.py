@@ -23,7 +23,7 @@ class Knob(UserInputHandler):
 
         self.font_size_value = int(self.height*0.2)#22
         self.font_size_unit = int(self.height*0.1)#10
-        self.font_size_title = int(self.height*0.15)#15
+        self.font_size_title = int(self.height*0.12)#15
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width)
         coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
@@ -38,7 +38,7 @@ class Knob(UserInputHandler):
                 font=("Helvetica", self.font_size_value),fill='white', text=str(0),tags='knob_value_text')
         self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
                 font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
-        self.canvas.create_text(int(self.width*0.5), int(self.height*0.98), anchor='s', \
+        self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
                 font=("Helvetica", self.font_size_title),fill='grey', text=self.title)
 
         self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
