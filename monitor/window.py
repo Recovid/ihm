@@ -207,7 +207,7 @@ class Window:
         
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
         self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=8, sticky=tk.N+tk.S+tk.E+tk.W)
-        matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution,blit=True)
+        self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution,blit=True)
 
         self.freeze_time=False
         self.delta_marker=None
