@@ -44,7 +44,7 @@ def data_frame(d):
     assert isinstance(d, Data)
     return checked_frame( \
         "DATA msec:%05d Vol_:%03d Deb_:%s%03d Paw_:%s%03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d" \
-        % (d.number, d.volume_ml, '-' if d.debit_lpm<0 else '+', d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
+        % (d.number % 100000, d.volume_ml, '-' if d.debit_lpm<0 else '+', d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
 
 if __name__ == '__main__':
     fr_pm = 25
