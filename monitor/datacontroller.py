@@ -71,7 +71,7 @@ class DataInputs:
         return self.index
 
     def make_index(self,timestamp):
-        if(timestamp-self.index_zero_time > self.xmax or self.unfreeze):
+        if(timestamp-self.index_zero_time >= self.xmax or self.unfreeze):
             self.index=0
             self.index_zero_time=timestamp
             self.unfreeze=False
