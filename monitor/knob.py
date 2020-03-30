@@ -5,7 +5,7 @@ from .userinputs import UserInputHandler
 
 class Knob(UserInputHandler):
     def __init__(self,app,userinputs, datamanager,unit,title):
-        self.value = 0.0
+        self.value = datamanager.value
         self.max_range = datamanager.vmax
         self.min_range = datamanager.vmin
         self.step = datamanager.step
@@ -48,6 +48,8 @@ class Knob(UserInputHandler):
                 font=("Helvetica", 12),fill='grey', text=self.max_range)        
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
+
+        self.update(self.value)
     
     def minus_handler(self, big=False):
         inc = 10 if big else 1

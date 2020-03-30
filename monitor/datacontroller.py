@@ -103,12 +103,12 @@ class DataController:
         self.inputs=None
         self.outputs={}
 
-        self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=22)
-        self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,0,1000,default=22, step=10)
-        self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,0,50,default=22)
-        self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,0,30,default=22)
-        self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,0,100,default=22)
-        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0,100,default=22)
+        self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=21)
+        self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,0,1000,default=500, step=10)
+        self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,0,50,default=15)
+        self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,0,30,default=5)
+        self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,0,100,default=60)
+        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0,100,default=0)
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)

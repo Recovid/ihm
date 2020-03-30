@@ -129,22 +129,22 @@ class Window:
 
         #VALEURS A Droite
  
-        self.m_fio2 = Mesure(self.app,0,'%','FiO2 %')
+        self.m_fio2 = Mesure(self.app,0,'%','FiO2')
         self.m_fio2.canvas.grid(row=1,column=9)
 
-        self.m_pep = Mesure(self.app,0,'mbar','PEP')
+        self.m_pep = Mesure(self.app,0,'cmH2O','PEP')
         self.m_pep.canvas.grid(row=1,column=10)
 
         self.m_fr = Mesure(self.app,0,'/min','FR')
         self.m_fr.canvas.grid(row=2,column=9)
 
-        self.m_pplat = Mesure(self.app,0,'mbar','Pplat')
+        self.m_pplat = Mesure(self.app,0,'cmH2O','Pplat')
         self.m_pplat.canvas.grid(row=2,column=10)
 
         self.m_vm = Mesure(self.app,0,'L/min','VM')
         self.m_vm.canvas.grid(row=3,column=9)
         
-        self.m_pcrete = Mesure(self.app,0,'mbar','Pcrete')
+        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete')
         self.m_pcrete.canvas.grid(row=3,column=10)
 
         self.m_vte = Mesure(self.app,0,'mL','VTe')
@@ -201,7 +201,7 @@ class Window:
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
-        self.scope_pressure=Scope(self.ax_pressure,"Pression","mBar",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
+        self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
         self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, self.data_controller.inputs.flow)
         self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, self.data_controller.inputs.volume)
         
