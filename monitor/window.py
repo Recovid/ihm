@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
-from .databackend import DataBackend, DataBackendDummy
+from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile
 from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager
 from .knob import Knob
 from .mesure import Mesure
@@ -118,6 +118,7 @@ class Window:
         self.uihandler = Window.UIHandler(self)
 
         self.data_backend = DataBackendDummy(100,100,500)
+        #self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
