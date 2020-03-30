@@ -40,11 +40,14 @@ class DataInputs:
         self.inputs = {}
         self.inputs[DataBackend.FIO2]=0
         self.inputs[DataBackend.PEP]=0
+        self.inputs[DataBackend.PEP_ALARM]=False
         self.inputs[DataBackend.FR]=0
         self.inputs[DataBackend.PPLAT]=0
         self.inputs[DataBackend.VM]=0
         self.inputs[DataBackend.PCRETE]=0
+        self.inputs[DataBackend.PCRETE_ALARM]=False
         self.inputs[DataBackend.VTE]=0
+        self.inputs[DataBackend.VTE_ALARM]=False
 
         self.changed=False
         self.handler = DataInputs.Handler(self)

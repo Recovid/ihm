@@ -66,6 +66,8 @@ class Mesure:
         self.unit = unit
         self.title = title
         self.userinputs=userinputs
+        self.alarm=False
+        self.alarm_switch=False
 
         self.width = int(app.winfo_screenwidth()*0.09)
         self.height = int(app.winfo_screenwidth()*0.09)
@@ -87,11 +89,29 @@ class Mesure:
             self.amax=AlarmValue(self, amax,userinputs,'se')
 
 
-    def update(self,value):
+    def update(self,value, alarm=False):
         self.value.set(value)
         self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
         self.canvas.update_idletasks()
+        if(self.alarm!=alarm):
+            self.set_alarm(alarm)
 
+    def set_alarm(self, on):
+        self.alarm=on
+        if on:
+            self.canvas.configure(background="#ff2026")
+            self.alarm_switch=False
+            self.update_alarm()
+        else:
+            self.canvas.configure(background="#edf0f6")
+            self.canvas.after_cancel(self.alarm_id)
+        self.canvas.update_idletasks()
+
+    def update_alarm(self):
+        self.alarm_switch = not self.alarm_switch
+        self.canvas.configure(background=  "#ff2026" if self.alarm_switch else "#edf0f6")
+        self.canvas.update_idletasks()
+        self.alarm_id=self.canvas.after(1000 if self.alarm_switch else 500,self.update_alarm)
 
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")

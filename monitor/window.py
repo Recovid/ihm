@@ -249,12 +249,12 @@ class Window:
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
             self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
-            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP])
+            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM])
-            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE])
-            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE])
+            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.inputs.inputs[DataBackend.PCRETE_ALARM])
+            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.inputs.inputs[DataBackend.VTE_ALARM])
         return (*lp,*lf,*lv)
 
     def run(self):

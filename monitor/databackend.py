@@ -15,15 +15,18 @@ class DataBackendHandler:
 
 class DataBackend(Thread):
     PEP="pep"
+    PEP_ALARM="pep_alarm"
     FIO2="fio2"
     VT="vt"
     FR="fr"
     FLOW="flow"
     TPLAT="tplat"
     VTE="vte"
+    VTE_ALARM="vte_alarm"
     VMIN="vmin"
     PPLAT="pplat"
     PCRETE="pcrete"
+    PCRETE_ALARM="pcrete_alarm"
     PMAX="pmax"
     PMIN="pmin"
     VM="VM"
@@ -126,14 +129,14 @@ class DataBackendDummy(DataBackend):
             self.settings[key]=value
             print(str(key), str(value))
             if(key==self.PEP):
-                self.handler.update_inputs(**{self.PEP:value})
+                self.handler.update_inputs(**{self.PEP:value,self.PEP_ALARM:value>10 })
             elif(key==self.FIO2):
                 self.handler.update_inputs(**{self.FIO2:value})
             elif(key==self.VT):
-                self.handler.update_inputs(**{self.VTE:value})
+                self.handler.update_inputs(**{self.VTE:value, self.VTE_ALARM:value<100})
             elif(key==self.FR):
                 self.handler.update_inputs(**{self.FR:value})
             elif(key==self.FLOW):
-                self.handler.update_inputs(**{self.PCRETE:value})
+                self.handler.update_inputs(**{self.PCRETE:value,self.PCRETE_ALARM:value>80})
             elif(key==self.TPLAT):
                 self.handler.update_inputs(**{self.PPLAT:value})
