@@ -3,6 +3,7 @@
 import time
 from threading import Thread
 import numpy as np
+import re
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -14,15 +15,20 @@ class DataBackendHandler:
 
 class DataBackend(Thread):
     PEP="pep"
+    PEP_ALARM="pep_alarm"
     FIO2="fio2"
     VT="vt"
     FR="fr"
     FLOW="flow"
     TPLAT="tplat"
     VTE="vte"
+    VTE_ALARM="vte_alarm"
+    VMIN="vmin"
     PPLAT="pplat"
     PCRETE="pcrete"
-    TPLAT="TPLAT"
+    PCRETE_ALARM="pcrete_alarm"
+    PMAX="pmax"
+    PMIN="pmin"
     VM="VM"
 
     def __init__(self):
@@ -37,6 +43,9 @@ class DataBackend(Thread):
         self.settings[type(self).PEP]=0
         self.settings[type(self).FLOW]=0
         self.settings[type(self).TPLAT]=0
+        self.settings[type(self).PMIN]=0
+        self.settings[type(self).PMAX]=0
+        self.settings[type(self).VMIN]=0
 
     def set_handler(self, handler):
         self.handler=handler
@@ -53,6 +62,47 @@ class DataBackend(Thread):
 
     def stop(self):
         self.running=False
+
+class DataBackendFromFile(DataBackend):
+    def __init__(self, inputFile):
+        DataBackend.__init__(self)
+        self.inputFile = inputFile
+
+    def run(self):
+        framePattern = re.compile("DATA msec:(.....) Vol_:(...) Deb_:(....) Paw_:(....) Fi02:(...) Vt__:(....) FR__:(..) PEP_:(..) DebM:(..) CS8_:(..)")
+        self.running=True
+        prevTimestamp = 0
+        toAdd = 0
+        with open(self.inputFile, "r") as f:
+            line = f.readline()
+            while line:
+                time.sleep(1.0/40)
+                res = framePattern.match(line)
+                if res:
+                    timestamp = int(res.group(1))
+                    if prevTimestamp > timestamp:
+                        toAdd += 100
+                    self.handler.update_timedata(toAdd + timestamp / 1000, int(res.group(4)), int(res.group(3)), int(res.group(2)))
+                    prevTimestamp = timestamp
+                line = f.readline()
+
+    def set_setting(self, key, value):
+        if(key in self.settings):
+            self.settings[key]=value
+            print(str(key), str(value))
+            if(key==self.PEP):
+                self.handler.update_inputs(**{self.PEP:value})
+            elif(key==self.FIO2):
+                self.handler.update_inputs(**{self.FIO2:value})
+            elif(key==self.VT):
+                self.handler.update_inputs(**{self.VTE:value})
+            elif(key==self.FR):
+                self.handler.update_inputs(**{self.FR:value})
+            elif(key==self.FLOW):
+                self.handler.update_inputs(**{self.PCRETE:value})
+            elif(key==self.TPLAT):
+                self.handler.update_inputs(**{self.PPLAT:value})
+            
 
 class DataBackendDummy(DataBackend):
    
@@ -78,14 +128,14 @@ class DataBackendDummy(DataBackend):
             self.settings[key]=value
             print(str(key), str(value))
             if(key==self.PEP):
-                self.handler.update_inputs(**{self.PEP:value})
+                self.handler.update_inputs(**{self.PEP:value,self.PEP_ALARM:value>10 })
             elif(key==self.FIO2):
                 self.handler.update_inputs(**{self.FIO2:value})
             elif(key==self.VT):
-                self.handler.update_inputs(**{self.VTE:value})
+                self.handler.update_inputs(**{self.VTE:value, self.VTE_ALARM:value<100})
             elif(key==self.FR):
                 self.handler.update_inputs(**{self.FR:value})
             elif(key==self.FLOW):
-                self.handler.update_inputs(**{self.PCRETE:value})
+                self.handler.update_inputs(**{self.PCRETE:value,self.PCRETE_ALARM:value>80})
             elif(key==self.TPLAT):
                 self.handler.update_inputs(**{self.PPLAT:value})

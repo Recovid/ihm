@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
-from .databackend import DataBackend, DataBackendDummy
+from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile
 from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager
 from .knob import Knob
 from .mesure import Mesure
@@ -102,8 +102,8 @@ class Window:
 
         self.ws = self.app.winfo_screenwidth()
         self.hw = self.app.winfo_screenheight()
-        # self.ws = 600
-        # self.hw = 400
+        self.ws = 800
+        self.hw = 480
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -118,6 +118,7 @@ class Window:
         self.uihandler = Window.UIHandler(self)
 
         self.data_backend = DataBackendDummy(100,100,500)
+        #self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
@@ -144,18 +145,18 @@ class Window:
         self.m_vm = Mesure(self.app,0,'L/min','VM')
         self.m_vm.canvas.grid(row=3,column=9)
         
-        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete')
+        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', amin=self.data_controller.outputs[DataBackend.PMIN], amax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
         self.m_pcrete.canvas.grid(row=3,column=10)
 
-        self.m_vte = Mesure(self.app,0,'mL','VTe')
+        self.m_vte = Mesure(self.app,0,'mL','VTe', amin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
         self.m_vte.canvas.grid(row=4,column=9)
-    
+
         #BOUTONS EN BAS
      
         btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
         btn1.canvas.grid(row=5,column=2)
         
-        btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT')
+        btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT/vte')
         btn2.canvas.grid(row=5,column=3)
 
         btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
@@ -198,7 +199,7 @@ class Window:
 
         #Graph Init 
 
-        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
+        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(int(self.ws*0.006),int(self.hw*0.01)))
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
         self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
@@ -207,7 +208,7 @@ class Window:
         
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
         self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=8, sticky=tk.N+tk.S+tk.E+tk.W)
-        matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution,blit=True)
+        self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution * 1000,blit=True)
 
         self.freeze_time=False
         self.delta_marker=None
@@ -248,12 +249,12 @@ class Window:
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
             self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
-            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP])
+            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM])
-            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE])
-            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE])
+            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.inputs.inputs[DataBackend.PCRETE_ALARM])
+            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.inputs.inputs[DataBackend.VTE_ALARM])
         return (*lp,*lf,*lv)
 
     def run(self):

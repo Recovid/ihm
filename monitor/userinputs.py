@@ -44,8 +44,10 @@ class KeyboardUserInputManager(UserInputManager):
 class ButtonUserInputManager():
     def __init__(self,app):
         UserInputManager.__init__(self)
-        self.width = int(app.winfo_screenwidth()*0.2)
-        self.height = int(app.winfo_screenheight()*0.09)
+        # self.width = int(app.winfo_screenwidth()*0.2)
+        # self.height = int(app.winfo_screenheight()*0.09)
+        self.width = int(800*0.2)
+        self.height = int(480*0.09)
 
         self.font_size = int(self.height*0.35)
 

@@ -12,10 +12,10 @@ class Button():
          
         self.width = int(app.winfo_screenwidth()*0.09)
         self.height = int(app.winfo_screenheight()*0.09)
-        # self.width = int(800*0.09) #150
-        # self.height = int(600*0.09) #100
+        self.width = int(800*0.09) #150
+        self.height = int(480*0.09) #100
 
-        self.font_size = int(self.height*0.16)
+        self.font_size = int(self.height*0.22)
         
         
 

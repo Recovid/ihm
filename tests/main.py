@@ -1,6 +1,7 @@
 import math
 import io
 import os
+import sys
 
 class Data: # TODO move to communication.py
     number = -1 # invalid
@@ -44,12 +45,14 @@ def data_frame(d):
     assert isinstance(d, Data)
     return checked_frame( \
         "DATA msec:%05d Vol_:%03d Deb_:%s%03d Paw_:%s%03d Fi02:%03d Vt__:%04d FR__:%02d PEP_:%02d DebM:%02d" \
-        % (d.number, d.volume_ml, '-' if d.debit_lpm<0 else '+', d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
+        % (d.number % 100000, d.volume_ml, '-' if d.debit_lpm<0 else '+', d.debit_lpm, '-' if d.paw_mbar<0 else '+', abs(d.paw_mbar), d.fio2_pct, d.vt_ml, d.fr_pm, d.pep_mbar, d.debit_max_lpm))
 
 if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print ("Usage: main.py time(ms)")
     fr_pm = 25
     fr_hz = fr_pm / 60 # sec
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     with io.open('nominal_cycle.txt','w') as nominal_cycle:
-        for t_ms in range(0, int(1000/fr_hz), int(1000/fr_pm)):
+        for t_ms in range(0, int(sys.argv[1]), int(1000/fr_pm)):
             nominal_cycle.write(data_frame(nominal_data(t_ms, fr_hz)))
