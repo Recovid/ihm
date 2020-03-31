@@ -18,8 +18,8 @@ class Knob(UserInputHandler):
       
         self.width = int(app.winfo_screenwidth()*0.1)
         self.height = int(app.winfo_screenwidth()*0.1)#120
-        # self.width = int(800*0.1)
-        # self.height = int(800*0.1)#120
+        self.width = int(800*0.09)
+        self.height = int(800*0.09)#120
 
         self.font_size_value = int(self.height*0.2)#22
         self.font_size_unit = int(self.height*0.1)#10

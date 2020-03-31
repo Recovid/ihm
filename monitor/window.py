@@ -102,8 +102,8 @@ class Window:
 
         self.ws = self.app.winfo_screenwidth()
         self.hw = self.app.winfo_screenheight()
-        # self.ws = 600
-        # self.hw = 400
+        self.ws = 800
+        self.hw = 480
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -199,7 +199,7 @@ class Window:
 
         #Graph Init 
 
-        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
+        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(int(self.ws*0.006),int(self.hw*0.01)))
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
         self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)

@@ -85,11 +85,11 @@ class Mesure:
 
         self.width = int(app.winfo_screenwidth()*0.09)
         self.height = int(app.winfo_screenwidth()*0.09)
-        # self.width = int(800*0.09)
-        # self.height = int(600*0.09)
+        self.width = int(800*0.1)
+        self.height = self.width
 
         self.font_size_value = int(self.height*0.4)
-        self.font_size_unit = int(self.height*0.1)
+        self.font_size_unit = int(self.height*0.15)
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg="#edf0f6")
         
