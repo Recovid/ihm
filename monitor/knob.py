@@ -18,8 +18,8 @@ class Knob(UserInputHandler):
       
         self.width = int(app.winfo_screenwidth()*0.1)
         self.height = int(app.winfo_screenwidth()*0.1)#120
-        self.width = int(800*0.09)
-        self.height = int(800*0.09)#120
+        self.width = 1 #int(800*0.09)
+        self.height = 1 #int(800*0.09)#120
 
         self.font_size_value = int(self.height*0.2)#22
         self.font_size_unit = int(self.height*0.1)#10
@@ -34,23 +34,39 @@ class Knob(UserInputHandler):
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
         self.circle = self.canvas.create_oval(coord, fill="grey", width=2,tags='knob_circle')
 
-        self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
+        self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
                 font=("Helvetica", self.font_size_value),fill='white', text=str(0),tags='knob_value_text')
-        self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
-                font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
-        self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
-                font=("Helvetica", self.font_size_title),fill='grey', text=self.title)
+        #self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
+        #        font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
+        #self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
+        #        font=("Helvetica", self.font_size_title),fill='grey', text=self.title)
 
-        self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
-                font=("Helvetica", 12),fill='grey', text=self.min_range)
+        #self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
+        #        font=("Helvetica", 12),fill='grey', text=self.min_range)
 
-        self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
-                font=("Helvetica", 12),fill='grey', text=self.max_range)        
+        #self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
+        #        font=("Helvetica", 12),fill='grey', text=self.max_range)        
         
+        self.canvas.bind('<Configure>',self.configure)
         self.canvas.bind('<ButtonPress-1>',self.onClick)
 
         self.update(self.value)
     
+    def configure(self,event):
+        self.width = int(self.canvas.winfo_width())
+        self.height = int(self.canvas.winfo_height())
+        coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
+        self.canvas.coords(self.arc_green,coord)
+        self.canvas.coords(self.arc_grey,coord)
+        coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
+        self.canvas.coords(self.circle,coord)
+
+        font_size = int(self.width*0.2)
+        self.canvas.coords(self.textid,(int(self.width*0.5),int(self.height*0.5)))
+        self.canvas.itemconfig(self.textid, font=("Helvetica",font_size))
+        
+
+
     def minus_handler(self, big=False):
         inc = 10 if big else 1
         self.update(self.value-self.step*inc)

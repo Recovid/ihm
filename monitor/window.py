@@ -20,8 +20,8 @@ class Scope:
         self.xstep=xstep
         self.ax=ax
         # self.ax.set_title(title,loc='left')
-        self.ax.set_title(title, x=0.46, y=1.0)
-        self.ax.set_ylabel(ylabel)
+        #self.ax.set_title(title, x=0.46, y=1.0)
+        self.ax.set_ylabel(title+'\n'+ylabel)
         self.ax.set_xlim(xlim)
         self.ax.set_ylim(self.handler.get_range())
 
@@ -98,22 +98,24 @@ class Window:
 
         self.app = tk.Tk()
 
-        self.app.attributes("-fullscreen", True)
-
-        self.ws = self.app.winfo_screenwidth()
-        self.hw = self.app.winfo_screenheight()
+        #self.app.attributes("-fullscreen", True)
         self.ws = 800
         self.hw = 480
+        self.app.geometry("%dx%d"% (self.ws , self.hw))
+        #self.ws = self.app.winfo_width()
+        #self.hw = self.app.winfo_height()
         
         print('ws:',self.ws,' hw:',self.hw)
 
         self.app.wm_title("Graphe Matplotlib dans Tkinter")
-        tk.Grid.rowconfigure(self.app, 6, weight=1)
-        tk.Grid.columnconfigure(self.app, 12, weight=1)
+        for i in range(6):
+            tk.Grid.rowconfigure(self.app, i, weight=1, minsize=self.hw/6 if i>0 else self.hw/6/2)
+        for i in range(9):
+            tk.Grid.columnconfigure(self.app, i, weight=1, minsize=self.ws/9)
         
         # Bouton --/-/+/++
         self.userinputs = ButtonUserInputManager(self.app)
-        self.userinputs.canvas.grid(row=5,column=9,columnspan=2)
+        self.userinputs.canvas.grid(row=5,column=6,columnspan=2, sticky="news")
         
         self.uihandler = Window.UIHandler(self)
 
@@ -122,68 +124,70 @@ class Window:
         self.data_controller = DataController(self.data_backend)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
+        stickyall=tk.N+tk.S+tk.E+tk.W
         #TITLE
-        self.title_frame = tk.Frame(self.app,height=int(self.hw*0.1),width=self.ws, \
-            bg='#4E69AB').grid(row=0,column=0,columnspan=12)
-        self.title = tk.Label(self.title_frame, font=("Helvetica", 22),text='RECOVID', \
-            anchor='nw', fg='white',bg='#4E69AB').grid(row=0,column=5)
+        self.title_frame = tk.Frame(self.app, \
+            bg='#4E69AB').grid(row=0,column=0,columnspan=9)
+        self.title = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)),text='RECOVID', \
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=9, sticky=stickyall)
 
         #VALEURS A Droite
  
         self.m_fio2 = Mesure(self.app,0,'%','FiO2')
-        self.m_fio2.canvas.grid(row=1,column=9)
+        #self.m_fio2.grid(row=1,column=6, sticky="senw")
+        self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
         self.m_pep = Mesure(self.app,0,'cmH2O','PEP')
-        self.m_pep.canvas.grid(row=1,column=10)
+        self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
 
         self.m_fr = Mesure(self.app,0,'/min','FR')
-        self.m_fr.canvas.grid(row=2,column=9)
+        self.m_fr.canvas.grid(row=2,column=6, sticky="senw")
 
         self.m_pplat = Mesure(self.app,0,'cmH2O','Pplat')
-        self.m_pplat.canvas.grid(row=2,column=10)
+        self.m_pplat.canvas.grid(row=2,column=7, sticky="senw")
 
         self.m_vm = Mesure(self.app,0,'L/min','VM')
-        self.m_vm.canvas.grid(row=3,column=9)
+        self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
         self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', amin=self.data_controller.outputs[DataBackend.PMIN], amax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
-        self.m_pcrete.canvas.grid(row=3,column=10)
+        self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
         self.m_vte = Mesure(self.app,0,'mL','VTe', amin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
-        self.m_vte.canvas.grid(row=4,column=9)
+        self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
      
         btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
-        btn1.canvas.grid(row=5,column=2)
+        btn1.canvas.grid(row=5,column=0, sticky="senw")
         
         btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT/vte')
-        btn2.canvas.grid(row=5,column=3)
+        btn2.canvas.grid(row=5,column=1, sticky="senw")
 
         btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
-        btn3.canvas.grid(row=5,column=4)
+        btn3.canvas.grid(row=5,column=2, sticky="senw")
 
         btn4 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
-        btn4.canvas.grid(row=5,column=5)
+        btn4.canvas.grid(row=5,column=3, sticky="senw")
 
         btn5 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit')
-        btn5.canvas.grid(row=5,column=6)
+        btn5.canvas.grid(row=5,column=4, sticky="senw")
 
         btn6 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
-        btn6.canvas.grid(row=5,column=7)
+        btn6.canvas.grid(row=5,column=5, sticky="senw")
 
         #Boutons Pause
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
-            height=int(self.hw*0.9)).grid(column=11,row=1,rowspan=5)
+            height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
         self.bt_freeze = Button(self.app,0,"Geler courbes", "Resume")
-        self.bt_freeze.canvas.grid(row=1,column=11)
+        self.bt_freeze.canvas.grid(row=1,column=8,sticky=stickyall)
         
 
         self.bt_si = Button(self.app,1,"Pause Inspi")
-        self.bt_si.canvas.grid(row=2,column=11)
+        self.bt_si.canvas.grid(row=2,column=8, sticky="senw")
 
         self.bt_se = Button(self.app ,2,"Pause Expi")
-        self.bt_se.canvas.grid(row=3,column=11)
+        self.bt_se.canvas.grid(row=3,column=8, sticky="senw")
 
         self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze)
         self.bt_freeze.canvas.bind('<ButtonRelease-1>', None)
@@ -194,12 +198,13 @@ class Window:
         self.bt_se.canvas.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.canvas.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
 
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=11)
-
+        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
+        self.app.bind('<Control-q>', lambda event: self.app.quit())
 
         #Graph Init 
 
-        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(int(self.ws*0.006),int(self.hw*0.01)))
+        self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(3,4))
+        #self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
         self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
@@ -207,7 +212,7 @@ class Window:
         self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, self.data_controller.inputs.volume)
         
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
-        self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=8, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
         self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution * 1000,blit=True)
 
         self.freeze_time=False

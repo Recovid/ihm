@@ -44,10 +44,8 @@ class KeyboardUserInputManager(UserInputManager):
 class ButtonUserInputManager():
     def __init__(self,app):
         UserInputManager.__init__(self)
-        # self.width = int(app.winfo_screenwidth()*0.2)
-        # self.height = int(app.winfo_screenheight()*0.09)
-        self.width = int(800*0.2)
-        self.height = int(480*0.09)
+        self.width = 1 # int(app.winfo_screenwidth()*0.2)
+        self.height = 1 #int(app.winfo_screenheight()*0.09)
 
         self.font_size = int(self.height*0.35)
 
@@ -67,6 +65,18 @@ class ButtonUserInputManager():
         
         self.canvas.bind('<ButtonPress-1>',self.onClick)
         self.canvas.bind('<ButtonRelease-1>',self.onUnClick)
+        self.canvas.bind('<Configure>',self.configure)
+    
+    def configure(self,event):
+        self.width = int(self.canvas.winfo_width())
+        self.height = int(self.canvas.winfo_height())
+        self.font_size=int(self.width*0.10)
+        for i in range(0,4):
+            coords = int(self.width*i/4),int(self.height*0.0),int((i+1)*self.width/4),int(self.height)
+            self.canvas.coords(self.ids_frame[i],coords)
+            self.canvas.coords(self.ids_text[i],(int(coords[0]+self.width/8),int(self.height/2)))
+            self.canvas.itemconfig(self.ids_text[i], font=("Helvetica",self.font_size))
+    
     def select(self, handler, arrows=False):
         UserInputManager.select(self,handler)
         if(handler is not None):
