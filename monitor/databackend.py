@@ -82,7 +82,6 @@ class DataBackendFromFile(DataBackend):
                     timestamp = int(res.group(1))
                     if prevTimestamp > timestamp:
                         toAdd += 100
-                    print(toAdd + timestamp / 1000, int(res.group(4)), int(res.group(3)), int(res.group(2)))
                     self.handler.update_timedata(toAdd + timestamp / 1000, int(res.group(4)), int(res.group(3)), int(res.group(2)))
                     prevTimestamp = timestamp
                 line = f.readline()
