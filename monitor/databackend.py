@@ -4,6 +4,7 @@ import time
 from threading import Thread
 import numpy as np
 import re
+from .communication import *
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -69,40 +70,31 @@ class DataBackendFromFile(DataBackend):
         self.inputFile = inputFile
 
     def run(self):
-        framePattern = re.compile("DATA msec:(.....) Vol_:(...) Deb_:(....) Paw_:(....) Fi02:(...) Vt__:(....) FR__:(..) PEP_:(..) DebM:(..) CS8_:(..)")
         self.running=True
         prevTimestamp = 0
         toAdd = 0
         with open(self.inputFile, "r") as f:
-            line = f.readline()
-            while line:
-                time.sleep(1.0/40)
-                res = framePattern.match(line)
-                if res:
-                    timestamp = int(res.group(1))
+            for line in f:
+                time.sleep(1.0/40) # TODO: wait for the actual timestamps in the trace
+                msg = parse_msg(line)
+                if isinstance(msg, DataMsg):
+                    timestamp = msg.time_data.timestamp_ms
                     if prevTimestamp > timestamp:
                         toAdd += 100
-                    self.handler.update_timedata(toAdd + timestamp / 1000, int(res.group(4)), int(res.group(3)), int(res.group(2)))
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.time_data.paw_mbar, msg.time_data.debit_lpm, msg.time_data.volume_ml)
+                    if msg.input_data:
+                        self.handler.update_inputs(**{
+                            self.FIO2: msg.input_data.fio2_pct,
+                            self.VT: msg.input_data.vt_ml,
+                            self.FR: msg.input_data.fr_pm,
+                            self.PEP: msg.input_data.pep_mbar,
+                            self.PCRETE: msg.input_data.pep_mbar,
+                            self.PPLAT: msg.input_data.pplat_mbar,
+                        })
                     prevTimestamp = timestamp
-                line = f.readline()
 
     def set_setting(self, key, value):
-        if(key in self.settings):
-            self.settings[key]=value
-            print(str(key), str(value))
-            if(key==self.PEP):
-                self.handler.update_inputs(**{self.PEP:value})
-            elif(key==self.FIO2):
-                self.handler.update_inputs(**{self.FIO2:value})
-            elif(key==self.VT):
-                self.handler.update_inputs(**{self.VTE:value})
-            elif(key==self.FR):
-                self.handler.update_inputs(**{self.FR:value})
-            elif(key==self.FLOW):
-                self.handler.update_inputs(**{self.PCRETE:value})
-            elif(key==self.TPLAT):
-                self.handler.update_inputs(**{self.PPLAT:value})
-            
+        pass # settings do nothing for a trace file
 
 class DataBackendDummy(DataBackend):
    
