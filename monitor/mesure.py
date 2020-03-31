@@ -12,29 +12,30 @@ class AlarmValue(UserInputHandler):
         self.mesure=mesure
         self.datamanager=datamanager
         self.userinputs=userinputs
-        font = tkfont.Font(family="Helvetica", size=self.mesure.font_size_unit, weight="normal")
-        font_title = tkfont.Font(family="Helvetica", size=int(self.mesure.font_size_unit*0.8), weight="normal")
-        th = font.metrics('linespace')
-        tw = font.measure(str(self.datamanager.value))
-        rs=0.25
-        text_value = "min:"
-        rect_coord=(0,int(self.mesure.height*(1-rs)), int(self.mesure.width*1.5*rs), int(self.mesure.height))
+        self.font = tkfont.Font(family="Helvetica", size=int(self.mesure.height*0.1), weight="normal")
+        font_title = tkfont.Font(family="Helvetica", size=int(self.mesure.height*0.08), weight="normal")
+        th = self.font.metrics('linespace')
+        tw = self.font.measure(str(self.datamanager.value))
+        th_title = font_title.metrics('linespace')
+        tw_title = font_title.measure('max')
+        rs_h=0.25
+        self.rs_w=0.30
+        text_value = "min"
+        self.rect_coord=(0,int(self.mesure.height*(1-rs_h)), int(self.mesure.width*self.rs_w), int(self.mesure.height))
         if(anchor=='se'):
-            rect_coord=(int(self.mesure.width*(1-(rs*1.5))),int(self.mesure.height*(1-rs)), int(self.mesure.width), int(self.mesure.height))
-        text_coord=((int((self.mesure.width*rs)-tw)/2), int(self.mesure.height-(self.mesure.height*rs-th)/2))
-        if(anchor=='se'):
-            text_coord=((int(self.mesure.width-(self.mesure.width*rs-tw)/2)), int(self.mesure.height-(self.mesure.height*rs-th)/2))
-            text_value = "max:"
-        self.rect = self.mesure.canvas.create_rectangle(rect_coord,tags=anchor, fill='#c16666')
-        print(text_coord)
+            self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-rs_h)), int(self.mesure.width), int(self.mesure.height))
+            text_value = "max"
+        text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), self.rect_coord[3])
+        text_title_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw_title)/2), self.rect_coord[1])
+        self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=anchor, fill='#c16666')
         self.text_title = self.mesure.canvas.create_text( \
-                (text_coord[0],int(text_coord[1]*0.9)), \
-                anchor=anchor, \
+                text_title_coord, \
+                anchor='nw', \
         		font=font_title,fill='black', text=text_value, tags=anchor)
         self.text = self.mesure.canvas.create_text(\
-            (text_coord[0],int(text_coord[1])*1.03), \
-                anchor=anchor, \
-        		font=font,fill='black', text=str(self.datamanager.value), tags=anchor)
+                text_coord, \
+                anchor='sw', \
+        	font=self.font,fill='black', text=str(self.datamanager.value), tags=anchor)
         self.mesure.canvas.tag_bind(anchor,'<1>', self.click)
         self.value=datamanager.value
 
@@ -63,6 +64,9 @@ class AlarmValue(UserInputHandler):
         self.update()
 
     def update(self):
+        tw = self.font.measure(str(self.value))
+        text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), self.rect_coord[3])
+        self.mesure.canvas.coords(self.text, text_coord)
         self.mesure.canvas.itemconfig(self.text, text=str(self.value))
         self.mesure.canvas.update_idletasks()
 
