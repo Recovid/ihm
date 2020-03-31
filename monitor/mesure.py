@@ -13,17 +13,27 @@ class AlarmValue(UserInputHandler):
         self.datamanager=datamanager
         self.userinputs=userinputs
         font = tkfont.Font(family="Helvetica", size=self.mesure.font_size_unit, weight="normal")
+        font_title = tkfont.Font(family="Helvetica", size=int(self.mesure.font_size_unit*0.8), weight="normal")
         th = font.metrics('linespace')
         tw = font.measure(str(self.datamanager.value))
         rs=0.25
-        rect_coord=(0,int(self.mesure.height*(1-rs)), int(self.mesure.width*rs), int(self.mesure.height))
+        text_value = "min:"
+        rect_coord=(0,int(self.mesure.height*(1-rs)), int(self.mesure.width*1.5*rs), int(self.mesure.height))
         if(anchor=='se'):
-            rect_coord=(int(self.mesure.width*(1-rs)),int(self.mesure.height*(1-rs)), int(self.mesure.width), int(self.mesure.height))
+            rect_coord=(int(self.mesure.width*(1-(rs*1.5))),int(self.mesure.height*(1-rs)), int(self.mesure.width), int(self.mesure.height))
         text_coord=((int((self.mesure.width*rs)-tw)/2), int(self.mesure.height-(self.mesure.height*rs-th)/2))
         if(anchor=='se'):
             text_coord=((int(self.mesure.width-(self.mesure.width*rs-tw)/2)), int(self.mesure.height-(self.mesure.height*rs-th)/2))
-        self.rect = self.mesure.canvas.create_rectangle(rect_coord,tags=anchor, fill='blue')
-        self.text = self.mesure.canvas.create_text(text_coord, anchor=anchor, \
+            text_value = "max:"
+        self.rect = self.mesure.canvas.create_rectangle(rect_coord,tags=anchor, fill='#c16666')
+        print(text_coord)
+        self.text_title = self.mesure.canvas.create_text( \
+                (text_coord[0],int(text_coord[1]*0.9)), \
+                anchor=anchor, \
+        		font=font_title,fill='black', text=text_value, tags=anchor)
+        self.text = self.mesure.canvas.create_text(\
+            (text_coord[0],int(text_coord[1])*1.03), \
+                anchor=anchor, \
         		font=font,fill='black', text=str(self.datamanager.value), tags=anchor)
         self.mesure.canvas.tag_bind(anchor,'<1>', self.click)
         self.value=datamanager.value
@@ -39,7 +49,7 @@ class AlarmValue(UserInputHandler):
         self.mesure.canvas.itemconfig(self.rect,fill='red')
     def unselected_handler(self):
         self.selected=False
-        self.mesure.canvas.itemconfig(self.rect,fill='blue')
+        self.mesure.canvas.itemconfig(self.rect,fill='#c16666')
         self.value=self.datamanager.value
         self.update()
 
