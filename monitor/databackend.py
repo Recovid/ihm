@@ -77,22 +77,22 @@ class DataBackendFromFile(DataBackend):
             for line in f:
                 msg = parse_msg(line)
                 if isinstance(msg, DataMsg):
-                    timestamp = msg.time_data.timestamp_ms
+                    timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:
                         toAdd += 100
                     else: # do not wait when the timestamp overflow
                         time.sleep((timestamp - prevTimestamp)/1000)
-                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.time_data.paw_mbar, msg.time_data.debit_lpm, msg.time_data.volume_ml)
-                    if msg.input_data:
-                        self.handler.update_inputs(**{
-                            self.FIO2: msg.input_data.fio2_pct,
-                            self.VT: msg.input_data.vt_ml,
-                            self.FR: msg.input_data.fr_pm,
-                            self.PEP: msg.input_data.pep_mbar,
-                            self.PCRETE: msg.input_data.pep_mbar,
-                            self.PPLAT: msg.input_data.pplat_mbar,
-                        })
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
                     prevTimestamp = timestamp
+                elif isinstance(msg, RespMsg):
+                    self.handler.update_inputs(**{
+                        self.FIO2: msg.fio2_pct,
+                        self.VT: msg.vt_ml,
+                        self.FR: msg.fr_pm,
+                        self.PEP: msg.pep_mbar,
+                        self.PCRETE: msg.pep_mbar,
+                        self.PPLAT: msg.pplat_mbar,
+                    })
 
     def set_setting(self, key, value):
         pass # settings do nothing for a trace file
