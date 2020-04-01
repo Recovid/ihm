@@ -2,6 +2,7 @@
 
 import re
 import sys
+from .data import Data
 
 class DataMsg:
     args_pattern = re.compile('^msec_:(\d{5}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
@@ -47,6 +48,18 @@ class RespMsg:
 
 class SetMsg:
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')
+    SETTINGS = [ # (setting key, serial string, number of digits)
+        (Data.PEP, "PEP__", 2),
+        (Data.FIO2, "FiO2_", 3),
+        (Data.VT, "Vt___", 4),
+        (Data.FR, "FR___", 2),
+        (Data.TPLAT, "TPLAT", 3),
+        (Data.PCRETE, "PIF__", 2),
+        (Data.VMIN, "VTMIN", 4),
+        (Data.PMAX, "PMAX_", 3),
+        (Data.PMIN, "PMIN_", 3),
+        (Data.FLOW, "FIXME", 3), # TODO: remove, not real a setting
+    ]
 
     def __init__(self, setting, value):
         self.setting = setting
@@ -55,14 +68,22 @@ class SetMsg:
     def with_args(args_str):
         match = re.match(SetMsg.args_pattern, args_str)
         if not match:
-            print("failed to parse SET_ message", file=sys.stderr)
+            print("failed to parse SET_ message:", args_str, file=sys.stderr)
             return None
-        # TODO: check setting is valid
-        return SetMsg(match.group(1), int(match.group(2)))
+        for k, s, n in SetMsg.SETTINGS:
+            if s == match.group(1):
+                # TODO: check number of digits (len(match.group(2)) == n)
+                return SetMsg(k, int(match.group(2)))
+
+        print("unknown setting:", s, file=sys.stderr)
+        return None
 
     def __str__(self):
-        # TODO: fixed number of digits
-        return 'SET_ %s:%d' % (self.setting, self.value)
+        for k, s, n in SetMsg.SETTINGS:
+            if self.setting == k:
+                # TODO: check self.value fits on n digits
+                return ('SET_ %s:%0{}d'.format(n)) % (s, self.value)
+        assert False, "unknown setting: " + self.setting
 
 class AlarmMsg:
     def __init__(self, text):
@@ -93,6 +114,9 @@ class AckSetMsg:
         set_msg = SetMsg.with_args(args_str)
         return AckSetMsg(set_msg) if set_msg else None
 
+    def __str__(self):
+        return 'RSET' + str(self.set_msg)[4:]
+
 class AckAlarmMsg:
     def __init__(self, alarm_msg):
         self.alarm_msg = alarm_msg
@@ -100,6 +124,9 @@ class AckAlarmMsg:
     def with_args(args_str):
         alarm_msg = SetMsg.with_args(args_str)
         return AckSetMsg(alarm_msg) if alarm_msg else None
+
+    def __str__(self):
+        return 'RALM' + str(self.alarm_msg)[4:]
 
 class BeepMsg:
     args_pattern = re.compile('^dur__:(\d{5})$')
@@ -175,7 +202,7 @@ def parse_msg(msg_str):
         'INIT': InitMsg.with_args,
     }
     if id_ not in ctors:
-        print("unknown message id", file=sys.stderr)
+        print("unknown message id:", id_, file=sys.stderr)
         return None
     return ctors[id_](msg_str[5:-8])
 

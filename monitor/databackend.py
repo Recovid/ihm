@@ -5,6 +5,7 @@ from threading import Thread
 import numpy as np
 import re
 from .communication import *
+from .data import Data
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -14,24 +15,7 @@ class DataBackendHandler:
         pass
 
 
-class DataBackend(Thread):
-    PEP="pep"
-    PEP_ALARM="pep_alarm"
-    FIO2="fio2"
-    VT="vt"
-    FR="fr"
-    FLOW="flow"
-    TPLAT="tplat"
-    VTE="vte"
-    VTE_ALARM="vte_alarm"
-    VMIN="vmin"
-    PPLAT="pplat"
-    PCRETE="pcrete"
-    PCRETE_ALARM="pcrete_alarm"
-    PMAX="pmax"
-    PMIN="pmin"
-    VM="VM"
-
+class DataBackend(Data, Thread):
     def __init__(self):
         Thread.__init__(self)
 
