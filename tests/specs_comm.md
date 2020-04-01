@@ -1,24 +1,25 @@
 Spécification des trames de communication basées sur le CdC :
 https://github.com/Recovid/Documentation/wiki/01-Cahier-des-charges
 
+# Communication
+
 Canal de communication : port série sur USB.
 Un débit type teensy pour Serial sur USB est de 12MBit/s soit 50Ko @ 30FPS ( d'après https://www.pjrc.com/teensy/td_serial.html )
+
+# Structure générale
 
 Un format texte pour faciliter la mise au point en considérant qu'on aura pas besoin de compacifier les trames. Pour plus de sûreté et pour simplifier la mise au point, on choisi :
 - des trames de taille variable dont le 2 dernier champ est un checksum (voir ci dessous) suivant d'un '\n' (newline)
 - des champs séparés par ' ' (espace)
 - des donnees précédées d'un label sur 4 caractères qui identifie la donnée, son étendue (fixe) en nb de caractères et son unité
 
-____________________________________________________________________
-A. Controller > IHM
+# Controller > IHM
 
-
-A.1. Acquittement des réglages
+## Acquittement des réglages
 
 idem §B.1. avec la valeur appliquée (qui pourrait être différente en cas de prb comm ou matériel)
 
-
-A.2. Données
+## Données
 
 On s'attends à recevoir @ 25 FPS les dernières valeurs de chaque variable calculée par le Controller avec un identifiant et un CRC (à spécifier) pour diagnostiquer d'éventuels problèmes de communication.
 
@@ -49,8 +50,8 @@ Exemples:
 DATA msec:12300 Vol_:462 Deb_:+051.0 Paw_:+053.0 Fi02:040 Vt__:0800 FR___:20 PEP_:10 DebM:60 CS8_:C5\n
 DATA msec:12400 Vol_:464 Deb_:+051.5 Paw_:+053.6 Fi02:040 Vt__:0800 FR___:20 PEP_:10 DebM:60 CS8_:C7\n
 
+## Alarmes
 
-A.3. Alarmes 
 envoye toute les xms (100ms?) jusqu'a acknowledge
 'ALRM' : texte de taille variable terminé par '\0' suivi d'un champ cheksum (cf A.2)
 textes d'alarmes connues :
@@ -64,7 +65,8 @@ Specification sprintf:
 Exemple:
 ALRM Pression insufflation < seuil minimum\0 CS8_:D8\n
 
-A.4. Acknowledge Setting
+## Acknowledge Setting
+
 On s'attends a recevoir les réglages (validés par l'IHM) 1 par 1 de manière épisodique avec un identifiant et un CRC (à spécifier).
 envoye a chaque reception d'un setting
 
@@ -77,11 +79,10 @@ envoye a chaque reception d'un setting
 
 Exemple:
 SET_ Vt__:0550 CS8_:1A\n
-____________________________________________________________________
-B. IHM > Controller
 
+# IHM > Controller
 
-B.1. Réglages
+## Réglages
 
 On s'attends a recevoir les réglages (validés par l'IHM) 1 par 1 de manière épisodique avec un identifiant et un CRC (à spécifier).
 envoye toute les xms (100ms?) jusqu'a acknowledge
@@ -100,13 +101,10 @@ reglage d'alarme
 'PMIN_' (Pression Minimum inspiration) : 00.0..99.9 (cmH2O) 
 'VTMIN' (Volume Minimum inspiration) : 0200..1000 (mL)
 
-
-
 Exemple:
 SET_ Vt__:0550 CS8_:1A\n
 
-
-B.2. Pauses
+## Pauses
 
 'P_INS' (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
 
@@ -115,7 +113,8 @@ B.2. Pauses
 Exemple:
 P_INS 10 CS8_:2F\n
 
-B.3. Acknowledge Alarmes 
+## Acknowledge Alarmes
+
 envoye a chaque reception d'un message d'alarmes
 'RALM' : texte de taille variable terminé par '\0' suivi d'un champ cheksum (cf A.2)
 textes d'alarmes connues :
@@ -128,5 +127,3 @@ Specification sprintf:
 
 Exemple:
 RALM Pression insufflation < seuil minimum\0 CS8_:D8\n
-
-
