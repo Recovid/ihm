@@ -97,6 +97,42 @@ class DataBackendFromFile(DataBackend):
     def set_setting(self, key, value):
         pass # settings do nothing for a trace file
 
+class SerialPortMock(DataBackend):
+    def __init__(self, inputPipe, outputPipe):
+        DataBackend.__init__(self)
+        self.inputPipe = inputPipe
+        self.outputPipe = open(outputPipe, "w")
+
+    def run(self):
+        self.running=True
+        prevTimestamp = 0
+        toAdd = 0
+        with open(self.inputPipe, "r") as f:
+            for line in f:
+                msg = parse_msg(line)
+                if isinstance(msg, DataMsg):
+                    timestamp = msg.timestamp_ms
+                    if prevTimestamp > timestamp:
+                        toAdd += 100
+                    else: # do not wait when the timestamp overflow
+                        time.sleep((timestamp - prevTimestamp)/1000)
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                    prevTimestamp = timestamp
+                elif isinstance(msg, RespMsg):
+                    self.handler.update_inputs(**{
+                        self.FIO2: msg.fio2_pct,
+                        self.VT: msg.vt_ml,
+                        self.FR: msg.fr_pm,
+                        self.PEP: msg.pep_mbar,
+                        self.PCRETE: msg.pep_mbar,
+                        self.PPLAT: msg.pplat_mbar,
+                    })
+
+    def set_setting(self, key, value):
+        msg = SetMsg(key, value)
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
+
 class DataBackendDummy(DataBackend):
    
     def __init__(self, pmax, fmax, vmax):
