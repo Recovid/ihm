@@ -75,12 +75,13 @@ class DataBackendFromFile(DataBackend):
         toAdd = 0
         with open(self.inputFile, "r") as f:
             for line in f:
-                time.sleep(1.0/40) # TODO: wait for the actual timestamps in the trace
                 msg = parse_msg(line)
                 if isinstance(msg, DataMsg):
                     timestamp = msg.time_data.timestamp_ms
                     if prevTimestamp > timestamp:
                         toAdd += 100
+                    else: # do not wait when the timestamp overflow
+                        time.sleep((timestamp - prevTimestamp)/1000)
                     self.handler.update_timedata(toAdd + timestamp / 1000, msg.time_data.paw_mbar, msg.time_data.debit_lpm, msg.time_data.volume_ml)
                     if msg.input_data:
                         self.handler.update_inputs(**{
