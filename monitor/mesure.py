@@ -3,7 +3,7 @@
 import tkinter as tk
 import tkinter.font as tkfont
 import time
-from .userinputs import UserInputHandler
+from .userinputs import UserInputHandler, MinMaxDialog
 
 class AlarmValue(UserInputHandler):
     def __init__(self, mesure, datamanager, userinputs, anchor="sw"):
@@ -28,7 +28,7 @@ class AlarmValue(UserInputHandler):
                 text_coord, \
                 anchor='sw', \
         	font=self.font,fill='black', text=str(self.datamanager.value), tags=self.anchor)
-        self.mesure.canvas.tag_bind(anchor,'<1>', self.click)
+        #self.mesure.canvas.tag_bind(anchor,'<1>', self.click)
         self.value=datamanager.value
 
     def click(self,e):
@@ -71,7 +71,8 @@ class AlarmValue(UserInputHandler):
 
 
 class Mesure:
-    def __init__(self,app,id,unit,title,amin=None, amax=None, userinputs=None):
+    def __init__(self,app,id,unit,title,dmin=None, dmax=None, userinputs=None):
+        self.app=app
         self.value = tk.IntVar()
         self.value.set(0)
         self.state = 0
@@ -81,6 +82,8 @@ class Mesure:
         self.userinputs=userinputs
         self.alarm=False
         self.alarm_switch=False
+        self.dmin=dmin
+        self.dmax=dmax
         self.amin=None
         self.amax=None
 
@@ -97,13 +100,26 @@ class Mesure:
         self.canvas.bind('<Configure>',self.configure)
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
-        		font=("Helvetica", self.font_size_unit),fill='black', text=self.title +" "+self.unit)
+        		font=("Helvetica", self.font_size_unit),fill='black', text=self.title+' ('+self.unit+')')
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
         		font=("Helvetica", self.font_size_value),fill='black', text=self.value.get(),tags='text'+str(self.id))
-        if(amin is not None):
-            self.amin=AlarmValue(self, amin,userinputs)
-        if(amax is not None):
-            self.amax=AlarmValue(self, amax,userinputs,'se')
+        if(dmin is not None):
+            self.amin=AlarmValue(self, dmin,userinputs)
+        if(dmax is not None):
+            self.amax=AlarmValue(self, dmax,userinputs,'se')
+
+        if(self.dmin is not None or self.dmax is not None):
+            self.canvas.bind('<1>', self.click)
+
+    def click(self,event):
+        MinMaxDialog(self.app,self.title+' ('+self.unit+')',self.dmin, self.dmax)
+        if(self.dmin is not None):
+            self.amin.value=self.dmin.value
+            self.amin.update()
+        if(self.dmax is not None):
+            self.amax.value=self.dmax.value
+            self.amax.update()
+
 
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
