@@ -132,14 +132,14 @@ SET_ Vt___:0550\tCS8:1A\n
 
 ## Pauses
 
-`P_INS` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
+`PINS` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
 
-`P_EXP` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
+`PEXP` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
 
 Exemple:
 ```
-P_INS 10\tCS8:2F\n
-P_EXP 02\tCS8:4E\n
+PINS 10\tCS8:2F\n
+PEXP 02\tCS8:4E\n
 ```
 
 ## Acknowledge Alarmes
