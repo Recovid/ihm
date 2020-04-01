@@ -6,6 +6,7 @@ import numpy as np
 import re
 from .communication import *
 from .data import Data
+#import serial
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -114,6 +115,43 @@ class SerialPortMock(DataBackend):
         msg = SetMsg(key, value)
         self.outputPipe.write(serialize_msg(msg))
         self.outputPipe.flush()
+
+'''
+class SerialPort(DataBackend):
+    def __init__(self, tty):
+        DataBackend.__init__(self)
+        self.serialPort = serial.Serial(tty, 9600)
+
+        serialPort.write(test_string)
+        serialPort.read(bytes_sent)
+
+    def run(self):
+        self.running=True
+        prevTimestamp = 0
+        toAdd = 0
+        for line in serial: # replace with serial.readline() if it fails
+            msg = parse_msg(line)
+            if isinstance(msg, DataMsg):
+                timestamp = msg.timestamp_ms
+                if prevTimestamp > timestamp:
+                    toAdd += 100
+                self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                prevTimestamp = timestamp
+            elif isinstance(msg, RespMsg):
+                self.handler.update_inputs(**{
+                    self.FIO2: msg.fio2_pct,
+                    self.VT: msg.vt_ml,
+                    self.FR: msg.fr_pm,
+                    self.PEP: msg.pep_mbar,
+                    self.PCRETE: msg.pep_mbar,
+                    self.PPLAT: msg.pplat_mbar,
+                })
+
+    def set_setting(self, key, value):
+        msg = SetMsg(key, value)
+        self.serial.write(serialize_msg(msg))
+        self.serial.flush()
+'''
 
 class DataBackendDummy(DataBackend):
    
