@@ -98,8 +98,6 @@ class SerialPortMock(DataBackend):
                     timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:
                         toAdd += 100
-                    else: # do not wait when the timestamp overflow
-                        time.sleep((timestamp - prevTimestamp)/1000)
                     self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
                     prevTimestamp = timestamp
                 elif isinstance(msg, RespMsg):
