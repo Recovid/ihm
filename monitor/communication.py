@@ -4,7 +4,7 @@ import re
 import sys
 
 class DataMsg:
-    args_pattern = re.compile('^msec_:(\d{5}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})')
+    args_pattern = re.compile('^msec_:(\d{5}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar):
         self.timestamp_ms = timestamp_ms
@@ -24,7 +24,7 @@ class DataMsg:
         return 'DATA msec_:%05d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
 
 class RespMsg:
-    args_pattern = re.compile('^Fi02_:(\d{3}) Vt___:(\d{4}) FR___:(\d{2}) PEP__:(\d{2}) PIP__:(\d{3}) PPLAT:(\d{3})')
+    args_pattern = re.compile('^Fi02_:(\d{3}) Vt___:(\d{4}) FR___:(\d{2}) PEP__:(\d{2}) PIP__:(\d{3}) PPLAT:(\d{3})$')
 
     def __init__(self, fio2_pct, vt_ml, fr_pm, pep_mbar, pip_mbar, pplat_mbar):
         self.fio2_pct = fio2_pct
@@ -177,7 +177,7 @@ def parse_msg(msg_str):
     if id_ not in ctors:
         print("unknown message id", file=sys.stderr)
         return None
-    return ctors[id_](msg_str[5:])
+    return ctors[id_](msg_str[5:-8])
 
 def serialize_msg(msg):
     msg_str = str(msg) + "\tCS8:"
