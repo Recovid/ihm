@@ -63,6 +63,8 @@ class DataBackendFromFile(DataBackend):
         toAdd = 0
         with open(self.inputFile, "r") as f:
             for line in f:
+                if not self.running:
+                    break
                 msg = parse_msg(line)
                 if isinstance(msg, DataMsg):
                     timestamp = msg.timestamp_ms
@@ -97,6 +99,8 @@ class SerialPortMock(DataBackend):
         toAdd = 0
         with open(self.inputPipe, "r") as f:
             for line in f:
+                if not self.running:
+                    break
                 msg = parse_msg(line)
                 if isinstance(msg, DataMsg):
                     timestamp = msg.timestamp_ms
@@ -143,6 +147,8 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         for line in serial: # replace with serial.readline() if it fails
+            if not self.running:
+                break
             msg = parse_msg(line)
             if isinstance(msg, DataMsg):
                 timestamp = msg.timestamp_ms
