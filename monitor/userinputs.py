@@ -139,13 +139,16 @@ class OneValueDialog(Dialog):
         tk.Label(master, text=self.title()).pack(fill=tk.X)
         self.value_var=tk.StringVar()
         self.value_var.set(str(self.value))
-        self.label = tk.Label(master, font=(config.valueDialog['font_family'], config.valueDialog['font_size']), textvariable=self.value_var).pack(fill=tk.X)
+        self.label = tk.Label(master, font=(config.valueDialog['font_family'], config.valueDialog['font_size_value']), textvariable=self.value_var).pack(fill=tk.X)
 
         self.signs = ['--','-','+','++']
         self.buttons = []
         self.frame_buttons=tk.Frame(master)
         for i in range(4):
-            self.buttons.append(tk.Button(self.frame_buttons, text=self.signs[i]))
+            self.buttons.append(tk.Button(self.frame_buttons,activebackground=config.button['btn_background_selected'],
+                bg=config.button['btn_background'],
+                font=(config.valueDialog['font_family'], config.valueDialog['font_size_input']),
+                text=self.signs[i]))
             self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
             self.buttons[i].bind('<1>',self.click)
         self.frame_buttons.pack(fill=tk.BOTH, expand=1)
