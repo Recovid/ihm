@@ -59,6 +59,9 @@ class SetMsg:
         (Data.VTMIN, "VTMIN", 4),
         (Data.PMAX, "PMAX_", 3),
         (Data.PMIN, "PMIN_", 3),
+        (Data.FRMIN, "FRMIN", 2),
+        (Data.VMMIN, "VMMIN", 4)
+
     ]
 
     def __init__(self, setting, value):
