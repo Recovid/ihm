@@ -132,9 +132,9 @@ SET_ Vt___:0550\tCS8:1A\n
 
 ## Pauses
 
-`PINS` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
+`PINS` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé, un envoi d'une durée de 0 relance la respiration
 
-`PEXP` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé
+`PEXP` (pause inspiratoire débit 0) suivi d'une durée max : 00..99 (sec) NB: charge à l'IHM de réémettre la pause tant qu'on constate le bouton enfoncé, un envoi d'une durée de 0 relance la respiration
 
 Exemple:
 ```
