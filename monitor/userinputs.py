@@ -186,10 +186,7 @@ class MinMaxDialog(Dialog):
         self.dmax=dmax
         Dialog.__init__(self, master, title)
 
-
     def body(self, master):
-
-
         self.geometry("%dx%d" % (config.minMaxDialog['width'],config.minMaxDialog['height']))
 
         tk.Label(master, text=self.title()).pack(fill=tk.X)
@@ -223,24 +220,25 @@ class MinMaxDialog(Dialog):
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
                 self.buttons[i].bind('<1>',self.click, '+')
 
-
-
-
-
-
-
         return self.label # initial focus
 
     def click(self, event):
         if(event.widget==self.buttons[0]):
-            self.vmin_var.set(self.vmin_var.get()-1*self.dmin.step)
+            val = self.vmin_var.get()-1*self.dmin.step
+            if val >= self.dmin.vmin:
+                self.vmin_var.set(val)
         elif(event.widget==self.buttons[1]):
-            self.vmin_var.set(self.vmin_var.get()+1*self.dmin.step)
+            val = self.vmin_var.get()+1*self.dmin.step
+            if val <= self.dmin.vmax and val < self.vmax_var.get():
+                self.vmin_var.set(val)
         elif(event.widget==self.buttons[2]):
-            self.vmax_var.set(self.vmax_var.get()-1*self.dmax.step)
+            val = self.vmax_var.get()-1*self.dmax.step
+            if val >= self.dmax.vmin and val > self.vmin_var.get():
+                self.vmax_var.set(val)
         elif(event.widget==self.buttons[3]):
-            self.vmax_var.set(self.vmax_var.get()+1*self.dmax.step)
-
+            val = self.vmax_var.get()+1*self.dmax.step
+            if val <= self.dmax.vmax:
+                self.vmax_var.set(val)
 
     def apply(self):
         if(self.dmin is not None):
