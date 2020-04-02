@@ -15,15 +15,10 @@ def nominal_data(t_ms, fr_hz):
     volume_ml     = max(0, 500*sin)
     debit_lpm     = max(10,50*cos)
     paw_mbar      =        90*cos if cos>0 else 10*cos
-    fio2_pct      = max(0, 50 + 2 * cos)
-    vt_ml         = max(0, 1 + volume_ml)
-    fr_pm         = max(0, fr_hz * 60 + 2 * cos) # sec
-    pep_mbar      = max(0,  5 +  5 * cos)
-    pip_mbar      = max(0, 50 + 50 * cos)
-    pplat_mbar    = max(0, 40 + 40 * cos)
-    time_data = TimeData(t_ms, volume_ml, debit_lpm, paw_mbar)
-    input_data = InputData(fio2_pct, vt_ml, fr_pm, pep_mbar, pip_mbar, pplat_mbar)
-    return DataMsg(time_data, input_data)
+    return DataMsg(t_ms, volume_ml, debit_lpm, paw_mbar)
+
+def resp_msg(fr_hz):
+    return RespMsg(fio2_pct=50, vt_ml=500, fr_pm=fr_hz * 60, pep_mbar=5, pip_mbar=50, pplat_mbar=40)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -33,5 +28,6 @@ if __name__ == '__main__':
     fr_hz = fr_pm / 60 # sec
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     with io.open('nominal_cycle.txt','w') as nominal_cycle:
+        nominal_cycle.write(serialize_msg(resp_msg(fr_hz)))
         for t_ms in range(0, int(sys.argv[1]), int(1000/fr_pm)):
             nominal_cycle.write(serialize_msg(nominal_data(t_ms, fr_hz)))
