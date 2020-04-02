@@ -241,6 +241,15 @@ class Window:
         self.k_pep.refresh()
         self.k_flow.refresh()
         self.k_tplat.refresh()
+        
+        self.m_ie.refresh()
+        self.m_pep.refresh()
+        self.m_fr.refresh()
+        self.m_pplat.refresh()
+        self.m_vm.refresh()
+        self.m_pcrete.refresh()
+        self.m_vte.refresh()
+
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)

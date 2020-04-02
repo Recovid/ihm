@@ -171,6 +171,15 @@ class Mesure:
         self.canvas.update_idletasks()
         self.alarm_id=self.canvas.after(1000 if self.alarm_switch else 500,self.update_alarm)
 
+    def refresh(self):
+        if(self.amin is not None):
+            self.amin.value=self.dmin.value
+            self.amin.update()
+        if(self.amax is not None):
+            self.amax.value=self.dmax.value
+            self.amax.update()
+
+
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")
 

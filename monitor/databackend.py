@@ -46,17 +46,17 @@ class DataBackend(Data, Thread):
     
     def get_settings(self):
         # resp
-        self.settings[type(self).VT]=0
-        self.settings[type(self).FR]=0
-        self.settings[type(self).PEP]=0
-        self.settings[type(self).FLOW]=0
-        self.settings[type(self).TPLAT]=0
+        self.settings[type(self).VT]=300
+        self.settings[type(self).FR]=18
+        self.settings[type(self).PEP]=5
+        self.settings[type(self).FLOW]=60
+        self.settings[type(self).TPLAT]=0.1
         # alarms
-        self.settings[type(self).PMIN]=0
-        self.settings[type(self).PMAX]=0
-        self.settings[type(self).VTMIN]=0
-        self.settings[type(self).VMMIN]=0
-        self.settings[type(self).FRMIN]=0
+        self.settings[type(self).PMIN]=15
+        self.settings[type(self).PMAX]=60
+        self.settings[type(self).VTMIN]=50
+        self.settings[type(self).VMMIN]=50
+        self.settings[type(self).FRMIN]=12
         return self.settings
 
 
