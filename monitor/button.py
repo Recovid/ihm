@@ -88,7 +88,8 @@ class Button2(tk.Button):
     def resize(self, event):
         if(self.img):
             img = Image.open(self.content).resize(
-                (event.width-10, event.height-10), Image.ANTIALIAS
+                #(event.width-10, event.height-10), Image.ANTIALIAS
+                (event.width, event.height), Image.ANTIALIAS
             )
             self.img = ImageTk.PhotoImage(img)
             self.config(image=self.img)
@@ -102,6 +103,9 @@ class Button2(tk.Button):
             self.bind('<Configure>', self.resize)
         else:
             self.config(text=content)
+
+    def set_background(self, newbg):
+        self.config(bg=newbg)
 
 class ButtonPR(Button2):
     def __init__(self, parent, content, content_push=None):

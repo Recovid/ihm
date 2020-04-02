@@ -136,7 +136,8 @@ class Window:
         self.alarm_msg = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)), textvariable = self.alarm_text, \
             anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=6, sticky=stickyall)
 
-        self.bt_Alarm = ButtonPR(self.app,"Alarm Icon", "other" )
+        self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
+        self.bt_Alarm.set_background('#4E69AB')
         self.bt_Alarm.grid(self.title_frame, row=0, column=8, sticky=stickyall)
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm)
 
@@ -207,8 +208,6 @@ class Window:
 
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
-        
-        Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png").grid(row=4,column=8, sticky="news")
         
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
@@ -290,4 +289,7 @@ class Window:
     #see what we need to do with this button in function in function of the implementation of alarm system
     def event_bt_Alarm(self, e):
         print("event_bn_alarm pressed")
+        #just for test
+        self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
+        #self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
 
