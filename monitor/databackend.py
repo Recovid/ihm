@@ -4,6 +4,9 @@ import time
 from threading import Thread
 import numpy as np
 import re
+from .communication import *
+from .data import Data
+#import serial
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -13,24 +16,7 @@ class DataBackendHandler:
         pass
 
 
-class DataBackend(Thread):
-    PEP="pep"
-    PEP_ALARM="pep_alarm"
-    FIO2="fio2"
-    VT="vt"
-    FR="fr"
-    FLOW="flow"
-    TPLAT="tplat"
-    VTE="vte"
-    VTE_ALARM="vte_alarm"
-    VMIN="vmin"
-    PPLAT="pplat"
-    PCRETE="pcrete"
-    PCRETE_ALARM="pcrete_alarm"
-    PMAX="pmax"
-    PMIN="pmin"
-    VM="VM"
-
+class DataBackend(Data, Thread):
     def __init__(self):
         Thread.__init__(self)
 
@@ -55,10 +41,10 @@ class DataBackend(Thread):
             self.settings[key]=value
             print(str(key), str(value))
 
-    def stop_exp(self, on):
-        print("Pause expi "+str(on))
-    def stop_ins(self, on):
-        print("Pause inspi "+str(on))
+    def stop_exp(self, time):
+        print("Pause expi "+str(time))
+    def stop_ins(self, time):
+        print("Pause inspi "+str(time))
 
     def stop(self):
         self.running=False
@@ -69,40 +55,103 @@ class DataBackendFromFile(DataBackend):
         self.inputFile = inputFile
 
     def run(self):
-        framePattern = re.compile("DATA msec:(.....) Vol_:(...) Deb_:(....) Paw_:(....) Fi02:(...) Vt__:(....) FR__:(..) PEP_:(..) DebM:(..) CS8_:(..)")
         self.running=True
         prevTimestamp = 0
         toAdd = 0
         with open(self.inputFile, "r") as f:
-            line = f.readline()
-            while line:
-                time.sleep(1.0/40)
-                res = framePattern.match(line)
-                if res:
-                    timestamp = int(res.group(1))
+            for line in f:
+                msg = parse_msg(line)
+                if isinstance(msg, DataMsg):
+                    timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:
                         toAdd += 100
-                    self.handler.update_timedata(toAdd + timestamp / 1000, int(res.group(4)), int(res.group(3)), int(res.group(2)))
+                    else: # do not wait when the timestamp overflow
+                        time.sleep((timestamp - prevTimestamp)/1000)
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
                     prevTimestamp = timestamp
-                line = f.readline()
+                elif isinstance(msg, RespMsg):
+                    self.handler.update_inputs(**{
+                        self.FIO2: msg.fio2_pct,
+                        self.VT: msg.vt_ml,
+                        self.FR: msg.fr_pm,
+                        self.PEP: msg.pep_mbar,
+                        self.PCRETE: msg.pep_mbar,
+                        self.PPLAT: msg.pplat_mbar,
+                    })
 
     def set_setting(self, key, value):
-        if(key in self.settings):
-            self.settings[key]=value
-            print(str(key), str(value))
-            if(key==self.PEP):
-                self.handler.update_inputs(**{self.PEP:value})
-            elif(key==self.FIO2):
-                self.handler.update_inputs(**{self.FIO2:value})
-            elif(key==self.VT):
-                self.handler.update_inputs(**{self.VTE:value})
-            elif(key==self.FR):
-                self.handler.update_inputs(**{self.FR:value})
-            elif(key==self.FLOW):
-                self.handler.update_inputs(**{self.PCRETE:value})
-            elif(key==self.TPLAT):
-                self.handler.update_inputs(**{self.PPLAT:value})
-            
+        pass # settings do nothing for a trace file
+
+class SerialPortMock(DataBackend):
+    def __init__(self, inputPipe, outputPipe):
+        DataBackend.__init__(self)
+        self.inputPipe = inputPipe
+        self.outputPipe = open(outputPipe, "w")
+
+    def run(self):
+        self.running=True
+        prevTimestamp = 0
+        toAdd = 0
+        with open(self.inputPipe, "r") as f:
+            for line in f:
+                msg = parse_msg(line)
+                if isinstance(msg, DataMsg):
+                    timestamp = msg.timestamp_ms
+                    if prevTimestamp > timestamp:
+                        toAdd += 100
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                    prevTimestamp = timestamp
+                elif isinstance(msg, RespMsg):
+                    self.handler.update_inputs(**{
+                        self.FIO2: msg.fio2_pct,
+                        self.VT: msg.vt_ml,
+                        self.FR: msg.fr_pm,
+                        self.PEP: msg.pep_mbar,
+                        self.PCRETE: msg.pep_mbar,
+                        self.PPLAT: msg.pplat_mbar,
+                    })
+
+    def set_setting(self, key, value):
+        msg = SetMsg(key, value)
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
+
+'''
+class SerialPort(DataBackend):
+    def __init__(self, tty):
+        DataBackend.__init__(self)
+        self.serialPort = serial.Serial(tty, 9600)
+
+        serialPort.write(test_string)
+        serialPort.read(bytes_sent)
+
+    def run(self):
+        self.running=True
+        prevTimestamp = 0
+        toAdd = 0
+        for line in serial: # replace with serial.readline() if it fails
+            msg = parse_msg(line)
+            if isinstance(msg, DataMsg):
+                timestamp = msg.timestamp_ms
+                if prevTimestamp > timestamp:
+                    toAdd += 100
+                self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                prevTimestamp = timestamp
+            elif isinstance(msg, RespMsg):
+                self.handler.update_inputs(**{
+                    self.FIO2: msg.fio2_pct,
+                    self.VT: msg.vt_ml,
+                    self.FR: msg.fr_pm,
+                    self.PEP: msg.pep_mbar,
+                    self.PCRETE: msg.pep_mbar,
+                    self.PPLAT: msg.pplat_mbar,
+                })
+
+    def set_setting(self, key, value):
+        msg = SetMsg(key, value)
+        self.serial.write(serialize_msg(msg))
+        self.serial.flush()
+'''
 
 class DataBackendDummy(DataBackend):
    

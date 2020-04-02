@@ -1,60 +1,61 @@
-DATA msec:00000 Vol_:000 Deb_:+050 Paw_:+090 Fi02:052 Vt__:0001 FR__:27 PEP_:10 DebM:80 CS8_:0D
-DATA msec:00040 Vol_:052 Deb_:+049 Paw_:+089 Fi02:051 Vt__:0053 FR__:26 PEP_:09 DebM:79 CS8_:3D
-DATA msec:00080 Vol_:103 Deb_:+048 Paw_:+088 Fi02:051 Vt__:0104 FR__:26 PEP_:09 DebM:79 CS8_:39
-DATA msec:00120 Vol_:154 Deb_:+047 Paw_:+085 Fi02:051 Vt__:0155 FR__:26 PEP_:09 DebM:78 CS8_:3B
-DATA msec:00160 Vol_:203 Deb_:+045 Paw_:+082 Fi02:051 Vt__:0204 FR__:26 PEP_:09 DebM:76 CS8_:2E
-DATA msec:00200 Vol_:250 Deb_:+043 Paw_:+077 Fi02:051 Vt__:0251 FR__:26 PEP_:09 DebM:74 CS8_:2D
-DATA msec:00240 Vol_:293 Deb_:+040 Paw_:+072 Fi02:051 Vt__:0294 FR__:26 PEP_:09 DebM:72 CS8_:35
-DATA msec:00280 Vol_:334 Deb_:+037 Paw_:+066 Fi02:051 Vt__:0335 FR__:26 PEP_:08 DebM:69 CS8_:3F
-DATA msec:00320 Vol_:371 Deb_:+033 Paw_:+060 Fi02:051 Vt__:0372 FR__:26 PEP_:08 DebM:66 CS8_:2F
-DATA msec:00360 Vol_:404 Deb_:+029 Paw_:+052 Fi02:051 Vt__:0405 FR__:26 PEP_:07 DebM:63 CS8_:2F
-DATA msec:00400 Vol_:433 Deb_:+024 Paw_:+044 Fi02:051 Vt__:0434 FR__:26 PEP_:07 DebM:60 CS8_:27
-DATA msec:00440 Vol_:456 Deb_:+020 Paw_:+036 Fi02:050 Vt__:0457 FR__:25 PEP_:07 DebM:56 CS8_:35
-DATA msec:00480 Vol_:475 Deb_:+015 Paw_:+027 Fi02:050 Vt__:0476 FR__:25 PEP_:06 DebM:52 CS8_:3A
-DATA msec:00520 Vol_:489 Deb_:+010 Paw_:+018 Fi02:050 Vt__:0490 FR__:25 PEP_:06 DebM:48 CS8_:36
-DATA msec:00560 Vol_:497 Deb_:+010 Paw_:+009 Fi02:050 Vt__:0498 FR__:25 PEP_:05 DebM:44 CS8_:3C
-DATA msec:00600 Vol_:500 Deb_:+010 Paw_:+000 Fi02:050 Vt__:0501 FR__:25 PEP_:05 DebM:40 CS8_:0C
-DATA msec:00640 Vol_:497 Deb_:+010 Paw_:-001 Fi02:049 Vt__:0498 FR__:24 PEP_:04 DebM:35 CS8_:3B
-DATA msec:00680 Vol_:489 Deb_:+010 Paw_:-002 Fi02:049 Vt__:0490 FR__:24 PEP_:03 DebM:31 CS8_:34
-DATA msec:00720 Vol_:475 Deb_:+010 Paw_:-003 Fi02:049 Vt__:0476 FR__:24 PEP_:03 DebM:27 CS8_:34
-DATA msec:00760 Vol_:456 Deb_:+010 Paw_:-004 Fi02:049 Vt__:0457 FR__:24 PEP_:02 DebM:23 CS8_:32
-DATA msec:00800 Vol_:433 Deb_:+010 Paw_:-005 Fi02:049 Vt__:0434 FR__:24 PEP_:02 DebM:19 CS8_:29
-DATA msec:00840 Vol_:404 Deb_:+010 Paw_:-005 Fi02:048 Vt__:0405 FR__:23 PEP_:02 DebM:16 CS8_:24
-DATA msec:00880 Vol_:371 Deb_:+010 Paw_:-006 Fi02:048 Vt__:0372 FR__:23 PEP_:01 DebM:13 CS8_:2B
-DATA msec:00920 Vol_:334 Deb_:+010 Paw_:-007 Fi02:048 Vt__:0335 FR__:23 PEP_:01 DebM:10 CS8_:22
-DATA msec:00960 Vol_:293 Deb_:+010 Paw_:-008 Fi02:048 Vt__:0294 FR__:23 PEP_:00 DebM:07 CS8_:34
-DATA msec:01000 Vol_:249 Deb_:+010 Paw_:-008 Fi02:048 Vt__:0250 FR__:23 PEP_:00 DebM:05 CS8_:1D
-DATA msec:01040 Vol_:203 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0204 FR__:23 PEP_:00 DebM:03 CS8_:15
-DATA msec:01080 Vol_:154 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0155 FR__:23 PEP_:00 DebM:01 CS8_:21
-DATA msec:01120 Vol_:103 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0104 FR__:23 PEP_:00 DebM:00 CS8_:0F
-DATA msec:01160 Vol_:052 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0053 FR__:23 PEP_:00 DebM:00 CS8_:19
-DATA msec:01200 Vol_:000 Deb_:+010 Paw_:-010 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:00 CS8_:FE
-DATA msec:01240 Vol_:000 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:00 CS8_:0A
-DATA msec:01280 Vol_:000 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:00 CS8_:0E
-DATA msec:01320 Vol_:000 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:01 CS8_:0A
-DATA msec:01360 Vol_:000 Deb_:+010 Paw_:-009 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:03 CS8_:10
-DATA msec:01400 Vol_:000 Deb_:+010 Paw_:-008 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:05 CS8_:0C
-DATA msec:01440 Vol_:000 Deb_:+010 Paw_:-008 Fi02:048 Vt__:0001 FR__:23 PEP_:00 DebM:07 CS8_:12
-DATA msec:01480 Vol_:000 Deb_:+010 Paw_:-007 Fi02:048 Vt__:0001 FR__:23 PEP_:01 DebM:10 CS8_:10
-DATA msec:01520 Vol_:000 Deb_:+010 Paw_:-006 Fi02:048 Vt__:0001 FR__:23 PEP_:01 DebM:13 CS8_:0D
-DATA msec:01560 Vol_:000 Deb_:+010 Paw_:-005 Fi02:048 Vt__:0001 FR__:23 PEP_:02 DebM:16 CS8_:14
-DATA msec:01600 Vol_:000 Deb_:+010 Paw_:-004 Fi02:049 Vt__:0001 FR__:24 PEP_:02 DebM:20 CS8_:0B
-DATA msec:01640 Vol_:000 Deb_:+010 Paw_:-004 Fi02:049 Vt__:0001 FR__:24 PEP_:02 DebM:23 CS8_:12
-DATA msec:01680 Vol_:000 Deb_:+010 Paw_:-003 Fi02:049 Vt__:0001 FR__:24 PEP_:03 DebM:27 CS8_:1A
-DATA msec:01720 Vol_:000 Deb_:+010 Paw_:-002 Fi02:049 Vt__:0001 FR__:24 PEP_:03 DebM:31 CS8_:0F
-DATA msec:01760 Vol_:000 Deb_:+010 Paw_:-001 Fi02:049 Vt__:0001 FR__:24 PEP_:04 DebM:35 CS8_:17
-DATA msec:01800 Vol_:000 Deb_:+010 Paw_:-000 Fi02:050 Vt__:0001 FR__:25 PEP_:04 DebM:39 CS8_:0E
-DATA msec:01840 Vol_:000 Deb_:+010 Paw_:+009 Fi02:050 Vt__:0001 FR__:25 PEP_:05 DebM:44 CS8_:16
-DATA msec:01880 Vol_:000 Deb_:+010 Paw_:+018 Fi02:050 Vt__:0001 FR__:25 PEP_:06 DebM:48 CS8_:1F
-DATA msec:01920 Vol_:000 Deb_:+015 Paw_:+027 Fi02:050 Vt__:0001 FR__:25 PEP_:06 DebM:52 CS8_:1A
-DATA msec:01960 Vol_:000 Deb_:+020 Paw_:+036 Fi02:050 Vt__:0001 FR__:25 PEP_:07 DebM:56 CS8_:1F
-DATA msec:02000 Vol_:000 Deb_:+025 Paw_:+045 Fi02:051 Vt__:0001 FR__:26 PEP_:07 DebM:60 CS8_:13
-DATA msec:02040 Vol_:000 Deb_:+029 Paw_:+052 Fi02:051 Vt__:0001 FR__:26 PEP_:07 DebM:63 CS8_:1C
-DATA msec:02080 Vol_:000 Deb_:+033 Paw_:+060 Fi02:051 Vt__:0001 FR__:26 PEP_:08 DebM:66 CS8_:1E
-DATA msec:02120 Vol_:000 Deb_:+037 Paw_:+066 Fi02:051 Vt__:0001 FR__:26 PEP_:08 DebM:69 CS8_:26
-DATA msec:02160 Vol_:000 Deb_:+040 Paw_:+072 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:72 CS8_:1C
-DATA msec:02200 Vol_:000 Deb_:+043 Paw_:+077 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:74 CS8_:21
-DATA msec:02240 Vol_:000 Deb_:+045 Paw_:+082 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:76 CS8_:25
-DATA msec:02280 Vol_:000 Deb_:+047 Paw_:+085 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:78 CS8_:30
-DATA msec:02320 Vol_:000 Deb_:+048 Paw_:+088 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:79 CS8_:30
-DATA msec:02360 Vol_:000 Deb_:+049 Paw_:+089 Fi02:051 Vt__:0001 FR__:26 PEP_:09 DebM:79 CS8_:36
+RESP Fi02_:050 Vt___:0500 FR___:25 PEP__:05 PIP__:050 PPLAT:040	CS8:8D
+DATA msec_:00000 Vol__:0000 Deb__:+050 Paw__:+090	CS8:6C
+DATA msec_:00040 Vol__:0052 Deb__:+049 Paw__:+089	CS8:87
+DATA msec_:00080 Vol__:0103 Deb__:+048 Paw__:+088	CS8:86
+DATA msec_:00120 Vol__:0154 Deb__:+047 Paw__:+085	CS8:83
+DATA msec_:00160 Vol__:0203 Deb__:+045 Paw__:+082	CS8:7D
+DATA msec_:00200 Vol__:0250 Deb__:+043 Paw__:+077	CS8:7C
+DATA msec_:00240 Vol__:0293 Deb__:+040 Paw__:+072	CS8:7F
+DATA msec_:00280 Vol__:0334 Deb__:+037 Paw__:+066	CS8:88
+DATA msec_:00320 Vol__:0371 Deb__:+033 Paw__:+060	CS8:7A
+DATA msec_:00360 Vol__:0404 Deb__:+029 Paw__:+052	CS8:81
+DATA msec_:00400 Vol__:0433 Deb__:+024 Paw__:+044	CS8:7A
+DATA msec_:00440 Vol__:0456 Deb__:+020 Paw__:+036	CS8:80
+DATA msec_:00480 Vol__:0475 Deb__:+015 Paw__:+027	CS8:89
+DATA msec_:00520 Vol__:0489 Deb__:+010 Paw__:+018	CS8:84
+DATA msec_:00560 Vol__:0497 Deb__:+010 Paw__:+009	CS8:87
+DATA msec_:00600 Vol__:0500 Deb__:+010 Paw__:+000	CS8:6A
+DATA msec_:00640 Vol__:0497 Deb__:+010 Paw__:-001	CS8:80
+DATA msec_:00680 Vol__:0489 Deb__:+010 Paw__:-002	CS8:86
+DATA msec_:00720 Vol__:0475 Deb__:+010 Paw__:-003	CS8:7D
+DATA msec_:00760 Vol__:0456 Deb__:+010 Paw__:-004	CS8:81
+DATA msec_:00800 Vol__:0433 Deb__:+010 Paw__:-005	CS8:78
+DATA msec_:00840 Vol__:0404 Deb__:+010 Paw__:-005	CS8:7A
+DATA msec_:00880 Vol__:0371 Deb__:+010 Paw__:-006	CS8:82
+DATA msec_:00920 Vol__:0334 Deb__:+010 Paw__:-007	CS8:7D
+DATA msec_:00960 Vol__:0293 Deb__:+010 Paw__:-008	CS8:86
+DATA msec_:01000 Vol__:0249 Deb__:+010 Paw__:-008	CS8:79
+DATA msec_:01040 Vol__:0203 Deb__:+010 Paw__:-009	CS8:74
+DATA msec_:01080 Vol__:0154 Deb__:+010 Paw__:-009	CS8:7D
+DATA msec_:01120 Vol__:0103 Deb__:+010 Paw__:-009	CS8:72
+DATA msec_:01160 Vol__:0052 Deb__:+010 Paw__:-009	CS8:79
+DATA msec_:01200 Vol__:0000 Deb__:+010 Paw__:-010	CS8:65
+DATA msec_:01240 Vol__:0000 Deb__:+010 Paw__:-009	CS8:71
+DATA msec_:01280 Vol__:0000 Deb__:+010 Paw__:-009	CS8:75
+DATA msec_:01320 Vol__:0000 Deb__:+010 Paw__:-009	CS8:70
+DATA msec_:01360 Vol__:0000 Deb__:+010 Paw__:-009	CS8:74
+DATA msec_:01400 Vol__:0000 Deb__:+010 Paw__:-008	CS8:6E
+DATA msec_:01440 Vol__:0000 Deb__:+010 Paw__:-008	CS8:72
+DATA msec_:01480 Vol__:0000 Deb__:+010 Paw__:-007	CS8:75
+DATA msec_:01520 Vol__:0000 Deb__:+010 Paw__:-006	CS8:6F
+DATA msec_:01560 Vol__:0000 Deb__:+010 Paw__:-005	CS8:72
+DATA msec_:01600 Vol__:0000 Deb__:+010 Paw__:-004	CS8:6C
+DATA msec_:01640 Vol__:0000 Deb__:+010 Paw__:-004	CS8:70
+DATA msec_:01680 Vol__:0000 Deb__:+010 Paw__:-003	CS8:73
+DATA msec_:01720 Vol__:0000 Deb__:+010 Paw__:-002	CS8:6D
+DATA msec_:01760 Vol__:0000 Deb__:+010 Paw__:-001	CS8:70
+DATA msec_:01800 Vol__:0000 Deb__:+010 Paw__:-000	CS8:6A
+DATA msec_:01840 Vol__:0000 Deb__:+010 Paw__:+009	CS8:75
+DATA msec_:01880 Vol__:0000 Deb__:+010 Paw__:+018	CS8:79
+DATA msec_:01920 Vol__:0000 Deb__:+015 Paw__:+027	CS8:79
+DATA msec_:01960 Vol__:0000 Deb__:+020 Paw__:+036	CS8:79
+DATA msec_:02000 Vol__:0000 Deb__:+025 Paw__:+045	CS8:70
+DATA msec_:02040 Vol__:0000 Deb__:+029 Paw__:+052	CS8:76
+DATA msec_:02080 Vol__:0000 Deb__:+033 Paw__:+060	CS8:74
+DATA msec_:02120 Vol__:0000 Deb__:+037 Paw__:+066	CS8:79
+DATA msec_:02160 Vol__:0000 Deb__:+040 Paw__:+072	CS8:74
+DATA msec_:02200 Vol__:0000 Deb__:+043 Paw__:+077	CS8:77
+DATA msec_:02240 Vol__:0000 Deb__:+045 Paw__:+082	CS8:79
+DATA msec_:02280 Vol__:0000 Deb__:+047 Paw__:+085	CS8:82
+DATA msec_:02320 Vol__:0000 Deb__:+048 Paw__:+088	CS8:81
+DATA msec_:02360 Vol__:0000 Deb__:+049 Paw__:+089	CS8:87

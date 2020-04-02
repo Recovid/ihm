@@ -101,10 +101,13 @@ class DataOutputManager:
 
 class DataController:
 
-    def __init__(self,backend):
+    def __init__(self, backend, mainLoop):
         self.backend=backend
+        self.mainLoop = mainLoop
         self.inputs=None
         self.outputs={}
+        self.repost_stop_exp = False
+        self.repost_stop_ins = False
 
         self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=21)
         self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,0,1000,default=500, step=10)
@@ -119,4 +122,36 @@ class DataController:
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)
         self.backend.set_handler(self.inputs.handler)
+
+    def post_stop_exp(self, time_sec):
+        if time_sec == 0:
+            self.backend.stop_exp(0)
+        elif self.repost_stop_exp:
+            self.backend.stop_exp(time_sec)
+            # repost 1 sec before timeout end to avoid breath restart
+            self.mainLoop.after((time_sec - 1) * 1000, self.post_stop_exp, time_sec)
+
+    def stop_exp(self, on):
+        if (on):
+            self.repost_stop_exp = True
+            self.post_stop_exp(5)
+        else:
+            self.post_stop_exp(0)
+            self.repost_stop_exp = False
+
+    def post_stop_ins(self, time_sec):
+        if time_sec == 0:
+            self.backend.stop_ins(0)
+        elif self.repost_stop_ins:
+            self.backend.stop_ins(time_sec)
+            # repost 1 sec before timeout end to avoid breath restart
+            self.mainLoop.after((time_sec - 1) * 1000, self.post_stop_ins, time_sec)
+
+    def stop_ins(self, on):
+        if (on):
+            self.repost_stop_ins = True
+            self.post_stop_ins(5)
+        else:
+            self.post_stop_ins(0)
+            self.repost_stop_ins = False
 
