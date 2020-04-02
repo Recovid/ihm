@@ -75,17 +75,23 @@ Specification sprintf:
 
 ## Alarmes
 
-Envoyé toute les xms (100ms?) jusqu'à acknowledge
+Envoyé toute les x ms (100ms?) jusqu'à acknowledge
 
 `ALRM` suivi d'un texte de taille variable ne contenant pas le caractère '\t'.
 
 Textes d'alarmes connues :
-- 'Pression insufflation > seuil maximum'
-- 'Pression insufflation < seuil minimum'
-- 'Niveau batterie bas'
+- 'Pression insufflation > seuil maximum : valeur reele > seuil'
+- 'Pression insufflation < seuil minimum : valeur reele < seuil''
+- 'PEP basse : valeur reele < seuil'
+- 'PEP Haute : valeur reele > seuil''
+- 'VTe bas : valeur reele < seuil'
+- 'VTe Haut : valeur reele > seuil''
+- 'Niveau batterie bas : niveau < seuil'
+
+le changement doit permetre de cree un fichier de log des alarmes.
 
 Specification sprintf: 
-`ALRM %s\0\tCS8:%02X\n`
+`ALRM %s\0\t : %d %s %dCS8:%02X\n`
 
 Exemple:
 ```
@@ -112,6 +118,7 @@ envoye toute les xms (100ms?) jusqu'a acknowledge
 
 `SET_` suivi d'un réglage parmi :
 
+- `Fi02_` (Fraction inspirée en di-Oxygène) : 021..100 (%)
 - `Vt___` (Volume tidal ou courant) : 0300..1000 (mL)
 - `PEP__` (Pression Expiratoire Positive) : 00..50 (cmH2O)
 - `FR___` (Fréquence Respiratoire) : 12..35 (1/min)
