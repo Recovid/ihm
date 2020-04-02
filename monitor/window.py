@@ -246,7 +246,7 @@ class Window:
         if(e.type==tk.EventType.ButtonPress):
             self.data_backend.stop_exp(True)
         elif(e.type==tk.EventType.ButtonRelease):
-            self.data_backend.stop_exp(True)
+            self.data_backend.stop_exp(False)
 
     def update(self, frame):
         index = self.data_controller.inputs.get_index()
