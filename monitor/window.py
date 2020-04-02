@@ -122,7 +122,7 @@ class Window:
         #self.data_backend = DataBackendDummy(100,100,500)
         self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         #self.data_backend = SerialPortMock("in", "out")
-        self.data_controller = DataController(self.data_backend)
+        self.data_controller = DataController(self.data_backend, self.app)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
         stickyall=tk.N+tk.S+tk.E+tk.W
@@ -238,15 +238,15 @@ class Window:
 
     def stop_ins_event(self, e):
         if(e.type==tk.EventType.ButtonPress):
-            self.data_backend.stop_ins(True)
+            self.data_controller.stop_ins(True)
         elif(e.type==tk.EventType.ButtonRelease):
-            self.data_backend.stop_ins(False)
+            self.data_controller.stop_ins(False)
     
     def stop_exp_event(self, e):
         if(e.type==tk.EventType.ButtonPress):
-            self.data_backend.stop_exp(True)
+            self.data_controller.stop_exp(True)
         elif(e.type==tk.EventType.ButtonRelease):
-            self.data_backend.stop_exp(False)
+            self.data_controller.stop_exp(False)
 
     def update(self, frame):
         index = self.data_controller.inputs.get_index()

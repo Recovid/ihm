@@ -41,10 +41,10 @@ class DataBackend(Data, Thread):
             self.settings[key]=value
             print(str(key), str(value))
 
-    def stop_exp(self, on):
-        print("Pause expi "+str(on))
-    def stop_ins(self, on):
-        print("Pause inspi "+str(on))
+    def stop_exp(self, time):
+        print("Pause expi "+str(time))
+    def stop_ins(self, time):
+        print("Pause inspi "+str(time))
 
     def stop(self):
         self.running=False
