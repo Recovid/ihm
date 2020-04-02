@@ -24,9 +24,16 @@ class Button():
         print(self.canvas.winfo_width())
         coord = int(self.width*0.0),int(self.height*0.0),int(self.width),int(self.height)
         self.frame = self.canvas.create_rectangle(coord,fill=config.button['btn_background'],tags='frame')
-        self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
-        		font=(self.font_family,self.font_size),fill=config.button['color_text'], text=self.text.get(),tags='text')
-        
+
+        #check if text is a text or a file path
+        if( text.count('.png') != 0):
+            #the path is an image the button should display an icon and not a text
+            print("display an icon and not a text:".format(text))
+        else:
+            self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
+            font=(self.font_family,self.font_size),fill=config.button['color_text'], text=self.text.get(),tags='text')
+
+
         self.canvas.bind('<ButtonPress-1>',self.onClick)
         self.canvas.bind('<ButtonRelease-1>',self.onUnClick)
         self.canvas.bind('<Configure>',self.configure)
@@ -57,6 +64,15 @@ class Button():
         self.canvas.itemconfigure('frame',fill=config.button['btn_background'])
         self.canvas.itemconfigure(self.textid, text=self.text.get())
         self.canvas.update_idletasks()
+
+    def setText(self, text):
+        #check if text is a text or a file path
+        if( text.count('.png') != 0):
+            #the path is an image the button should display an icon and not a text
+            print("display an icon and not a text:".format(text))
+        else:
+            self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
+            font=(self.font_family,self.font_size),fill=config.button['color_text'], text=self.text.get(),tags='text')
 
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")

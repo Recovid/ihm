@@ -138,22 +138,25 @@ class Window:
         #self.m_fio2.grid(row=1,column=6, sticky="senw")
         #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
-        self.m_pep = Mesure(self.app,0,'cmH2O','PEP')
+        self.m_ie = Mesure(self.app,0, 'I/E')
+        self.m_ie.canvas.grid(row=1, column=6, sticky="senw")
+
+        self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
         self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
 
-        self.m_fr = Mesure(self.app,0,'/min','FR')
+        self.m_fr = Mesure(self.app,0,'FR','/min')
         self.m_fr.canvas.grid(row=2,column=6, sticky="senw")
 
-        self.m_pplat = Mesure(self.app,0,'cmH2O','Pplat')
+        self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
         self.m_pplat.canvas.grid(row=2,column=7, sticky="senw")
 
-        self.m_vm = Mesure(self.app,0,'L/min','VM')
+        self.m_vm = Mesure(self.app,0,'VM','L/min')
         self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
-        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
+        self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
         self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
-        self.m_vte = Mesure(self.app,0,'mL','VTe', dmin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
+        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
         self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
@@ -161,20 +164,20 @@ class Window:
         #btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
         #btn1.canvas.grid(row=5,column=0, sticky="senw")
         
-        btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT/vte')
-        btn2.canvas.grid(row=5,column=1, sticky="senw")
+        btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT')
+        btn2.canvas.grid(row=5,column=0, sticky="senw")
 
         btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
-        btn3.canvas.grid(row=5,column=2, sticky="senw")
+        btn3.canvas.grid(row=5,column=1, sticky="senw")
 
         btn4 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
-        btn4.canvas.grid(row=5,column=3, sticky="senw")
+        btn4.canvas.grid(row=5,column=2, sticky="senw")
 
-        btn5 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit')
-        btn5.canvas.grid(row=5,column=4, sticky="senw")
+        btn5 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
+        btn5.canvas.grid(row=5,column=3, sticky="senw")
 
         btn6 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
-        btn6.canvas.grid(row=5,column=5, sticky="senw")
+        btn6.canvas.grid(row=5,column=4, sticky="senw")
 
         #Boutons Pause
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
@@ -255,6 +258,9 @@ class Window:
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
             #self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
+
+            #recalcul de la valeur de I/E
+
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])

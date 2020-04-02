@@ -81,7 +81,7 @@ class AlarmValue(UserInputHandler):
 
 
 class Mesure:
-    def __init__(self,app,id,unit,title,dmin=None, dmax=None, userinputs=None):
+    def __init__(self,app,id,title, unit=None ,dmin=None, dmax=None, userinputs=None):
         self.app=app
         self.value = tk.IntVar()
         self.value.set(0)
@@ -101,7 +101,7 @@ class Mesure:
         self.height = self.width
 
         self.font_size_value = int(self.height*config.mesure['font_ratio_value'])
-        self.font_size_unit = int(self.height*config.mesure['font_ratio_unit'])
+        self.font_size_unit = int(self.height*config.mesure['font_ratio_title'])
         self.font_family = config.mesure['font_family']
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg=config.mesure['background'])
@@ -109,10 +109,14 @@ class Mesure:
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
         		font=(self.font_family, self.font_size_unit),\
-                fill=config.mesure['color_text'], text=self.title+' ('+self.unit+')')
+                fill=config.mesure['color_text'], text=self.title)
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
-        		font=(self.font_family, self.font_size_value),\
+                font=(self.font_family, self.font_size_value),\
                 fill=config.mesure['color_text'], text=self.value.get(),tags='text'+str(self.id))
+        self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.1), anchor='n', \
+                font=(self.font_family, self.font_size_unit),\
+                fill=config.mesure['color_text'], text=self.unit)
+
         if(dmin is not None):
             self.amin=AlarmValue(self, dmin,userinputs)
         if(dmax is not None):
@@ -137,11 +141,16 @@ class Mesure:
         # self.font_size= int(self.height*0.35)
         # self.title_font_size= int(self.height*0.1)
         self.font_size= int(self.height*config.mesure['font_ratio_value'])
-        self.title_font_size= int(self.height*config.mesure['font_ratio_unit'])
+        self.title_font_size= int(self.height*config.mesure['font_ratio_title'])
+        self.unit_font_size= int(self.height*config.mesure['font_ratio_unit'])
         self.canvas.coords(self.textid,(int(self.width/2),int(self.height/2)))
         self.canvas.itemconfig(self.textid, font=(config.mesure['font_family'],self.font_size))
         self.canvas.coords(self.title_textid,(int(self.width/2),int(self.height*0.05)))
         self.canvas.itemconfig(self.title_textid, font=(config.mesure['font_family'],self.title_font_size))
+        self.canvas.coords(self.unit_textid,int(self.width/2),int(self.height*(1-config.mesure['height_ratio_unit'])))
+        self.canvas.itemconfig(self.unit_textid, font=(config.mesure['font_family'], self.unit_font_size))
+
+
         if(self.amin is not None):
             self.amin.update()
         if(self.amax is not None):
