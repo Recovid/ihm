@@ -117,11 +117,11 @@ envoye toute les xms (100ms?) jusqu'a acknowledge
 
 `SET_` suivi d'un réglage parmi :
 
-- `Vt___` (Volume tidal ou courant) : 0300..1000 (mL)
-- `PEP__` (Pression Expiratoire Positive) : 00..50 (cmH2O)
+- `VT___` (Volume tidal ou courant) : 100..600 (mL)
 - `FR___` (Fréquence Respiratoire) : 12..35 (1/min)
-- `PIF__` (Débit de pointe) : 30..90 (1/min)
-- `TPLAT` (Temps Plateau) : 000..200 (ms)
+- `PEP__` (Pression Expiratoire Positive) : 05..20 (cmH2O)
+- `FLOW_` (Débit max inspiratoire) : 20..60 (L/min)
+- `TPLAT` (Temps Plateau) : 0100..1000 (ms)
 
 ou parmi ces réglages d'alarme
 
@@ -131,7 +131,7 @@ ou parmi ces réglages d'alarme
 
 Exemple:
 ```
-SET_ Vt___:0550\tCS8:1A\n
+SET_ Vt___:550\tCS8:1A\n
 ```
 
 ## Pauses

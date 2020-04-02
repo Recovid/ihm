@@ -109,12 +109,14 @@ class DataController:
         self.repost_stop_exp = False
         self.repost_stop_ins = False
 
-        self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=21)
+        # settings
         self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,0,1000,default=500, step=10)
         self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,0,50,default=15)
         self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,0,30,default=5)
         self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,0,100,default=60)
         self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0,100,default=0)
+
+        # alarms
         self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,100,default=30)
         self.outputs[backend.PMAX]=DataOutputManager(backend,backend.PMAX,0,100,default=90)
         self.outputs[backend.VMIN]=DataOutputManager(backend,backend.VMIN,0,100,default=300, step=10)

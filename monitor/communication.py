@@ -49,15 +49,16 @@ class RespMsg:
 class SetMsg:
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')
     SETTINGS = [ # (setting key, serial string, number of digits)
-        (Data.PEP, "PEP__", 2),
-        (Data.VT, "Vt___", 4),
+        # resp settings
+        (Data.VT, "VT___", 4),
         (Data.FR, "FR___", 2),
-        (Data.TPLAT, "TPLAT", 3),
-        (Data.PCRETE, "PIF__", 2),
+        (Data.PEP, "PEP__", 2),
+        (Data.FLOW, "FLOW", 2),
+        (Data.TPLAT, "TPLAT", 4),
+        # alarms
         (Data.VMIN, "VTMIN", 4),
         (Data.PMAX, "PMAX_", 3),
         (Data.PMIN, "PMIN_", 3),
-        (Data.FLOW, "FIXME", 3), # TODO: remove, not real a setting
     ]
 
     def __init__(self, setting, value):

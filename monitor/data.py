@@ -1,11 +1,12 @@
 class Data:
-    PEP="pep"
+    VT="vt" # volume courant (mL)
+    FR="fr" # frequence respiratoire (1/min)
+    PEP="pep" # pression expiratoire positive (cmH2O)
+    FLOW="flow" # debit max inspiratoire (L/min)
+    TPLAT="tplat" # temps plateau (ms)
+
     PEP_ALARM="pep_alarm"
     FIO2="fio2"
-    VT="vt"
-    FR="fr"
-    FLOW="flow"
-    TPLAT="tplat"
     VTE="vte"
     VTE_ALARM="vte_alarm"
     VMIN="vmin"

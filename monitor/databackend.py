@@ -23,12 +23,13 @@ class DataBackend(Data, Thread):
         self.running=False
 
         self.settings={}
-        self.settings[type(self).FIO2]=0
+        # resp
         self.settings[type(self).VT]=0
         self.settings[type(self).FR]=0
         self.settings[type(self).PEP]=0
         self.settings[type(self).FLOW]=0
         self.settings[type(self).TPLAT]=0
+        # alarms
         self.settings[type(self).PMIN]=0
         self.settings[type(self).PMAX]=0
         self.settings[type(self).VMIN]=0
@@ -198,8 +199,6 @@ class DataBackendDummy(DataBackend):
             print(str(key), str(value))
             if(key==self.PEP):
                 self.handler.update_inputs(**{self.PEP:value,self.PEP_ALARM:value>10 })
-            elif(key==self.FIO2):
-                self.handler.update_inputs(**{self.FIO2:value})
             elif(key==self.VT):
                 self.handler.update_inputs(**{self.VTE:value, self.VTE_ALARM:value<100})
             elif(key==self.FR):
