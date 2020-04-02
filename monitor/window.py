@@ -120,8 +120,8 @@ class Window:
         self.uihandler = Window.UIHandler(self)
 
         #self.data_backend = DataBackendDummy(100,100,500)
-        #self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
-        self.data_backend = SerialPortMock("in", "out")
+        self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
+        #self.data_backend = SerialPortMock("in", "out")
         self.data_controller = DataController(self.data_backend)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
