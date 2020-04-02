@@ -120,6 +120,7 @@ class DataController:
         self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,100,default=30)
         self.outputs[backend.PMAX]=DataOutputManager(backend,backend.PMAX,0,100,default=90)
         self.outputs[backend.VMIN]=DataOutputManager(backend,backend.VMIN,0,100,default=300, step=10)
+        #self.outputs[backend.FIO2]=DataOutputManager(backend,backend.FIO2,0,100,default=21)
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)

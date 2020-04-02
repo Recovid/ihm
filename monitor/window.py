@@ -134,9 +134,9 @@ class Window:
 
         #VALEURS A Droite
  
-        self.m_fio2 = Mesure(self.app,0,'%','FiO2')
+        #self.m_fio2 = Mesure(self.app,0,'%','FiO2')
         #self.m_fio2.grid(row=1,column=6, sticky="senw")
-        self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
+        #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
         self.m_pep = Mesure(self.app,0,'cmH2O','PEP')
         self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
@@ -254,7 +254,7 @@ class Window:
         lf = self.scope_flow.update(index,self.delta_marker)
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
-            self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
+            #self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
