@@ -93,9 +93,12 @@ class Knob(UserInputHandler):
     def update(self,value):
         if value >= self.min_range and value <= self.max_range:
             self.value = value
-            self.value_norm = 270 - (((self.value/self.max_range) + self.min_range)*270)
+            print(self.max_range, self.min_range, self.value)
+            print((self.value/self.max_range) + self.min_range)
+            self.value_norm = 270 - ((self.value-self.min_range)/(self.max_range- self.min_range)*270)
+            print(self.value_norm)
             item_txt = self.canvas.find_withtag("knob_value")
-            self.canvas.itemconfigure(item_txt,extent=self.value_norm)
+            self.canvas.itemconfigure(self.arc_grey,extent=self.value_norm)
             item_txt = self.canvas.find_withtag("knob_value_text")
             self.canvas.itemconfigure(item_txt,text=str(value))
             self.canvas.update_idletasks()
