@@ -10,7 +10,7 @@ from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, Ser
 from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager, OneValueDialog
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button
+from .button import Button, Button2, ButtonPR
 
 
 class Scope:
@@ -183,24 +183,22 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
-        self.bt_freeze = Button(self.app,0,"Geler courbes", "Resume")
-        self.bt_freeze.canvas.grid(row=1,column=8,sticky=stickyall)
-        
+        self.bt_freeze = ButtonPR(self.app,"Geler courbes", "Resume")
+        self.bt_freeze.grid(row=1,column=8,sticky=stickyall)
 
-        self.bt_si = Button(self.app,1,"Pause Inspi")
-        self.bt_si.canvas.grid(row=2,column=8, sticky="senw")
+        self.bt_si = Button2(self.app,"Pause Inspi")
+        self.bt_si.grid(row=2,column=8, sticky="senw")
 
-        self.bt_se = Button(self.app ,2,"Pause Expi")
-        self.bt_se.canvas.grid(row=3,column=8, sticky="senw")
+        self.bt_se = Button2(self.app ,"Pause Expi")
+        self.bt_se.grid(row=3,column=8, sticky="senw")
 
-        self.bt_freeze.canvas.bind('<Button-1>', self.event_bt_freeze)
-        self.bt_freeze.canvas.bind('<ButtonRelease-1>', None)
+        self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
-        self.bt_si.canvas.bind('<ButtonPress-1>',self.stop_ins_event,'+')
-        self.bt_si.canvas.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
+        self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
+        self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
-        self.bt_se.canvas.bind('<ButtonPress-1>',self.stop_exp_event,'+')
-        self.bt_se.canvas.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
+        self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
+        self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
@@ -228,13 +226,13 @@ class Window:
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
             self.userinputs.select(self.uihandler, arrows=True)
             self.delta_marker=0
-            self.bt_freeze.push()
+            #self.bt_freeze.push()
         else:
             self.freeze_time=False
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
             self.userinputs.select(None)
             self.delta_marker=None
-            self.bt_freeze.release()
+            #self.bt_freeze.release()
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)

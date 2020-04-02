@@ -96,8 +96,9 @@ class DataOutputManager:
         self.key=key
 
     def update(self,value):
-        self.value=value
-        self.backend.set_setting(self.key,value)
+        if(value<=self.vmax or value >= self.vmin):
+            self.value=value
+            self.backend.set_setting(self.key,value)
 
 class DataController:
 

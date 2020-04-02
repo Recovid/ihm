@@ -74,6 +74,41 @@ class Button():
             self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
             font=(self.font_family,self.font_size),fill=config.button['color_text'], text=self.text.get(),tags='text')
 
+class Button2(tk.Button):
+    def __init__(self,parent, text=None):
+        tk.Button.__init__(self,parent,bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
+        if(text is not None):
+            self.config(text=text)
+
+        self.bind('<ButtonPress-1>', lambda event : self.config(activebackground=config.button['btn_background_selected']))
+        self.bind('<ButtonRelease-1>', lambda event : self.config(activebackground=config.button['btn_background']))
+class ButtonPR(Button2):
+    def __init__(self, parent, text, text_push=None):
+        Button2.__init__(self, parent ,text)
+        self.pushed=False
+        self.text_push=text_push
+        self.text=text
+
+        self.bind('<ButtonPress-1>',self.click)
+        self.bind('<ButtonRelease-1>',self.unclick)
+    def click(self, event):
+        if(self.pushed):
+            self.pushed=False
+            self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'], default=tk.DISABLED)
+            if(self.text_push is not None):
+                self.config(text=self.text)
+        else:
+            self.pushed=True
+            self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'], default=tk.ACTIVE)
+            if(self.text_push is not None):
+                self.config(text=self.text_push)
+        
+    def unclick(self, event):
+        if(self.pushed):
+            self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'])
+        else:
+            self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'])
+
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")
 

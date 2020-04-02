@@ -3,6 +3,7 @@
 import config
 import tkinter as tk
 from .helpers import Dialog
+from .button import Button2
 
 class UserInputHandler:
 
@@ -145,12 +146,9 @@ class OneValueDialog(Dialog):
         self.buttons = []
         self.frame_buttons=tk.Frame(master)
         for i in range(4):
-            self.buttons.append(tk.Button(self.frame_buttons,activebackground=config.button['btn_background_selected'],
-                bg=config.button['btn_background'],
-                font=(config.valueDialog['font_family'], config.valueDialog['font_size_input']),
-                text=self.signs[i]))
+            self.buttons.append(Button2(self.frame_buttons,text=self.signs[i]))
             self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-            self.buttons[i].bind('<1>',self.click)
+            self.buttons[i].bind('<1>',self.click,'+')
         self.frame_buttons.pack(fill=tk.BOTH, expand=1)
 
 
