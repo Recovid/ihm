@@ -112,7 +112,6 @@ envoye toute les xms (100ms?) jusqu'a acknowledge
 
 `SET_` suivi d'un réglage parmi :
 
-- `Fi02_` (Fraction inspirée en di-Oxygène) : 021..100 (%)
 - `Vt___` (Volume tidal ou courant) : 0300..1000 (mL)
 - `PEP__` (Pression Expiratoire Positive) : 00..50 (cmH2O)
 - `FR___` (Fréquence Respiratoire) : 12..35 (1/min)

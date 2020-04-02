@@ -158,8 +158,8 @@ class Window:
 
         #BOUTONS EN BAS
      
-        btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
-        btn1.canvas.grid(row=5,column=0, sticky="senw")
+        #btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
+        #btn1.canvas.grid(row=5,column=0, sticky="senw")
         
         btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT/vte')
         btn2.canvas.grid(row=5,column=1, sticky="senw")
