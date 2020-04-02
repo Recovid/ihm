@@ -229,11 +229,11 @@ class MinMaxDialog(Dialog):
                 self.vmin_var.set(val)
         elif(event.widget==self.buttons[1]):
             val = self.vmin_var.get()+1*self.dmin.step
-            if val <= self.dmin.vmax and val < self.vmax_var.get():
+            if val <= self.dmin.vmax and (self.dmax is None or val < self.vmax_var.get()):
                 self.vmin_var.set(val)
         elif(event.widget==self.buttons[2]):
             val = self.vmax_var.get()-1*self.dmax.step
-            if val >= self.dmax.vmin and val > self.vmin_var.get():
+            if val >= self.dmax.vmin and (self.dmin is None or val > self.vmin_var.get()):
                 self.vmax_var.set(val)
         elif(event.widget==self.buttons[3]):
             val = self.vmax_var.get()+1*self.dmax.step
