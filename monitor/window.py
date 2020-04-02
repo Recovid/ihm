@@ -63,16 +63,6 @@ class Scope:
         else:
             return self.line_a, self.line_b
 
-class RangeSetter:
-    def __init__(self, app, value, label, handler):
-        self.handler=handler
-        self.scale=tk.Scale(app, variable=value, label=label, from_=handler.vmin, to=handler.vmax, command=self.update)
-        self.scale.set(handler.value)
-
-    def update(self,value):
-        self.handler.update(value)
-
-
 class Window:
     class UIHandler(UserInputHandler):
 
@@ -89,9 +79,6 @@ class Window:
                 self.parent.delta_marker=self.parent.delta_marker-inc
     
     def __init__(self):
-
-        
-
         self.timewindow=15
         self.freq=20
         self.timeresolution=1.0/self.freq
@@ -135,7 +122,7 @@ class Window:
         self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
         self.bt_Alarm.set_background('#4E69AB')
         self.bt_Alarm.grid(self.title_frame, row=0, column=8, sticky=stickyall)
-        self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm)
+        self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
 
         #VALEURS A Droite
  
