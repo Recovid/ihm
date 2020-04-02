@@ -1,5 +1,6 @@
 
 # -*- coding: utf-8 -*-
+import config
 import tkinter as tk
 import tkinter.font as tkfont
 import time
@@ -14,20 +15,26 @@ class AlarmValue(UserInputHandler):
         self.value=datamanager.value
         self.userinputs=userinputs
         self.anchor=anchor
-        self.font = tkfont.Font(family="Helvetica", size=int(self.mesure.height*0.1), weight="normal")
+        self.font = tkfont.Font(family=config.alarmValue['font_family'], \
+            size=int(self.mesure.height*config.alarmValue['unit_value']), \
+            weight="normal")
         th = self.font.metrics('linespace')
         tw = self.font.measure(str(self.datamanager.value))
-        self.rs_h=0.25
-        self.rs_w=0.30
-        self.rect_coord=(0,int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width*self.rs_w), int(self.mesure.height))
+        self.rs_h=config.alarmValue['height_ratio']
+        self.rs_w=config.alarmValue['width_ratio']
+        self.rect_coord=(0,int(self.mesure.height*(1-self.rs_h)), \
+            int(self.mesure.width*self.rs_w), int(self.mesure.height))
         if(self.anchor=='se'):
-            self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width), int(self.mesure.height))
+            self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))), \
+                int(self.mesure.height*(1-self.rs_h)), \
+                int(self.mesure.width), \
+                int(self.mesure.height))
         text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), self.rect_coord[3])
-        self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=self.anchor, fill='#c16666')
+        self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=self.anchor, fill=config.alarmValue['background'])
         self.text = self.mesure.canvas.create_text(\
                 text_coord, \
                 anchor='sw', \
-        	font=self.font,fill='black', text=str(self.datamanager.value), tags=self.anchor)
+        	font=self.font,fill=config.alarmValue['color_text'], text=str(self.datamanager.value), tags=self.anchor)
         #self.mesure.canvas.tag_bind(anchor,'<1>', self.click)
         self.value=datamanager.value
 
@@ -39,10 +46,12 @@ class AlarmValue(UserInputHandler):
             self.userinputs.select(None)
     def selected_handler(self):
         self.selected=True
-        self.mesure.canvas.itemconfig(self.rect,fill='red')
+        self.mesure.canvas.itemconfig(self.rect, \
+            fill=config.alarmValue['background_selected'])
     def unselected_handler(self):
         self.selected=False
-        self.mesure.canvas.itemconfig(self.rect,fill='#c16666')
+        self.mesure.canvas.itemconfig(self.rect, \
+            fill=config.alarmValue['background'])
         self.value=self.datamanager.value
         self.update()
 
@@ -61,10 +70,11 @@ class AlarmValue(UserInputHandler):
             self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width), int(self.mesure.height))
         self.mesure.canvas.coords(self.rect,self.rect_coord)
 
-        self.font = tkfont.Font(family="Helvetica", size=int(self.mesure.height*0.1), weight="normal")
+        self.font = tkfont.Font(family=config.alarmValue['font_family'], size=int(self.mesure.height*0.1), weight="normal")
         tw = self.font.measure(str(self.value))
         th = self.font.metrics('linespace')
-        text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), int(self.rect_coord[3]-(self.mesure.height*self.rs_h-th)/2))
+        text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), \
+            int(self.rect_coord[3]-(self.mesure.height*self.rs_h-th)/2))
         self.mesure.canvas.coords(self.text, text_coord)
         self.mesure.canvas.itemconfig(self.text, text=str(self.value), font=self.font)
         self.mesure.canvas.update_idletasks()
@@ -87,22 +97,22 @@ class Mesure:
         self.amin=None
         self.amax=None
 
-        self.width = int(app.winfo_screenwidth()*0.009)
-        self.height = int(app.winfo_screenwidth()*0.009)
-        #self.width = 1
-        #self.height = 1
+        self.width = int(app.winfo_screenwidth()*config.mesure['ratio_width'])
+        self.height = self.width
 
-        self.font_size_value = int(self.height*0.4)
-        self.font_size_unit = int(self.height*0.15)
-        self.font_family = "Helvetica"
+        self.font_size_value = int(self.height*config.mesure['font_ratio_value'])
+        self.font_size_unit = int(self.height*config.mesure['font_ratio_unit'])
+        self.font_family = config.mesure['font_family']
 
-        self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg="#edf0f6")
+        self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg=config.mesure['background'])
         self.canvas.bind('<Configure>',self.configure)
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
-        		font=("Helvetica", self.font_size_unit),fill='black', text=self.title+' ('+self.unit+')')
+        		font=(self.font_family, self.font_size_unit),\
+                fill=config.mesure['color_text'], text=self.title+' ('+self.unit+')')
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
-        		font=("Helvetica", self.font_size_value),fill='black', text=self.value.get(),tags='text'+str(self.id))
+        		font=(self.font_family, self.font_size_value),\
+                fill=config.mesure['color_text'], text=self.value.get(),tags='text'+str(self.id))
         if(dmin is not None):
             self.amin=AlarmValue(self, dmin,userinputs)
         if(dmax is not None):
@@ -124,12 +134,14 @@ class Mesure:
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
         self.height = int(self.canvas.winfo_height())
-        self.font_size= int(self.height*0.35)
-        self.title_font_size= int(self.height*0.1)
+        # self.font_size= int(self.height*0.35)
+        # self.title_font_size= int(self.height*0.1)
+        self.font_size= int(self.height*config.mesure['font_ratio_value'])
+        self.title_font_size= int(self.height*config.mesure['font_ratio_unit'])
         self.canvas.coords(self.textid,(int(self.width/2),int(self.height/2)))
-        self.canvas.itemconfig(self.textid, font=("Helvetica",self.font_size))
+        self.canvas.itemconfig(self.textid, font=(config.mesure['font_family'],self.font_size))
         self.canvas.coords(self.title_textid,(int(self.width/2),int(self.height*0.05)))
-        self.canvas.itemconfig(self.title_textid, font=("Helvetica",self.title_font_size))
+        self.canvas.itemconfig(self.title_textid, font=(config.mesure['font_family'],self.title_font_size))
         if(self.amin is not None):
             self.amin.update()
         if(self.amax is not None):
@@ -145,17 +157,17 @@ class Mesure:
     def set_alarm(self, on):
         self.alarm=on
         if on:
-            self.canvas.configure(background="#ff2026")
+            self.canvas.configure(background=config.mesure['background_alarmOn'])
             self.alarm_switch=False
             self.update_alarm()
         else:
-            self.canvas.configure(background="#edf0f6")
+            self.canvas.configure(background=config.mesure['background'])
             self.canvas.after_cancel(self.alarm_id)
         self.canvas.update_idletasks()
 
     def update_alarm(self):
         self.alarm_switch = not self.alarm_switch
-        self.canvas.configure(background=  "#ff2026" if self.alarm_switch else "#edf0f6")
+        self.canvas.configure(background=config.mesure['background_alarmOn'] if self.alarm_switch else config.mesure['background'])
         self.canvas.update_idletasks()
         self.alarm_id=self.canvas.after(1000 if self.alarm_switch else 500,self.update_alarm)
 

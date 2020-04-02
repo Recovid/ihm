@@ -1,5 +1,6 @@
 
 # -*- coding: utf-8 -*-
+import config
 import tkinter as tk
 from .helpers import Dialog
 
@@ -45,12 +46,13 @@ class KeyboardUserInputManager(UserInputManager):
 class ButtonUserInputManager(UserInputManager):
     def __init__(self,app):
         UserInputManager.__init__(self)
-        self.width = 1 # int(app.winfo_screenwidth()*0.2)
-        self.height = 1 #int(app.winfo_screenheight()*0.09)
+        self.width = config.buttonUserInput['width_ratio'] # int(app.winfo_screenwidth()*0.2)
+        self.height = config.buttonUserInput['height_ratio'] #int(app.winfo_screenheight()*0.09)
 
-        self.font_size = int(self.height*0.35)
+        self.font_size = int(self.height*config.buttonUserInput['font_ratio_value'])
 
-        self.canvas = tk.Canvas(app, height=self.height, width=self.width, bg="white",borderwidth=0)
+        self.canvas = tk.Canvas(app, height=self.height, width=self.width, \
+            bg=config.buttonUserInput['background'],borderwidth=0)
 
         self.signs = ['--','-','+','++']
         self.arrows = ['<<','<','>','>>']
@@ -60,7 +62,8 @@ class ButtonUserInputManager(UserInputManager):
             coord = int(self.width*i/4),int(self.height*0.0),int((i+1)*self.width/4),int(self.height)
             self.ids_frame[i]=self.canvas.create_rectangle(coord,fill='grey',tags='frame_'+str(i))
             self.ids_text[i]=self.canvas.create_text(int(coord[0]+(coord[2]-coord[0])*0.5), int(self.height*0.5), anchor='c', \
-                font=("Helvetica", self.font_size),fill='white', text=self.signs[i],tags='text_'+str(i))
+                font=(config.buttonUserInput['font_family'], self.font_size),\
+                fill=config.buttonUserInput['background'], text=self.signs[i],tags='text_'+str(i))
 
         self.canvas.itemconfig('all',state="hidden")
 
@@ -76,7 +79,7 @@ class ButtonUserInputManager(UserInputManager):
             coords = int(self.width*i/4),int(self.height*0.0),int((i+1)*self.width/4),int(self.height)
             self.canvas.coords(self.ids_frame[i],coords)
             self.canvas.coords(self.ids_text[i],(int(coords[0]+self.width/8),int(self.height/2)))
-            self.canvas.itemconfig(self.ids_text[i], font=("Helvetica",self.font_size))
+            self.canvas.itemconfig(self.ids_text[i], font=(config.buttonUserInput['font_family'],self.font_size))
 
     def select(self, handler, arrows=False):
         UserInputManager.select(self,handler)
@@ -103,7 +106,7 @@ class ButtonUserInputManager(UserInputManager):
 
     def onClick(self,event):
         idbutton = self.find_idbutton(event)
-        self.canvas.itemconfigure(self.ids_frame[idbutton],fill="#c9d2e5")
+        self.canvas.itemconfigure(self.ids_frame[idbutton],fill=config.buttonUserInput['btn_background_selected'])
         self.canvas.update_idletasks()
         if(self.selected is not None):
             if(idbutton==0):
@@ -117,7 +120,7 @@ class ButtonUserInputManager(UserInputManager):
 
     def onUnClick(self,event):
         idbutton = self.find_idbutton(event)
-        self.canvas.itemconfigure(self.ids_frame[idbutton],fill="grey")
+        self.canvas.itemconfigure(self.ids_frame[idbutton],fill=config.buttonUserInput['btn_background'])
         self.canvas.update_idletasks()
 
 class OneValueDialog(Dialog):
@@ -131,12 +134,12 @@ class OneValueDialog(Dialog):
     def body(self, master):
 
 
-        self.geometry("%dx%d" % (300,250))
+        self.geometry("%dx%d" % (config.valueDialog['width'],config.valueDialog['height']))
 
         tk.Label(master, text=self.title()).pack(fill=tk.X)
         self.value_var=tk.StringVar()
         self.value_var.set(str(self.value))
-        self.label = tk.Label(master, font=("Helvetica", 40), textvariable=self.value_var).pack(fill=tk.X)
+        self.label = tk.Label(master, font=(config.valueDialog['font_family'], config.valueDialog['font_size']), textvariable=self.value_var).pack(fill=tk.X)
 
         self.signs = ['--','-','+','++']
         self.buttons = []
@@ -179,7 +182,7 @@ class MinMaxDialog(Dialog):
     def body(self, master):
 
 
-        self.geometry("%dx%d" % (300,250))
+        self.geometry("%dx%d" % (config.minMaxDialog['width'],config.minMaxDialog['height']))
 
         tk.Label(master, text=self.title()).pack(fill=tk.X)
 
@@ -197,7 +200,7 @@ class MinMaxDialog(Dialog):
             tk.Label(fm, text="Min").pack(side=tk.LEFT,fill=tk.X,expand=1)
             self.vmin_var=tk.IntVar()
             self.vmin_var.set(self.dmin.value)
-            self.label = tk.Label(fv, font=("Helvetica", 30), textvariable=self.vmin_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
+            self.label = tk.Label(fv, font=(config.minMaxDialog['font_family'],config.minMaxDialog['font_size']), textvariable=self.vmin_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
             for i in [0,1]:
                 self.buttons[i]=tk.Button(self.frame_buttons, text=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
@@ -206,7 +209,7 @@ class MinMaxDialog(Dialog):
             tk.Label(fm, text="Max").pack(side=tk.LEFT,fill=tk.X,expand=1)
             self.vmax_var=tk.IntVar()
             self.vmax_var.set(self.dmax.value)
-            self.label = tk.Label(fv, font=("Helvetica", 30), textvariable=self.vmax_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
+            self.label = tk.Label(fv, font=(config.minMaxDialog['font_family'], config.minMaxDialog['font_size']), textvariable=self.vmax_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
             for i in [2,3]:
                 self.buttons[i]=tk.Button(self.frame_buttons, text=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)

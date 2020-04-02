@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import config
 import tkinter as tk
 import time
 from .userinputs import UserInputHandler, OneValueDialog
@@ -19,28 +20,30 @@ class Knob(UserInputHandler):
       
         self.width = int(app.winfo_screenwidth()*0.1)
         self.height = int(app.winfo_screenwidth()*0.1)#120
-        self.width = 1 #int(800*0.09)
-        self.height = 1 #int(800*0.09)#120
+        self.width = config.knob['width_ratio'] #int(800*0.09)
+        self.height = config.knob['height_ratio'] #int(800*0.09)#120
 
-        self.font_size_value = int(self.height*0.2)#22
-        self.font_size_unit = int(self.height*0.1)#10
-        self.font_size_title = int(self.height*0.12)#15
+        self.font_size_value = int(self.height*config.knob['font_ratio_value'])#22
+        self.font_size_unit = int(self.height*config.knob['font_ratio_unit'])#10
+        self.font_size_title = int(self.height*config.knob['font_ratio_title'])#15
 
         self.canvas = tk.Canvas(app, height=self.height, width=self.width)
         coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
-        self.arc_green = self.canvas.create_arc(coord, start=-45, extent=270, fill="#4E69AB")
+        self.arc_green = self.canvas.create_arc(coord, start=-45, extent=270, fill=config.knob['color_arc'])
 
-        self.arc_grey = self.canvas.create_arc(coord, start=-45, extent=270, fill="grey",tags='knob_value')
+        self.arc_grey = self.canvas.create_arc(coord, start=-45, extent=270, fill=config.knob['background'],tags='knob_value')
 
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
-        self.circle = self.canvas.create_oval(coord, fill="grey", width=2,tags='knob_circle')
+        self.circle = self.canvas.create_oval(coord, fill=config.knob['background'], width=2,tags='knob_circle')
 
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
-                font=("Helvetica", self.font_size_value),fill='white', text=str(0),tags='knob_value_text')
+                font=(config.knob['font_family'], self.font_size_value),\
+                fill=config.knob['color_text'], text=str(0),tags='knob_value_text')
         #self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
         #        font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
         self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
-                font=("Helvetica", self.font_size_title),fill='grey', text=self.title)
+                font=(config.knob['font_family'], self.font_size_title),\
+                fill=config.knob['background'], text=self.title)
 
         #self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
         #        font=("Helvetica", 12),fill='grey', text=self.min_range)
@@ -62,13 +65,13 @@ class Knob(UserInputHandler):
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
         self.canvas.coords(self.circle,coord)
 
-        font_size = int(self.width*0.2)
+        font_size = int(self.width*config.knob['font_ratio_value'])
         self.canvas.coords(self.textid,(int(self.width*0.5),int(self.height*0.5)))
-        self.canvas.itemconfig(self.textid, font=("Helvetica",font_size))
+        self.canvas.itemconfig(self.textid, font=(config.knob['font_family'],font_size))
         
-        font_size = int(self.width*0.12)
+        font_size = int(self.width*config.knob['font_ratio_title'])
         self.canvas.coords(self.title_textid,(int(self.width*0.5),int(self.height)))
-        self.canvas.itemconfig(self.title_textid, font=("Helvetica",font_size))
+        self.canvas.itemconfig(self.title_textid, font=(config.knob['font_family'],font_size))
         
 
 
@@ -80,10 +83,10 @@ class Knob(UserInputHandler):
         self.update(self.value+self.step*inc)
     def selected_handler(self):
         self.selected = True
-        self.canvas.itemconfigure('knob_circle', fill='#c9d2e5')
+        self.canvas.itemconfigure('knob_circle', fill=config.knob['background_selected'])
     def unselected_handler(self):
         self.selected = False
-        self.canvas.itemconfigure('knob_circle', fill='gray')
+        self.canvas.itemconfigure('knob_circle', fill=config.knob['background'])
 
 
 
