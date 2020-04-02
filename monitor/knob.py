@@ -91,7 +91,7 @@ class Knob(UserInputHandler):
 
 
     def update(self,value):
-        if value>self.min_range and value <=self.max_range:
+        if value >= self.min_range and value <= self.max_range:
             self.value = value
             self.value_norm = 270 - (((self.value/self.max_range) + self.min_range)*270)
             item_txt = self.canvas.find_withtag("knob_value")

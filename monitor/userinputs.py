@@ -167,7 +167,12 @@ class OneValueDialog(Dialog):
             inc=1
         elif(event.widget==self.buttons[3]):
             inc=10
-        self.value=self.value+self.datamanager.step*inc
+        val = self.value+self.datamanager.step*inc
+        if val >= self.datamanager.vmax:
+            val = self.datamanager.vmax
+        elif val <= self.datamanager.vmin:
+            val = self.datamanager.vmin
+        self.value = val
         self.value_var.set(self.value)
 
 
