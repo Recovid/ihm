@@ -104,6 +104,8 @@ class Window:
         self.app.geometry("%dx%d"% (self.ws , self.hw))
         #self.ws = self.app.winfo_width()
         #self.hw = self.app.winfo_height()
+        self.alarm_text = tk.StringVar()
+        self.alarm_text.set("Some Alarm message text")
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -130,7 +132,13 @@ class Window:
         self.title_frame = tk.Frame(self.app, \
             bg='#4E69AB').grid(row=0,column=0,columnspan=9)
         self.title = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)),text='RECOVID', \
-            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=9, sticky=stickyall)
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=2, sticky=stickyall)
+        self.alarm_msg = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)), textvariable = self.alarm_text, \
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=6, sticky=stickyall)
+
+        self.bt_Alarm = ButtonPR(self.app,"Alarm Icon", "other" )
+        self.bt_Alarm.grid(self.title_frame, row=0, column=8, sticky=stickyall)
+        self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm)
 
         #VALEURS A Droite
  
@@ -272,4 +280,12 @@ class Window:
         self.app.mainloop()
         self.app.destroy()
         self.data_backend.stop()
+
+    #note Boris: note sure if this function will be usefull
+    def updateAlarmText(self, newText):
+        self.alarm_msg.set_text(newText)
+
+    #see what we need to do with this button in function in function of the implementation of alarm system
+    def event_bt_Alarm(self, e):
+        print("event_bn_alarm pressed")
 
