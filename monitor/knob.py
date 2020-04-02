@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 import time
-from .userinputs import UserInputHandler
+from .userinputs import UserInputHandler, OneValueDialog
 
 class Knob(UserInputHandler):
     def __init__(self,app,userinputs, datamanager,unit,title):
+        self.app=app
         self.value = datamanager.value
         self.max_range = datamanager.vmax
         self.min_range = datamanager.vmin
@@ -95,13 +96,15 @@ class Knob(UserInputHandler):
             item_txt = self.canvas.find_withtag("knob_value_text")
             self.canvas.itemconfigure(item_txt,text=str(value))
             self.canvas.update_idletasks()
-            self.datamanager.update(value)
+            #self.datamanager.update(value)
 
     def onClick(self,event):
-        if self.selected:
-            self.userinputs.select(None)
-        else:
-            self.userinputs.select(self)
+        OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
+        self.update(self.datamanager.value)
+    #    if self.selected:
+    #        self.userinputs.select(None)
+    #    else:
+    #        self.userinputs.select(self)
 
 
 # Programme de test

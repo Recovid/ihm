@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
-from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager
+from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager, OneValueDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button
@@ -150,10 +150,10 @@ class Window:
         self.m_vm = Mesure(self.app,0,'L/min','VM')
         self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
-        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', amin=self.data_controller.outputs[DataBackend.PMIN], amax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
+        self.m_pcrete = Mesure(self.app,0,'cmH2O','Pcrete', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
         self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
-        self.m_vte = Mesure(self.app,0,'mL','VTe', amin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
+        self.m_vte = Mesure(self.app,0,'mL','VTe', dmin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
         self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
