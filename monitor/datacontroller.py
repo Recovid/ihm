@@ -114,7 +114,7 @@ class DataController:
         self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,12,35,default=18)
         self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,5,20,default=5)
         self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,20,60,default=60, step=2)
-        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0.1,1,default=0.1)
+        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0.1,1,default=0.1, step=0.1)
 
         # alarms
         self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,30,default=15) # TODO confirm default
