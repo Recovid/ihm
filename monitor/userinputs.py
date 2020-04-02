@@ -146,7 +146,7 @@ class OneValueDialog(Dialog):
         self.buttons = []
         self.frame_buttons=tk.Frame(master)
         for i in range(4):
-            self.buttons.append(Button2(self.frame_buttons,text=self.signs[i]))
+            self.buttons.append(Button2(self.frame_buttons,content=self.signs[i]))
             self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
             self.buttons[i].bind('<1>',self.click,'+')
         self.frame_buttons.pack(fill=tk.BOTH, expand=1)
@@ -210,18 +210,18 @@ class MinMaxDialog(Dialog):
             self.vmin_var.set(self.dmin.value)
             self.label = tk.Label(fv, font=(config.minMaxDialog['font_family'],config.minMaxDialog['font_size']), textvariable=self.vmin_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
             for i in [0,1]:
-                self.buttons[i]=tk.Button(self.frame_buttons, text=self.signs[i])
+                self.buttons[i]=Button2(self.frame_buttons, content=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-                self.buttons[i].bind('<1>',self.click)
+                self.buttons[i].bind('<1>',self.click, '+')
         if(self.dmax is not None):
             tk.Label(fm, text="Max").pack(side=tk.LEFT,fill=tk.X,expand=1)
             self.vmax_var=tk.IntVar()
             self.vmax_var.set(self.dmax.value)
             self.label = tk.Label(fv, font=(config.minMaxDialog['font_family'], config.minMaxDialog['font_size']), textvariable=self.vmax_var).pack(side=tk.LEFT,fill=tk.X,expand=1)
             for i in [2,3]:
-                self.buttons[i]=tk.Button(self.frame_buttons, text=self.signs[i])
+                self.buttons[i]=Button2(self.frame_buttons, content=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-                self.buttons[i].bind('<1>',self.click)
+                self.buttons[i].bind('<1>',self.click, '+')
 
 
 

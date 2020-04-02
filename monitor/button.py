@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import config
 import tkinter as tk
+from PIL import Image, ImageTk
 import time
 
 class Button():
@@ -75,33 +76,60 @@ class Button():
             font=(self.font_family,self.font_size),fill=config.button['color_text'], text=self.text.get(),tags='text')
 
 class Button2(tk.Button):
-    def __init__(self,parent, text=None):
+    def __init__(self,parent, content=None):
         tk.Button.__init__(self,parent,bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
-        if(text is not None):
-            self.config(text=text)
+        self.content=content
+        if(content is not None):
+            self.set_content(content)
 
         self.bind('<ButtonPress-1>', lambda event : self.config(activebackground=config.button['btn_background_selected']))
         self.bind('<ButtonRelease-1>', lambda event : self.config(activebackground=config.button['btn_background']))
+
+    def resize(self, event):
+        if(self.img):
+            img = Image.open(self.content).resize(
+                (event.width-10, event.height-10), Image.ANTIALIAS
+            )
+            self.img = ImageTk.PhotoImage(img)
+            self.config(image=self.img)
+
+    def set_content(self, content):
+        if( content.count('.png') != 0):
+            self.img = ImageTk.PhotoImage(
+                Image.open(content)
+                )
+            self.config(image=self.img)
+            self.bind('<Configure>', self.resize)
+        else:
+            self.config(text=content)
+
 class ButtonPR(Button2):
-    def __init__(self, parent, text, text_push=None):
-        Button2.__init__(self, parent ,text)
+    def __init__(self, parent, content, content_push=None):
+        Button2.__init__(self, parent ,content)
         self.pushed=False
-        self.text_push=text_push
-        self.text=text
+        self.content_push=content_push
+        self.content=content
 
         self.bind('<ButtonPress-1>',self.click)
         self.bind('<ButtonRelease-1>',self.unclick)
+    def resize(self, event):
+        if(self.img):
+            img = Image.open(self.content_push if self.content_push is not None and self.pushed else self.content).resize(
+                (event.width-10, event.height-10), Image.ANTIALIAS
+            )
+            self.img = ImageTk.PhotoImage(img)
+            self.config(image=self.img)
     def click(self, event):
         if(self.pushed):
             self.pushed=False
             self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'], default=tk.DISABLED)
-            if(self.text_push is not None):
-                self.config(text=self.text)
+            if(self.content_push is not None):
+                self.set_content(self.content)
         else:
             self.pushed=True
             self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'], default=tk.ACTIVE)
-            if(self.text_push is not None):
-                self.config(text=self.text_push)
+            if(self.content_push is not None):
+                self.set_content(self.content_push)
         
     def unclick(self, event):
         if(self.pushed):

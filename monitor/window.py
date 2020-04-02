@@ -207,7 +207,9 @@ class Window:
 
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
-
+        
+        Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png").grid(row=4,column=8, sticky="news")
+        
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
 
