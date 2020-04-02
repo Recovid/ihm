@@ -111,6 +111,16 @@ class SerialPortMock(DataBackend):
                         self.PPLAT: msg.pplat_mbar,
                     })
 
+    def stop_exp(self, time):
+        msg = PauseExpMsg(time)
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
+
+    def stop_ins(self, time):
+        msg = PauseInsMsg(time)
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
+
     def set_setting(self, key, value):
         msg = SetMsg(key, value)
         self.outputPipe.write(serialize_msg(msg))
@@ -146,6 +156,16 @@ class SerialPort(DataBackend):
                     self.PCRETE: msg.pep_mbar,
                     self.PPLAT: msg.pplat_mbar,
                 })
+
+    def stop_exp(self, time):
+        msg = PauseExpMsg(time)
+        self.serial.write(serialize_msg(msg))
+        self.serial.flush()
+
+    def stop_ins(self, time):
+        msg = PauseInsMsg(time)
+        self.serial.write(serialize_msg(msg))
+        self.serial.flush()
 
     def set_setting(self, key, value):
         msg = SetMsg(key, value)
