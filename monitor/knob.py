@@ -2,10 +2,10 @@
 import config
 import tkinter as tk
 import time
-from .userinputs import UserInputHandler, OneValueDialog
+from .userinputs import OneValueDialog
 
-class Knob(UserInputHandler):
-    def __init__(self,app,userinputs, datamanager,unit,title):
+class Knob():
+    def __init__(self,app, datamanager,unit,title):
         self.app=app
         self.value = datamanager.value
         self.max_range = datamanager.vmax
@@ -14,7 +14,6 @@ class Knob(UserInputHandler):
         self.selected = False
         self.unit = unit
         self.title = title
-        self.userinputs=userinputs
         self.datamanager=datamanager
 
       
@@ -107,10 +106,6 @@ class Knob(UserInputHandler):
     def onClick(self,event):
         OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
         self.update(self.datamanager.value)
-    #    if self.selected:
-    #        self.userinputs.select(None)
-    #    else:
-    #        self.userinputs.select(self)
 
 
 # Programme de test

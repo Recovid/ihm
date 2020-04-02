@@ -115,10 +115,6 @@ class Window:
         for i in range(9):
             tk.Grid.columnconfigure(self.app, i, weight=1, minsize=self.ws/9)
         
-        # Bouton --/-/+/++
-        self.userinputs = ButtonUserInputManager(self.app)
-        self.userinputs.canvas.grid(row=5,column=6,columnspan=2, sticky="news")
-        
         self.uihandler = Window.UIHandler(self)
 
         #self.data_backend = DataBackendDummy(100,100,500)
@@ -162,30 +158,27 @@ class Window:
         self.m_vm = Mesure(self.app,0,'VM','L/min')
         self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
-        self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX], userinputs=self.userinputs)
+        self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX])
         self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
-        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VMIN], userinputs=self.userinputs)
+        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VMIN])
         self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
-     
-        #btn1 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FIO2], '%','FiO2')
-        #btn1.canvas.grid(row=5,column=0, sticky="senw")
-        
-        btn2 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.VT],'ml','VT')
+ 
+        btn2 = Knob(self.app, self.data_controller.outputs[DataBackend.VT],'ml','VT')
         btn2.canvas.grid(row=5,column=0, sticky="senw")
 
-        btn3 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
+        btn3 = Knob(self.app, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
         btn3.canvas.grid(row=5,column=1, sticky="senw")
 
-        btn4 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
+        btn4 = Knob(self.app, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
         btn4.canvas.grid(row=5,column=2, sticky="senw")
 
-        btn5 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
+        btn5 = Knob(self.app, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
         btn5.canvas.grid(row=5,column=3, sticky="senw")
 
-        btn6 = Knob(self.app, self.userinputs, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
+        btn6 = Knob(self.app, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
         btn6.canvas.grid(row=5,column=4, sticky="senw")
 
         #Boutons Pause
@@ -228,20 +221,43 @@ class Window:
 
         self.freeze_time=False
         self.delta_marker=None
+        
+        self.arrows_frame=tk.Frame(self.app) 
+        self.arrows_string = ['<<','<','>','>>']
+        self.arrows = []
+        for i in range(4):
+            self.arrows.append(Button2(self.arrows_frame, self.arrows_string[i]))
+            self.arrows[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+            self.arrows[i].bind('<1>', self.arrows_event,'+')
+        self.arrows_frame.grid(row=5,column=6,columnspan=2, sticky="news")
+        self.arrows_frame.grid_forget()
 
     def freeze_curve(self, freeze):
         if freeze:
             self.freeze_time=True
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
-            self.userinputs.select(self.uihandler, arrows=True)
+            self.arrows_frame.grid(row=5,column=6,columnspan=2, sticky="news")
             self.delta_marker=0
-            #self.bt_freeze.push()
         else:
             self.freeze_time=False
             self.data_controller.inputs.timedata_freeze(self.freeze_time)
-            self.userinputs.select(None)
+            self.arrows_frame.grid_forget()
             self.delta_marker=None
-            #self.bt_freeze.release()
+
+    def arrows_event(self, event):
+        inc=0
+        if(event.widget==self.arrows[0]):
+            inc=10
+        elif(event.widget==self.arrows[1]):
+            inc=1
+        elif(event.widget==self.arrows[2]):
+            inc=-1
+        elif(event.widget==self.arrows[3]):
+            inc=-10
+        self.delta_marker=self.delta_marker+inc
+        if(self.delta_marker<0):
+            self.delta_marker=0
+
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)
