@@ -75,22 +75,27 @@ Specification sprintf:
 
 ## Alarmes
 
-Envoyé toute les xms (100ms?) jusqu'à acknowledge
+Envoyé toute les x ms (100ms?) jusqu'à acknowledge
 
-`ALRM` suivi d'un texte de taille variable ne contenant pas le caractère '\t'.
+`ALRM` suivi de 'Activation : ' ou 'Deactivation : ' suivi d'un texte de taille variable ne contenant pas le caractère '\t'.
 
 Textes d'alarmes connues :
-- 'Pression insufflation > seuil maximum'
-- 'Pression insufflation < seuil minimum'
-- 'Niveau batterie bas'
+- 'Pression insufflation > seuil maximum : valeur reele > seuil'
+- 'Pression insufflation < seuil minimum : valeur reele < seuil'
+- 'PEP basse : valeur reele < seuil'
+- 'PEP Haute : valeur reele > seuil'
+- 'VTe bas : valeur reele < seuil'
+- 'VTe Haut : valeur reele > seuil'
+- 'Niveau batterie bas : niveau < seuil'
 
 Specification sprintf: 
 `ALRM %s\0\tCS8:%02X\n`
 
 Exemple:
 ```
-ALRM Pression insufflation < seuil minimum\0\tCS8:D8\n
+ALRM Activation : Pression insufflation < seuil minimum : 15 < 20\0\tCS8:D8\n
 ```
+le changement doit permetre de cree un fichier de log des alarmes et d'afficher/supprimer les alarmes à l'ecran
 
 ## Acknowledge Setting
 
