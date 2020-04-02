@@ -105,6 +105,10 @@ class Knob():
 
     def onClick(self,event):
         OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
+        self.refresh()
+
+    def refresh(self):
+        self.value=self.datamanager.value
         self.update(self.datamanager.value)
 
 

@@ -127,6 +127,11 @@ class DataController:
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)
         self.backend.set_handler(self.inputs.handler)
+    def new_patient(self, is_woman, size):
+        # TODO calculate VT
+        sets = self.backend.get_settings()
+        for k,v in sets.items():
+            self.outputs[k].value=v
 
     def post_stop_exp(self, time_sec):
         if time_sec == 0:

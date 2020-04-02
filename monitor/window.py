@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
-from .userinputs import KeyboardUserInputManager, UserInputHandler, ButtonUserInputManager, OneValueDialog
+from .userinputs import OneValueDialog, NewPatientDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button, Button2, ButtonPR
@@ -64,19 +64,6 @@ class Scope:
             return self.line_a, self.line_b
 
 class Window:
-    class UIHandler(UserInputHandler):
-
-        def __init__(self, parent):
-            self.parent=parent
-
-        def minus_handler(self,big=False):
-            if(self.parent.freeze_time):
-                inc = 10 if big else 1
-                self.parent.delta_marker=self.parent.delta_marker+inc
-        def plus_handler(self, big=False):
-            if(self.parent.freeze_time and self.parent.delta_marker>0):
-                inc = 10 if big else 1
-                self.parent.delta_marker=self.parent.delta_marker-inc
     
     def __init__(self):
         self.timewindow=15
@@ -102,8 +89,6 @@ class Window:
         for i in range(9):
             tk.Grid.columnconfigure(self.app, i, weight=1, minsize=self.ws/9)
         
-        self.uihandler = Window.UIHandler(self)
-
         #self.data_backend = DataBackendDummy(100,100,500)
         self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         #self.data_backend = SerialPortMock("in", "out")
@@ -153,42 +138,45 @@ class Window:
 
         #BOUTONS EN BAS
  
-        btn2 = Knob(self.app, self.data_controller.outputs[DataBackend.VT],'ml','VT')
-        btn2.canvas.grid(row=5,column=0, sticky="senw")
+        self.k_vt = Knob(self.app, self.data_controller.outputs[DataBackend.VT],'ml','VT')
+        self.k_vt.canvas.grid(row=5,column=0, sticky="senw")
 
-        btn3 = Knob(self.app, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
-        btn3.canvas.grid(row=5,column=1, sticky="senw")
+        self.k_fr = Knob(self.app, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
+        self.k_fr.canvas.grid(row=5,column=1, sticky="senw")
 
-        btn4 = Knob(self.app, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
-        btn4.canvas.grid(row=5,column=2, sticky="senw")
+        self.k_pep = Knob(self.app, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
+        self.k_pep.canvas.grid(row=5,column=2, sticky="senw")
 
-        btn5 = Knob(self.app, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
-        btn5.canvas.grid(row=5,column=3, sticky="senw")
+        self.k_flow = Knob(self.app, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
+        self.k_flow.canvas.grid(row=5,column=3, sticky="senw")
 
-        btn6 = Knob(self.app, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
-        btn6.canvas.grid(row=5,column=4, sticky="senw")
+        self.k_tplat = Knob(self.app, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
+        self.k_tplat.canvas.grid(row=5,column=4, sticky="senw")
 
         #Boutons Pause
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
+        self.bt_new = Button2(self.app,"Nouveau\nPatient")
+        self.bt_new.grid(row=1,column=8,sticky=stickyall)
+        self.bt_new.bind('<Button-1>', self.event_bt_new,'+')
+        
         self.bt_freeze = ButtonPR(self.app,"Geler courbes", "Resume")
-        self.bt_freeze.grid(row=1,column=8,sticky=stickyall)
-
-        self.bt_si = Button2(self.app,"Pause Inspi")
-        self.bt_si.grid(row=2,column=8, sticky="senw")
-
-        self.bt_se = Button2(self.app ,"Pause Expi")
-        self.bt_se.grid(row=3,column=8, sticky="senw")
-
+        self.bt_freeze.grid(row=2,column=8,sticky=stickyall)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
+        self.bt_si = Button2(self.app,"Pause Inspi")
+        self.bt_si.grid(row=3,column=8, sticky="senw")
         self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
         self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
+        self.bt_se = Button2(self.app ,"Pause Expi")
+        self.bt_se.grid(row=4,column=8, sticky="senw")
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
-        
+       
+
+
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
 
@@ -245,6 +233,14 @@ class Window:
         if(self.delta_marker<0):
             self.delta_marker=0
 
+    def event_bt_new(self,e):
+        NewPatientDialog(self.app, self.data_controller)
+        
+        self.k_vt.refresh()
+        self.k_fr.refresh()
+        self.k_pep.refresh()
+        self.k_flow.refresh()
+        self.k_tplat.refresh()
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)

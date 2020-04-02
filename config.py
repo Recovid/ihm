@@ -69,3 +69,12 @@ minMaxDialog = dict(
 	font_family = "Helvetica",
 	font_size = 30,
 )
+
+newPatientDialog = dict(
+	width = 300,
+	height = 250,
+	font_family = "Helvetica",
+	font_size_size = 20,
+	font_size_button = 20,
+
+)

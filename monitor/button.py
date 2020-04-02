@@ -127,23 +127,31 @@ class ButtonPR(Button2):
             )
             self.img = ImageTk.PhotoImage(img)
             self.config(image=self.img)
+    
     def click(self, event):
         if(self.pushed):
-            self.pushed=False
-            self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'], default=tk.DISABLED)
-            if(self.content_push is not None):
-                self.set_content(self.content)
+            self.release()
         else:
-            self.pushed=True
-            self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'], default=tk.ACTIVE)
-            if(self.content_push is not None):
-                self.set_content(self.content_push)
-        
+            self.push()
+    
     def unclick(self, event):
         if(self.pushed):
             self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'])
         else:
             self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'])
+    
+    def push(self):
+        self.pushed=True
+        self.config(bg=config.button['btn_background_selected'], activebackground=config.button['btn_background_selected'], default=tk.ACTIVE)
+        if(self.content_push is not None):
+            self.set_content(self.content_push)
+
+    def release(self):
+        self.pushed=False
+        self.config(bg=config.button['btn_background'], activebackground=config.button['btn_background'], default=tk.DISABLED)
+        if(self.content_push is not None):
+            self.set_content(self.content)
+
 
 # app = tk.Tk()
 # app.wm_title("Graphe Matplotlib dans Tkinter")

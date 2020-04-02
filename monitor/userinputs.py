@@ -3,7 +3,7 @@
 import config
 import tkinter as tk
 from .helpers import Dialog
-from .button import Button2
+from .button import Button2, ButtonPR
 
 class UserInputHandler:
 
@@ -245,3 +245,74 @@ class MinMaxDialog(Dialog):
             self.dmin.update(self.vmin_var.get())
         if(self.dmax is not None):
             self.dmax.update(self.vmax_var.get())
+
+class NewPatientDialog(Dialog):
+
+    def __init__(self, master, datacontroller):
+        self.datacontroller=datacontroller
+        Dialog.__init__(self, master, 'Nouveau Patient')
+
+    def body(self, master):
+        self.geometry("%dx%d" % (config.minMaxDialog['width'],config.minMaxDialog['height']))
+
+        tk.Label(master, text=self.title()).pack(fill=tk.X)
+        
+        tk.Label(master, text="Genre").pack(fill=tk.X)
+
+        fg = tk.Frame(master)
+        self.w_button = ButtonPR(fg,"Femme")
+        self.w_button.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        self.w_button.push()
+        self.w_button.bind('<1>',self.wm_switch,'+')
+        self.h_button = ButtonPR(fg,"Homme")
+        self.h_button.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        self.h_button.bind('<1>',self.wm_switch,'+')
+        fg.pack(fill=tk.X,expand=1)
+        
+        tk.Label(master, text="Taille").pack(fill=tk.X)
+        
+        self.size_var=tk.IntVar()
+        self.size_var.set(180)
+        self.size_label = tk.Label(master, font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_size']), textvariable=self.size_var).pack(fill=tk.X)
+        
+        fsb = tk.Frame(master)
+        self.s_minus = Button2(fsb,"-")
+        self.s_minus.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        self.s_minus.config(font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_button']))
+        self.s_minus.bind('<1>',self.size_change,'+')
+        self.s_plus = Button2(fsb,"+")
+        self.s_plus.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        self.s_plus.config(font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_button']))
+        self.s_plus.bind('<1>',self.size_change,'+')
+
+        fsb.pack(fill=tk.BOTH,expand=1)
+        
+        return self # initial focus
+
+    def wm_switch(self, event):
+        if(event.widget==self.w_button):
+            if(self.w_button.pushed):
+                self.h_button.release()
+            else:
+                self.h_button.push()
+                self.h_button.focus_set()
+        elif(event.widget==self.h_button):
+            if(self.h_button.pushed):
+                self.w_button.release()
+            else:
+                self.w_button.push()
+                self.w_button.focus_set()
+    def size_change(self,event):
+        size =self.size_var.get()
+        if(event.widget==self.s_minus):
+            size=size-1
+            if(size<140):
+                size=140
+        else:
+            size=size+1
+            if(size>222):
+                size=222
+        self.size_var.set(size)
+
+    def apply(self):
+        self.datacontroller.new_patient(self.w_button.pushed,self.size_var.get())

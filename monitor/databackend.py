@@ -43,6 +43,23 @@ class DataBackend(Data, Thread):
         if(key in self.settings):
             self.settings[key]=value
             print(str(key), str(value))
+    
+    def get_settings(self):
+        # resp
+        self.settings[type(self).VT]=0
+        self.settings[type(self).FR]=0
+        self.settings[type(self).PEP]=0
+        self.settings[type(self).FLOW]=0
+        self.settings[type(self).TPLAT]=0
+        # alarms
+        self.settings[type(self).PMIN]=0
+        self.settings[type(self).PMAX]=0
+        self.settings[type(self).VTMIN]=0
+        self.settings[type(self).VMMIN]=0
+        self.settings[type(self).FRMIN]=0
+        return self.settings
+
+
 
     def stop_exp(self, time):
         print("Pause expi "+str(time))
