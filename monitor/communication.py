@@ -56,7 +56,7 @@ class SetMsg:
         (Data.FLOW, "FLOW", 2),
         (Data.TPLAT, "TPLAT", 4),
         # alarms
-        (Data.VMIN, "VTMIN", 4),
+        (Data.VTMIN, "VTMIN", 4),
         (Data.PMAX, "PMAX_", 3),
         (Data.PMIN, "PMIN_", 3),
     ]

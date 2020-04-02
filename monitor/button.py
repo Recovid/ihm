@@ -82,7 +82,6 @@ class Button2(tk.Button):
             self.set_content(content)
             if( content.count('.png') != 0):
                 self.bind('<Configure>', self.resize)
-
         self.bind('<ButtonPress-1>', lambda event : self.config(activebackground=config.button['btn_background_selected']))
         self.bind('<ButtonRelease-1>', lambda event : self.config(activebackground=config.button['btn_background']))
 

@@ -120,7 +120,9 @@ class DataController:
         # alarms
         self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,30,default=15) # TODO confirm default
         self.outputs[backend.PMAX]=DataOutputManager(backend,backend.PMAX,1,80,default=60) # TODO confirm default
-        self.outputs[backend.VMIN]=DataOutputManager(backend,backend.VMIN,100,1000,default=300, step=50) # TODO confirm default
+        self.outputs[backend.VTMIN]=DataOutputManager(backend,backend.VTMIN,100,1000,default=300, step=50) # TODO confirm default
+        self.outputs[backend.VMMIN]=DataOutputManager(backend,backend.VMMIN,100,1000,default=100, step=50) # TODO confirm default
+        self.outputs[backend.FRMIN]=DataOutputManager(backend,backend.FRMIN,12,35,default=12) # TODO confirm default
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)

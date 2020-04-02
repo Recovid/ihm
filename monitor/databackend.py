@@ -32,7 +32,9 @@ class DataBackend(Data, Thread):
         # alarms
         self.settings[type(self).PMIN]=0
         self.settings[type(self).PMAX]=0
-        self.settings[type(self).VMIN]=0
+        self.settings[type(self).VTMIN]=0
+        self.settings[type(self).VMMIN]=0
+        self.settings[type(self).FRMIN]=0
 
     def set_handler(self, handler):
         self.handler=handler

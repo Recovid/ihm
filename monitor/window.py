@@ -136,19 +136,19 @@ class Window:
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
         self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
 
-        self.m_fr = Mesure(self.app,0,'FR','/min')
+        self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.outputs[DataBackend.FRMIN])
         self.m_fr.canvas.grid(row=2,column=6, sticky="senw")
 
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
         self.m_pplat.canvas.grid(row=2,column=7, sticky="senw")
 
-        self.m_vm = Mesure(self.app,0,'VM','L/min')
+        self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.outputs[DataBackend.VMMIN])
         self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
         self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX])
         self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
-        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VMIN])
+        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VTMIN])
         self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
