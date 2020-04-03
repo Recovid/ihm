@@ -83,7 +83,6 @@ class Window:
         self.alarm_text = tk.StringVar()
         self.alarm_text.set("Some Alarm message text")
         self.alarmMgr = AlarmManager()
-        self.updateAlarmDisplay()
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -207,7 +206,7 @@ class Window:
         self.arrows_frame.grid(row=5,column=6,columnspan=2, sticky="news")
         self.arrows_frame.grid_forget()
 
-
+        self.updateAlarmDisplay()
         #just here for test
         self.test_cnt = 0
 
