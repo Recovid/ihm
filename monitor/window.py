@@ -107,12 +107,8 @@ class Window:
         self.title = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)),text='RECOVID', \
             anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=2, sticky=stickyall)
         self.alarm_msg = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)), textvariable = self.alarm_text, \
-            anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=6, sticky=stickyall)
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=7, sticky=stickyall)
 
-        self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
-        self.bt_Alarm.set_background('#4E69AB')
-        self.bt_Alarm.grid(self.title_frame, row=0, column=8, sticky=stickyall)
-        self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
 
         #VALEURS A Droite
  
@@ -162,17 +158,22 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
+        self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
+        self.bt_Alarm.set_background('#4E69AB')
+        self.bt_Alarm.grid(row=1, column=8, sticky=stickyall, padx=4, pady=2)
+        self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
+
         self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
-        self.bt_freeze.grid(row=1,column=8,sticky=stickyall, padx=4, pady=2)
+        self.bt_freeze.grid(row=2,column=8,sticky=stickyall, padx=4, pady=2)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         self.bt_si = Button2(self.app,"Pause Inspi")
-        self.bt_si.grid(row=2,column=8, sticky="senw", padx=4, pady=2)
+        self.bt_si.grid(row=3,column=8, sticky="senw", padx=4, pady=2)
         self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
         self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
         self.bt_se = Button2(self.app ,"Pause Expi")
-        self.bt_se.grid(row=3,column=8, sticky="senw", padx=4, pady=2)
+        self.bt_se.grid(row=4,column=8, sticky="senw", padx=4, pady=2)
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
