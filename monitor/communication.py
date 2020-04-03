@@ -50,7 +50,7 @@ class SetMsg:
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')
     SETTINGS = [ # (setting key, serial string, number of digits)
         # resp settings
-        (Data.VT, "VT___", 4),
+        (Data.VT, "VT___", 3),
         (Data.FR, "FR___", 2),
         (Data.PEP, "PEP__", 2),
         (Data.FLOW, "FLOW", 2),
