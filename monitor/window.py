@@ -74,6 +74,8 @@ class Window:
 
         self.app = tk.Tk()
 
+        self.app.protocol("WM_DELETE_WINDOW", self.app.quit)
+
         #self.app.attributes("-fullscreen", True)
         self.ws = 800
         self.hw = 480
