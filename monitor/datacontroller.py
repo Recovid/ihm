@@ -121,6 +121,8 @@ class DataController:
         self.inputs=None
         self.repost_stop_exp = False
         self.repost_stop_ins = False
+        self.repost_stop_exp_posted = False
+        self.repost_stop_ins_posted = False
 
         self.reset_settings()
 
@@ -138,35 +140,41 @@ class DataController:
         self.settings[Data.VT] = vt
 
     def post_stop_exp(self, time_ms):
-        if time_ms == 0:
-            self.backend.stop_exp(0)
-        elif self.repost_stop_exp:
-            self.backend.stop_exp(time_ms)
-            # repost 1 sec before timeout end to avoid breath restart
+        # repost 100 msec before timeout end to avoid breath restart
+        if self.repost_stop_exp:
+            self.backend.stop_exp(500)
             self.mainLoop.after(time_ms - 100, self.post_stop_exp, time_ms)
+        else:
+            self.repost_stop_exp_posted = False
 
     def stop_exp(self, on):
         if (on):
             self.repost_stop_exp = True
-            self.post_stop_exp(500)
+            self.backend.stop_exp(500)
+            if self.repost_stop_exp_posted == False: # if we don't already have a running timer
+                self.repost_stop_exp_posted = True
+                self.mainLoop.after(400, self.post_stop_exp, 500)
         else:
-            self.post_stop_exp(0)
+            self.backend.stop_exp(0)
             self.repost_stop_exp = False
 
     def post_stop_ins(self, time_ms):
-        if time_ms == 0:
-            self.backend.stop_ins(0)
-        elif self.repost_stop_ins:
-            self.backend.stop_ins(time_ms)
-            # repost 1 sec before timeout end to avoid breath restart
+        # repost 100 msec before timeout end to avoid breath restart
+        if self.repost_stop_ins:
+            self.backend.stop_ins(500)
             self.mainLoop.after(time_ms - 100, self.post_stop_ins, time_ms)
+        else:
+            self.repost_stop_ins_posted = False
 
     def stop_ins(self, on):
         if (on):
             self.repost_stop_ins = True
-            self.post_stop_ins(500)
+            self.backend.stop_ins(500)
+            if self.repost_stop_ins_posted == False: # if we don't already have a running timer
+                self.repost_stop_ins_posted = True
+                self.mainLoop.after(400, self.post_stop_ins, 500)
         else:
-            self.post_stop_ins(0)
+            self.backend.stop_ins(0)
             self.repost_stop_ins = False
 
     def change_setting(self, key, value):
