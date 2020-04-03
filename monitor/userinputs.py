@@ -315,5 +315,14 @@ class VTDialog(Dialog):
         self.size_var.set(size)
 
     def apply(self):
-        vt =int(self.size_var.get())
+        # P = X + 0,91 (taille en cm - 152,4)
+        # X= 50 pour les hommes
+        # X=45,5 pour les femmes
+        # Vt = P * 6ml/kg
+        if self.w_button.pushed:
+            X = 45.5
+        elif self.h_button.pushed:
+            X = 50
+        P = X + 0.91 * (int(self.size_var.get()) - 152.4)
+        vt = round(P * 6)
         self.setting.change(vt)
