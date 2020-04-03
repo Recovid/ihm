@@ -14,6 +14,9 @@ class DataBackendHandler:
 
     def update_inputs(self, **kwargs):
         pass
+    
+    def update_setting(self, key, value):
+        pass
 
 
 class DataBackend(Data, Thread):
@@ -23,9 +26,8 @@ class DataBackend(Data, Thread):
         self.running=False
         self.settings = {setting.key: None for setting in SETTINGS.values()}
 
-    def set_controler(self, controler):
-        self.controler = controler
-        self.handler = controler.inputs.handler
+    def set_handler(self, handler):
+        self.handler = handler
 
     def set_setting(self, key, value):
         if(key in self.settings):
@@ -72,7 +74,7 @@ class DataBackendFromFile(DataBackend):
                         self.PPLAT: msg.pplat_mbar,
                     })
                 elif isinstance(msg, SetMsg):
-                    self.controler.received_setting(msg.setting, int(msg.value))
+                    self.handler.received_setting(msg.setting, int(msg.value))
                 elif isinstance(msg, InitMsg):
                     # do we need to reset some settings ?
                     pass
@@ -114,7 +116,7 @@ class SerialPortMock(DataBackend):
                         self.PPLAT: msg.pplat_mbar,
                     })
                 elif isinstance(msg, SetMsg):
-                    self.controler.received_setting(msg.setting, int(msg.value))
+                    self.handler.received_setting(msg.setting, int(msg.value))
                 elif isinstance(msg, InitMsg):
                     # do we need to reset some settings ?
                     pass
@@ -168,7 +170,7 @@ class SerialPort(DataBackend):
                     self.PPLAT: msg.pplat_mbar,
                 })
             elif isinstance(msg, SetMsg):
-                self.controler.received_setting(msg.setting, int(msg.value))
+                self.handler.received_setting(msg.setting, int(msg.value))
             elif isinstance(msg, InitMsg):
                 # do we need to reset some settings ?
                 pass

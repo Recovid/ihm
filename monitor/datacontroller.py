@@ -14,27 +14,7 @@ class TimeDataInputManager:
         return (self.ymin,self.ymax)
 
 class DataInputs:
-
-    class Handler(DataBackendHandler):
-        def __init__(self, parent):
-            self.parent=parent
-
-        def update_inputs(self, **kwargs):
-            if kwargs is not None:
-                for key, value in kwargs.items():
-                    if(key in self.parent.inputs):
-                        oldval=self.parent.inputs[key]
-                        if oldval != value:
-                            self.parent.changed=True
-                            self.parent.inputs[key]=value
-    
-        def update_timedata(self,timestamp, pressure, flow, volume):
-            if not self.parent.freeze:
-                self.parent.make_index(timestamp)
-                self.parent.pressure.data[self.parent.index]=pressure
-                self.parent.flow.data[self.parent.index]=flow
-                self.parent.volume.data[self.parent.index]=volume
-    
+   
     def __init__(self, xmax, freq):
         self.running=True
         
@@ -51,7 +31,6 @@ class DataInputs:
         self.inputs[DataBackend.VTE_ALARM]=False
 
         self.changed=False
-        self.handler = DataInputs.Handler(self)
         
         self.index=0
         self.index_zero_time = 0
@@ -101,9 +80,38 @@ class SettingManager():
     def change(self, value):
         # NB: go through the controller to ensure correct data management
         self.controller.change_setting(self.key, value)
+    def sync(self):
+        if(self.widget is not None)
+        self.widget.refresh()
 
 class DataController:
 
+    class Handler(DataBackendHandler):
+        def __init__(self, parent):
+            self.parent=parent
+
+        def update_inputs(self, **kwargs):
+            if kwargs is not None:
+                for key, value in kwargs.items():
+                    if(key in self.parent.inputs.inputs):
+                        oldval=self.parent.inputs.inputs[key]
+                        if oldval != value:
+                            self.parent.inputs.changed=True
+                            self.parent.inputs.inputs[key]=value
+    
+        def update_timedata(self,timestamp, pressure, flow, volume):
+            if not self.parent.inputs.freeze:
+                self.parent.inputs.make_index(timestamp)
+                self.parent.inputs.pressure.data[self.parent.inputs.index]=pressure
+                self.parent.inputs.flow.data[self.parent.inputs.index]=flow
+                self.parent.inputs.volume.data[self.parent.inputs.index]=volume
+        
+        def received_setting(self, key, value):
+            self.settings[key].value = value
+            self.settings[key].synchronized = True
+            self.settings.sync()
+            # TODO: update the corresponding widget
+ 
     def __init__(self, backend, mainLoop):
         self.backend=backend
         self.mainLoop = mainLoop
@@ -118,8 +126,9 @@ class DataController:
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)
-        self.backend.set_controler(self)
-
+        self.handler = DataController.Handler(self)
+        self.backend.set_handler(self.handler)
+    
     def new_patient(self, is_woman, size):
         vt=self.settings[Data.VT][0] # TODO calculate VT
         reset_settings()
@@ -164,10 +173,6 @@ class DataController:
             setting.synchronized = False
             self.backend.set_setting(key, value)
 
-    def received_setting(self, key, value):
-        self.settings[key].value = value
-        self.settings[key].synchronized = True
-        # TODO: update the corresponding widget
 
     def get_setting(self, key):
         """
