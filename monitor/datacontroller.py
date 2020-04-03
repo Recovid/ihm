@@ -109,6 +109,8 @@ class DataController:
                 self.parent.inputs.volume.data[self.parent.inputs.index]=volume
         
         def received_setting(self, key, value):
+            if (key == DataBackend.TPLAT):
+                value /= 1000
             self.parent.settings[key].value = value
             self.parent.settings[key].synchronized = True
             self.parent.settings[key].sync()
@@ -172,6 +174,8 @@ class DataController:
         if setting.vmin <= value <= setting.vmax:
             setting.value = value
             setting.synchronized = False
+            if (key == DataBackend.TPLAT):
+                value = int(value * 1000)
             self.backend.set_setting(key, value)
 
 
