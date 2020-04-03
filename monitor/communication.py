@@ -53,7 +53,7 @@ class SetMsg:
         (Data.VT, "VT___", 3),
         (Data.FR, "FR___", 2),
         (Data.PEP, "PEP__", 2),
-        (Data.FLOW, "FLOW", 2),
+        (Data.FLOW, "FLOW_", 2),
         (Data.TPLAT, "TPLAT", 4),
         # alarms
         (Data.VTMIN, "VTMIN", 4),

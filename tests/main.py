@@ -28,6 +28,10 @@ if __name__ == '__main__':
     fr_hz = fr_pm / 60 # sec
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     with io.open('nominal_cycle.txt','w') as nominal_cycle:
+        nominal_cycle.write(serialize_msg(SetMsg(Data.VT, 350)))
+        nominal_cycle.write(serialize_msg(SetMsg(Data.FR, 19)))
+        nominal_cycle.write(serialize_msg(SetMsg(Data.PEP, 6)))
+        nominal_cycle.write(serialize_msg(SetMsg(Data.FLOW,58)))
         nominal_cycle.write(serialize_msg(resp_msg(fr_hz)))
         for t_ms in range(0, int(sys.argv[1]), int(1000/fr_pm)):
             nominal_cycle.write(serialize_msg(nominal_data(t_ms, fr_hz)))

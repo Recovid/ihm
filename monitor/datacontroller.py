@@ -118,7 +118,7 @@ class DataController:
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)
-        self.backend.set_handler(self.inputs.handler)
+        self.backend.set_controler(self)
 
     def new_patient(self, is_woman, size):
         vt=self.settings[Data.VT][0] # TODO calculate VT

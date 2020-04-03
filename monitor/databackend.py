@@ -23,8 +23,9 @@ class DataBackend(Data, Thread):
         self.running=False
         self.settings = {setting.key: None for setting in SETTINGS.values()}
 
-    def set_handler(self, handler):
-        self.handler=handler
+    def set_controler(self, controler):
+        self.controler = controler
+        self.handler = controler.inputs.handler
 
     def set_setting(self, key, value):
         if(key in self.settings):
@@ -70,6 +71,11 @@ class DataBackendFromFile(DataBackend):
                         self.PCRETE: msg.pep_mbar,
                         self.PPLAT: msg.pplat_mbar,
                     })
+                elif isinstance(msg, SetMsg):
+                    self.controler.received_setting(msg.setting, int(msg.value))
+                elif isinstance(msg, InitMsg):
+                    # do we need to reset some settings ?
+                    pass
 
     def set_setting(self, key, value):
         pass # settings do nothing for a trace file
@@ -79,6 +85,9 @@ class SerialPortMock(DataBackend):
         DataBackend.__init__(self)
         self.inputPipe = inputPipe
         self.outputPipe = open(outputPipe, "w")
+        msg = InitMsg("RecovidIHMV2")
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
 
     def run(self):
         self.running=True
@@ -104,6 +113,12 @@ class SerialPortMock(DataBackend):
                         self.PCRETE: msg.pep_mbar,
                         self.PPLAT: msg.pplat_mbar,
                     })
+                elif isinstance(msg, SetMsg):
+                    self.controler.received_setting(msg.setting, int(msg.value))
+                elif isinstance(msg, InitMsg):
+                    # do we need to reset some settings ?
+                    pass
+
 
     def stop_exp(self, time):
         msg = PauseExpMsg(time)
@@ -125,9 +140,9 @@ class SerialPort(DataBackend):
     def __init__(self, tty):
         DataBackend.__init__(self)
         self.serialPort = serial.Serial(tty, 9600)
-
-        serialPort.write(test_string)
-        serialPort.read(bytes_sent)
+        msg = InitMsg("RecovidIHMV2")
+        self.serialPort.write(serialize_msg(msg))
+        self.serialPort.flush()
 
     def run(self):
         self.running=True
@@ -152,6 +167,11 @@ class SerialPort(DataBackend):
                     self.PCRETE: msg.pep_mbar,
                     self.PPLAT: msg.pplat_mbar,
                 })
+            elif isinstance(msg, SetMsg):
+                self.controler.received_setting(msg.setting, int(msg.value))
+            elif isinstance(msg, InitMsg):
+                # do we need to reset some settings ?
+                pass
 
     def stop_exp(self, time):
         msg = PauseExpMsg(time)
