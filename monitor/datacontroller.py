@@ -81,9 +81,6 @@ class SettingManager():
     def change(self, value):
         # NB: go through the controller to ensure correct data management
         self.controller.change_setting(self.key, value)
-    def sync(self):
-        if(self.widget is not None)
-        self.widget.refresh()
 
     def sync(self):
         if(self.widget is not None):
