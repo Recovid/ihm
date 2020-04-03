@@ -12,6 +12,7 @@ Les courbes sont pour l'instant simulées.
 
 
 # Requirement
+  libjpeg-dev
   Python 3
   
   dépendance :
@@ -20,7 +21,7 @@ Les courbes sont pour l'instant simulées.
 
 # Install
 ```
-sudo apt-get install libatlas-base-dev
+sudo apt-get install libatlas-base-dev libjpeg-dev
 git clone https://github.com/Recovid/ihm.git
 cd ihm
 python3.7 -m venv venv
