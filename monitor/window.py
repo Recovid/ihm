@@ -118,7 +118,7 @@ class Window:
         #self.m_fio2.grid(row=1,column=6, sticky="senw")
         #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
-        self.m_ie = Mesure(self.app,0, 'I/E')
+        self.m_ie = Mesure(self.app,0, 'I/E', is_frac=True)
         self.m_ie.canvas.grid(row=1, column=6, sticky="senw")
 
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')

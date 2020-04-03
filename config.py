@@ -6,6 +6,7 @@ mesure = dict(
 	background_alarmOn = '#ff2026',
 	font_family = "Helvetica",
 	font_ratio_value = 0.4,
+	font_ratio_value_frac = 0.35,
 	font_ratio_title = 0.09,
 	font_ratio_unit = 0.09,
 	height_ratio_unit = 0.19,
