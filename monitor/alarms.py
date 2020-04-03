@@ -14,6 +14,7 @@ class AlarmType(Enum):
     PEP_MAX = 6
     PEP_MIN = 7
     LOW_BATTERY = 8
+    FAILSAFE = 9
 
     #41 char max
     def GetMessage(self, alarmtype):
@@ -26,7 +27,8 @@ class AlarmType(Enum):
             AlarmType.VOLUME_MINUTE: "VOLUME MINUTE SOUS LE SEUIL",
             AlarmType.PEP_MAX: "PEP SUPERIEUR A LA NORME",
             AlarmType.PEP_MIN: "PEP INFERIEUR A LA NORME",
-            AlarmType.LOW_BATTERY: "BATTERIE FAIBLE"
+            AlarmType.LOW_BATTERY: "BATTERIE DECHARGEE",
+            AlarmType.FAILSAFE: "FAILSAFE"
         }
         return switcher.get(alarmtype, "")
 
@@ -76,24 +78,38 @@ class Alarm:
 class AlarmManager:
     def __init__(self):
         self.listActivAlarms = []
+        self.highPriorityNb = 0
+        self.mediumPriorityNb = 0
         #current alarms mean the Alarm Which is display on the screen : the first of the list
 
     def GetActivAlarmNb(self):
         return len(self.listActivAlarms)
 
     def ActivateAlarm(self, Alarm):
+        #if there is already an alarm of this type in the list: do not add a new one
+        for i in range(len(self.listActivAlarms)):
+            if(self.listActivAlarms[i].GetType() == Alarm.GetType() ):
+                print("An alarm of this type is already in the list")
+                return
+
         #To Have always new High Priority (HP) alarm in the top of the list we add HP new Alarm in head of the list and MediumPriority (MP)
         #on the back of the list. Moreover with this method we have always the newest HP alarm display
         if( Alarm.GetLevel() == AlarmLevel.MEDIUM_PRIORITY):
-            self.listActivAlarms.append( Alarm)
-            print("insert len")
+            self.listActivAlarms.insert(self.highPriorityNb, Alarm)
+            self.mediumPriorityNb += 1
 
         elif( Alarm.GetLevel() == AlarmLevel.HIGH_PRIORITY):
             self.listActivAlarms.insert(0, Alarm)
-            print("append")
+            self.highPriorityNb += 1
 
     def DeActivateCurrentAlarm(self):
         #delete the alarm of the list
+        if( self.GetActivAlarmNb() == 0):
+            return
+        if(self.GetCurrentMessageLevel() == AlarmLevel.HIGH_PRIORITY):
+            self.highPriorityNb -= 1
+        elif(self.GetCurrentMessageLevel() == AlarmLevel.MEDIUM_PRIORITY):
+            self.mediumPriorityNb -= 1
         del self.listActivAlarms[0]
 
     def ChangeCurrentAlarmState(self, newStatus ):

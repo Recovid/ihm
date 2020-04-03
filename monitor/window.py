@@ -83,6 +83,7 @@ class Window:
         self.alarm_text = tk.StringVar()
         self.alarm_text.set("Some Alarm message text")
         self.alarmMgr = AlarmManager()
+        self.updateAlarmDisplay()
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -205,7 +206,10 @@ class Window:
             self.arrows[i].bind('<1>', self.arrows_event,'+')
         self.arrows_frame.grid(row=5,column=6,columnspan=2, sticky="news")
         self.arrows_frame.grid_forget()
-        self.alarmManagerTest()
+
+
+        #just here for test
+        self.test_cnt = 0
 
     def freeze_curve(self, freeze):
         if freeze:
@@ -298,15 +302,63 @@ class Window:
     def event_bt_Alarm(self, e):
         print("event_bn_alarm pressed")
         #just for test
-        #self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
-        #self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
+        if(self.test_cnt == 0):
+            #do something
+            alarm1 = Alarm(AlarmType.PRESSION_MAX, AlarmLevel.MEDIUM_PRIORITY)
+            self.alarmMgr.ActivateAlarm(alarm1)
+            self.updateAlarmDisplay()
+        elif(self.test_cnt == 1):
+            #do other things
+            alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
+            self.alarmMgr.ActivateAlarm(alarm2)
+            self.updateAlarmDisplay()
 
-    #note Boris this function is here to make test on AlarmManager
-    def alarmManagerTest(self):
-        #alarm1 = Alarm(AlarmType.PRESSION_MAX, AlarmLevel.MEDIUM_PRIORITY)
-        #self.alarmMgr.ActivateAlarm(alarm1)
-        #alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
-        #alarm3 = Alarm(AlarmType.VOLUME_COURANT, AlarmLevel.HIGH_PRIORITY)
-        #self.alarmMgr.ActivateAlarm(alarm3)
-        #self.alarmMgr.ActivateAlarm(alarm2)
-        self.updateAlarmDisplay()
+        elif(self.test_cnt == 2):
+            #do other things
+            alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
+            self.alarmMgr.ActivateAlarm(alarm2)
+            self.updateAlarmDisplay()
+
+        elif(self.test_cnt == 3):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+
+        elif(self.test_cnt == 4):
+            #do other things
+            alarm4 = Alarm(AlarmType.LOW_BATTERY, AlarmLevel.MEDIUM_PRIORITY)
+            self.alarmMgr.ActivateAlarm(alarm4)
+            self.updateAlarmDisplay()
+            #KO parce que s'il n'y a pas de HIGH_PRIORITY on veut pas insérer en queue
+
+        elif(self.test_cnt == 5):
+            #do other things
+            self.updateAlarmDisplay()
+            alarm5 = Alarm(AlarmType.PEP_MAX, AlarmLevel.HIGH_PRIORITY)
+            self.alarmMgr.ActivateAlarm(alarm5)
+            self.updateAlarmDisplay()
+
+        elif(self.test_cnt == 6):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+
+        elif(self.test_cnt == 7):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+        elif(self.test_cnt == 8):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+        elif(self.test_cnt == 9):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+
+        elif(self.test_cnt == 10):
+            #do other things
+            self.alarmMgr.DeActivateCurrentAlarm()
+            self.updateAlarmDisplay()
+
+        self.test_cnt += 1
