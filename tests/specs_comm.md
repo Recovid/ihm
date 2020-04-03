@@ -171,17 +171,3 @@ Exemple:
 ```
 PBIP 500\tCS8:2F\n
 ```
-
-Envoyé pour déclencher un bip sonore d'une durée donnée
-
-`BEEP` suivi d'un seul champ :
-
-- `dur__` (Durée du bip) : 00000..99999 (ms)
-
-Specification sprintf :
-`BEEP dur__:%05d\tCS8:%02X\n`
-
-Exemple:
-```
-BEEP dur__:00500\tCS8:FF\n
-```
