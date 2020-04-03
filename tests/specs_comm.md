@@ -63,6 +63,7 @@ Envoyé une fois par cycle respiratoire
 `RESP`
 Suivi de chacun des champs et données suivants :
 
+- `IE___` (Rapport I/E) : 20 .. 60 (20 => 1/2, 22 => 1/2.2, ...)
 - `Fi02_` (Fraction inspirée en di-Oxygène) : 021..100 (%)
 - `Vt___` (Volume tidal ou courant) : 0300..800 (mL)
 - `FR___` (Fréquence Respiratoire) : 10..35 (1/min)
@@ -71,7 +72,7 @@ Suivi de chacun des champs et données suivants :
 - `PPLAT` (Pression Plateau) : 00.0..99.9 (cmH2O) 
 
 Specification sprintf:
-`RESP Fi02_:%03d Vt___:%04d FR___:%02d PEP__:%02.1f PIP__:%02.1f PPLAT:%02.1f\tCS8:%02X\n`
+`RESP IE___:%02d Fi02_:%03d Vt___:%04d FR___:%02d PEP__:%02.1f PIP__:%02.1f PPLAT:%02.1f\tCS8:%02X\n`
 
 ## Alarmes
 
