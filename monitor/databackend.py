@@ -18,7 +18,6 @@ class DataBackendHandler:
     def received_setting(self, key, value):
         pass
 
-
 class DataBackend(Data, Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -34,10 +33,12 @@ class DataBackend(Data, Thread):
             self.settings[key]=value
             print(str(key), str(value))
 
-    def stop_exp(self, time):
-        print("Pause expi "+str(time))
-    def stop_ins(self, time):
-        print("Pause inspi "+str(time))
+    def stop_exp(self, time_ms):
+        print("Pause expi "+str(time_ms))
+    def stop_ins(self, time_ms):
+        print("Pause inspi "+str(time_ms))
+    def pause_bip(self, time_ms):
+        print("Pause bip "+str(time_ms))
 
     def stop(self):
         self.running=False
@@ -123,14 +124,18 @@ class SerialPortMock(DataBackend):
                     # do we need to reset some settings ?
                     pass
 
-
-    def stop_exp(self, time):
-        msg = PauseExpMsg(time)
+    def stop_exp(self, time_ms):
+        msg = PauseExpMsg(time_ms)
         self.outputPipe.write(serialize_msg(msg))
         self.outputPipe.flush()
 
-    def stop_ins(self, time):
-        msg = PauseInsMsg(time)
+    def stop_ins(self, time_ms):
+        msg = PauseInsMsg(time_ms)
+        self.outputPipe.write(serialize_msg(msg))
+        self.outputPipe.flush()
+
+    def pause_bip(self, time_ms):
+        msg = PauseBipMsg(time_ms)
         self.outputPipe.write(serialize_msg(msg))
         self.outputPipe.flush()
 
@@ -178,13 +183,18 @@ class SerialPort(DataBackend):
                 # do we need to reset some settings ?
                 pass
 
-    def stop_exp(self, time):
-        msg = PauseExpMsg(time)
+    def stop_exp(self, time_ms):
+        msg = PauseExpMsg(time_ms)
         self.serial.write(serialize_msg(msg))
         self.serial.flush()
 
-    def stop_ins(self, time):
-        msg = PauseInsMsg(time)
+    def stop_ins(self, time_ms):
+        msg = PauseInsMsg(time_ms)
+        self.serial.write(serialize_msg(msg))
+        self.serial.flush()
+
+    def pause_bip(self, time_ms):
+        msg = PauseBipMsg(time_ms)
         self.serial.write(serialize_msg(msg))
         self.serial.flush()
 

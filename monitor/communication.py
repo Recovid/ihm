@@ -121,21 +121,16 @@ class AckAlarmMsg:
     def __str__(self):
         return 'RALM' + str(self.alarm_msg)[4:]
 
-class BeepMsg:
-    args_pattern = re.compile('^dur__:(\d{5})$')
-
+class PauseBipMsg:
     def __init__(self, duration_ms):
-        self.duration_ms = setting
+        self.duration_ms = duration_ms
 
     def with_args(args_str):
-        match = re.match(BeepMsg.args_pattern, args_str)
-        if not match:
-            print("failed to parse BEEP message", file=sys.stderr)
-            return None
-        return BeepMsg(int(match.group(1)))
+        # TODO: check we have a number
+        return PauseBipMsg(int(args_str))
 
     def __str__(self):
-        return 'BEEP dur__:%05d' % self.duration_ms
+        return 'PBIP %05d' % self.duration_ms
 
 class PauseInsMsg:
     def __init__(self, duration_ms):
@@ -188,7 +183,7 @@ def parse_msg(msg_str):
         'SET_': SetMsg.with_args,
         'ALRM': AlarmMsg.with_args,
         'RALM': AckAlarmMsg.with_args,
-        'BEEP': BeepMsg.with_args,
+        'PBIP': PauseBipMsg.with_args,
         'PINS': PauseInsMsg.with_args,
         'PEXP': PauseExpMsg.with_args,
         'INIT': InitMsg.with_args,

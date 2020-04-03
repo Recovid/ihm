@@ -165,9 +165,9 @@ RALM Pression insufflation < seuil minimum\tCS8:D8\n
 
 Envoyé pour désactiver les bip sonores pendant une durée donnée
 
-`PBIP` suivi d'une durée en ms 00000..99999 (ms)
+`PBIP` suivi d'une durée en ms 000000..999999 (ms)
 
 Exemple:
 ```
-PBIP 500\tCS8:2F\n
+PBIP 000500\tCS8:2F\n
 ```

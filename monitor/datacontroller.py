@@ -177,6 +177,9 @@ class DataController:
             self.backend.stop_ins(0)
             self.repost_stop_ins = False
 
+    def pause_bip(self):
+        self.backend.pause_bip(30000)
+
     def change_setting(self, key, value):
         setting = self.settings[key]
         if setting.vmin <= value <= setting.vmax:
