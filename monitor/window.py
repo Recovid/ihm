@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
-from .userinputs import OneValueDialog, NewPatientDialog
+from .userinputs import OneValueDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button, Button2, ButtonPR
@@ -159,21 +159,17 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
-        self.bt_new = Button2(self.app,"Nouveau\nPatient")
-        self.bt_new.grid(row=1,column=8,sticky=stickyall)
-        self.bt_new.bind('<Button-1>', self.event_bt_new,'+')
-        
         self.bt_freeze = ButtonPR(self.app,"Geler courbes", "Resume")
-        self.bt_freeze.grid(row=2,column=8,sticky=stickyall)
+        self.bt_freeze.grid(row=1,column=8,sticky=stickyall)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         self.bt_si = Button2(self.app,"Pause Inspi")
-        self.bt_si.grid(row=3,column=8, sticky="senw")
+        self.bt_si.grid(row=2,column=8, sticky="senw")
         self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
         self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
         self.bt_se = Button2(self.app ,"Pause Expi")
-        self.bt_se.grid(row=4,column=8, sticky="senw")
+        self.bt_se.grid(row=3,column=8, sticky="senw")
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
@@ -235,24 +231,6 @@ class Window:
         self.delta_marker=self.delta_marker+inc
         if(self.delta_marker<0):
             self.delta_marker=0
-
-    def event_bt_new(self,e):
-        NewPatientDialog(self.app, self.data_controller)
-        
-        self.k_vt.refresh()
-        self.k_fr.refresh()
-        self.k_pep.refresh()
-        self.k_flow.refresh()
-        self.k_tplat.refresh()
-        
-        self.m_ie.refresh()
-        self.m_pep.refresh()
-        self.m_fr.refresh()
-        self.m_pplat.refresh()
-        self.m_vm.refresh()
-        self.m_pcrete.refresh()
-        self.m_vte.refresh()
-
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)

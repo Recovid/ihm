@@ -246,11 +246,11 @@ class MinMaxDialog(Dialog):
         if(self.dmax is not None):
             self.dmax.update(self.vmax_var.get())
 
-class NewPatientDialog(Dialog):
+class VTDialog(Dialog):
 
-    def __init__(self, master, datacontroller):
-        self.datacontroller=datacontroller
-        Dialog.__init__(self, master, 'Nouveau Patient')
+    def __init__(self, master, datamanager):
+        self.datamanager=datamanager
+        Dialog.__init__(self, master, 'VT')
 
     def body(self, master):
         self.geometry("%dx%d" % (config.minMaxDialog['width'],config.minMaxDialog['height']))
@@ -315,4 +315,5 @@ class NewPatientDialog(Dialog):
         self.size_var.set(size)
 
     def apply(self):
-        self.datacontroller.new_patient(self.w_button.pushed,self.size_var.get())
+        vt =int(self.size_var.get())
+        self.datamanager.update(vt)

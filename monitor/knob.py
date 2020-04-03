@@ -2,7 +2,8 @@
 import config
 import tkinter as tk
 import time
-from .userinputs import OneValueDialog
+from .userinputs import OneValueDialog, VTDialog
+from .databackend import DataBackend
 
 class Knob():
     def __init__(self,app, datamanager,unit,title):
@@ -104,7 +105,10 @@ class Knob():
             #self.datamanager.update(value)
 
     def onClick(self,event):
-        OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
+        if(self.datamanager.key==DataBackend.VT):
+            VTDialog(self.app,self.datamanager)
+        else:
+            OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
         self.refresh()
 
     def refresh(self):
