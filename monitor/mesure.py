@@ -29,7 +29,7 @@ class AlarmValue():
                 int(self.mesure.width), \
                 int(self.mesure.height))
         text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), self.rect_coord[3])
-        self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=self.anchor, fill=config.alarmValue['background'])
+        #self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=self.anchor, fill=config.alarmValue['background'])
         self.text = self.mesure.canvas.create_text(\
                 text_coord, \
                 anchor='sw', \
@@ -62,7 +62,7 @@ class AlarmValue():
         self.rect_coord=(0,int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width*self.rs_w), int(self.mesure.height))
         if(self.anchor=='se'):
             self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width), int(self.mesure.height))
-        self.mesure.canvas.coords(self.rect,self.rect_coord)
+        #self.mesure.canvas.coords(self.rect,self.rect_coord)
 
         self.font = tkfont.Font(family=config.alarmValue['font_family'], size=int(self.mesure.height*0.1), weight="normal")
         tw = self.font.measure(str(self.value))

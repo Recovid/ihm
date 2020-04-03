@@ -119,25 +119,25 @@ class Window:
         #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
         self.m_ie = Mesure(self.app,0, 'I/E', is_frac=True)
-        self.m_ie.grid(row=1, column=6, sticky="senw")
+        self.m_ie.grid(row=1, column=6, sticky="senw", padx=2, pady=2)
 
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
-        self.m_pep.grid(row=1,column=7, sticky="senw")
+        self.m_pep.grid(row=1,column=7, sticky="senw", padx=2, pady=2)
 
         self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.settings[Data.FRMIN])
-        self.m_fr.grid(row=2,column=6, sticky="senw")
+        self.m_fr.grid(row=2,column=6, sticky="senw", padx=2, pady=2)
 
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
-        self.m_pplat.grid(row=2,column=7, sticky="senw")
+        self.m_pplat.grid(row=2,column=7, sticky="senw", padx=2, pady=2)
 
         self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.settings[Data.VMMIN])
-        self.m_vm.grid(row=3,column=6, sticky="senw")
+        self.m_vm.grid(row=3,column=6, sticky="senw", padx=2, pady=2)
         
         self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.settings[Data.PMIN], dmax=self.data_controller.settings[Data.PMAX])
-        self.m_pcrete.grid(row=3,column=7, sticky="senw")
+        self.m_pcrete.grid(row=3,column=7, sticky="senw", padx=2, pady=2)
 
         self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN])
-        self.m_vte.grid(row=4,column=6, sticky="senw")
+        self.m_vte.grid(row=4,column=6, sticky="senw", padx=2, pady=2)
 
         #BOUTONS EN BAS
  

@@ -17,7 +17,7 @@ alarmValue = dict(
 	height_ratio = 0.25,
 	unit_value = 0.1,
 	color_text ='black',
-	background = "#c16666",
+	background = "#edf0f6",
 	background_selected = "red",
 	font_family = "Helvetica",
 )
