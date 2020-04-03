@@ -35,7 +35,7 @@ class Knob():
 
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
                 font=(config.knob['font_family'], self.font_size_value),\
-                fill=config.knob['color_text'], text=str(0),tags='knob_value_text')
+                fill=config.knob['color_text_unsync'], text=str(0),tags='knob_value_text')
         #self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
         #        font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
         self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
@@ -94,7 +94,7 @@ class Knob():
             item_txt = self.canvas.find_withtag("knob_value")
             self.canvas.itemconfigure(self.arc_grey,extent=self.value_norm)
             item_txt = self.canvas.find_withtag("knob_value_text")
-            self.canvas.itemconfigure(item_txt,text=str(value))
+            self.canvas.itemconfigure(item_txt,text=str(value), fill=config.knob['color_text_sync'] if synchronized else config.knob['color_text_unsync'])
             self.canvas.update_idletasks()
             # TODO: display the value as (un)synchronized (given as argument)
 

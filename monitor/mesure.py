@@ -68,7 +68,7 @@ class AlarmValue():
         text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), \
             int(self.rect_coord[3]-(self.mesure.height*self.rs_h-th)/2))
         self.mesure.canvas.coords(self.text, text_coord)
-        self.mesure.canvas.itemconfig(self.text, text=str(self.value), font=self.font)
+        self.mesure.canvas.itemconfig(self.text, text=str(self.value), font=self.font, fill=config.mesure['color_text_sync'] if self.datamanager.synchronized else config.mesure['color_text_unsync'])
         self.mesure.canvas.update_idletasks()
 
 
@@ -100,13 +100,13 @@ class Mesure:
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
         		font=(self.font_family, self.font_size_unit),\
-                fill=config.mesure['color_text'], text=self.title)
+                fill=config.mesure['color_text_sync'], text=self.title)
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
                 font=(self.font_family, self.font_size_value),\
-                fill=config.mesure['color_text'], text=self.value.get(),tags='text'+str(self.id))
+                fill=config.mesure['color_text_sync'], text=self.value.get(),tags='text'+str(self.id))
         self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.1), anchor='n', \
                 font=(self.font_family, self.font_size_unit),\
-                fill=config.mesure['color_text'], text=self.unit)
+                fill=config.mesure['color_text_sync'], text=self.unit)
 
         if(dmin is not None):
             self.amin=AlarmValue(self, dmin)

@@ -15,7 +15,7 @@ class DataBackendHandler:
     def update_inputs(self, **kwargs):
         pass
     
-    def update_setting(self, key, value):
+    def received_setting(self, key, value):
         pass
 
 

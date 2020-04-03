@@ -76,6 +76,7 @@ class SettingManager():
         self.value = setting.default
         self.controller = controller
         self.synchronized = False
+        self.widget=None
 
     def change(self, value):
         # NB: go through the controller to ensure correct data management
@@ -83,6 +84,10 @@ class SettingManager():
     def sync(self):
         if(self.widget is not None)
         self.widget.refresh()
+
+    def sync(self):
+        if(self.widget is not None):
+            self.widget.refresh()
 
 class DataController:
 
@@ -107,10 +112,9 @@ class DataController:
                 self.parent.inputs.volume.data[self.parent.inputs.index]=volume
         
         def received_setting(self, key, value):
-            self.settings[key].value = value
-            self.settings[key].synchronized = True
-            self.settings.sync()
-            # TODO: update the corresponding widget
+            self.parent.settings[key].value = value
+            self.parent.settings[key].synchronized = True
+            self.parent.settings[key].sync()
  
     def __init__(self, backend, mainLoop):
         self.backend=backend

@@ -1,6 +1,7 @@
 mesure = dict(
 	ratio_width = 0.009,
-	color_text ='black',
+	color_text_sync ='black',
+	color_text_unsync ='dark slate gray',
 	background = "#edf0f6",
 	background_alarmOn = '#ff2026',
 	font_family = "Helvetica",
@@ -30,7 +31,8 @@ knob = dict(
 	color_arc = "#4E69AB",
 	background = "grey",
 	background_selected = "#c9d2e5",
-	color_text ='white',
+	color_text_sync ='white',
+	color_text_unsync ='dark slate gray',
 ) 
 
 button = dict(
