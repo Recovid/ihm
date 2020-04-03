@@ -74,8 +74,9 @@ class AlarmValue():
         self.mesure.canvas.update_idletasks()
 
 
-class Mesure:
+class Mesure(tk.Frame):
     def __init__(self,app,id,title, unit=None ,dmin=None, dmax=None, is_frac=False ):
+        tk.Frame.__init__(self, app, bg='white')
         self.app=app
         self.value = tk.IntVar()
         self.value.set(0)
@@ -99,8 +100,9 @@ class Mesure:
         self.font_size_unit = int(self.height*config.mesure['font_ratio_title'])
         self.font_family = config.mesure['font_family']
 
-        self.canvas = tk.Canvas(app, height=self.height, width=self.width,bg=config.mesure['background'])
+        self.canvas = tk.Canvas(self, height=self.height, width=self.width,bg=config.mesure['background'])
         self.canvas.bind('<Configure>',self.configure)
+        self.canvas.pack(fill=tk.BOTH,expand=1)
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
         		font=(self.font_family, self.font_size_unit),\
@@ -127,6 +129,7 @@ class Mesure:
 
         if(self.dmin is not None or self.dmax is not None):
             self.canvas.bind('<1>', self.click)
+            self.config(borderwidth=2 , relief='raised')
         
 
     def click(self,event):

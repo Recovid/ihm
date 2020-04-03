@@ -119,25 +119,25 @@ class Window:
         #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
 
         self.m_ie = Mesure(self.app,0, 'I/E', is_frac=True)
-        self.m_ie.canvas.grid(row=1, column=6, sticky="senw")
+        self.m_ie.grid(row=1, column=6, sticky="senw")
 
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
-        self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
+        self.m_pep.grid(row=1,column=7, sticky="senw")
 
         self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.settings[Data.FRMIN])
-        self.m_fr.canvas.grid(row=2,column=6, sticky="senw")
+        self.m_fr.grid(row=2,column=6, sticky="senw")
 
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
-        self.m_pplat.canvas.grid(row=2,column=7, sticky="senw")
+        self.m_pplat.grid(row=2,column=7, sticky="senw")
 
         self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.settings[Data.VMMIN])
-        self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
+        self.m_vm.grid(row=3,column=6, sticky="senw")
         
         self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.settings[Data.PMIN], dmax=self.data_controller.settings[Data.PMAX])
-        self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
+        self.m_pcrete.grid(row=3,column=7, sticky="senw")
 
         self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN])
-        self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
+        self.m_vte.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
  
@@ -160,17 +160,17 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
-        self.bt_freeze = ButtonPR(self.app,"Geler courbes", "Resume")
-        self.bt_freeze.grid(row=1,column=8,sticky=stickyall)
+        self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
+        self.bt_freeze.grid(row=1,column=8,sticky=stickyall, padx=4, pady=2)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         self.bt_si = Button2(self.app,"Pause Inspi")
-        self.bt_si.grid(row=2,column=8, sticky="senw")
+        self.bt_si.grid(row=2,column=8, sticky="senw", padx=4, pady=2)
         self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
         self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
         self.bt_se = Button2(self.app ,"Pause Expi")
-        self.bt_se.grid(row=3,column=8, sticky="senw")
+        self.bt_se.grid(row=3,column=8, sticky="senw", padx=4, pady=2)
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
