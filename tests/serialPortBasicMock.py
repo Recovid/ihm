@@ -37,7 +37,7 @@ with open("out", "r") as fOut:
             print("RECV : ", line)
             msg = parse_msg(line)
             if isinstance(msg, SetMsg):
-                resp = AckSetMsg(msg)
+                resp = SetMsg(msg)
                 fIn.write(serialize_msg(resp))
                 fIn.flush()
                 print("SEND : ", serialize_msg(resp))

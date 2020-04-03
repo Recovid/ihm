@@ -109,17 +109,6 @@ class InitMsg:
     def __str__(self):
         return 'INIT %s' % self.text
 
-class AckSetMsg:
-    def __init__(self, set_msg):
-        self.set_msg = set_msg
-
-    def with_args(args_str):
-        set_msg = SetMsg.with_args(args_str)
-        return AckSetMsg(set_msg) if set_msg else None
-
-    def __str__(self):
-        return 'RSET' + str(self.set_msg)[4:]
-
 class AckAlarmMsg:
     def __init__(self, alarm_msg):
         self.alarm_msg = alarm_msg
