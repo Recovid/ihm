@@ -163,6 +163,15 @@ RALM Pression insufflation < seuil minimum\tCS8:D8\n
 
 ## Bip sonore
 
+Envoyé pour désactiver les bip sonores pendant une durée donnée
+
+`PBIP` suivi d'une durée en ms 00000..99999 (ms)
+
+Exemple:
+```
+PBIP 500\tCS8:2F\n
+```
+
 Envoyé pour déclencher un bip sonore d'une durée donnée
 
 `BEEP` suivi d'un seul champ :
