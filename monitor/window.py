@@ -259,8 +259,7 @@ class Window:
         if(self.data_controller.inputs.changed):
             #self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
 
-            #recalcul de la valeur de I/E
-
+            self.m_ie.update(self.data_controller.inputs.inputs[DataBackend.IE])
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])

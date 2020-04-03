@@ -83,6 +83,7 @@ class Mesure:
         self.id = id
         self.unit = unit
         self.title = title
+        self.sync=False
         self.alarm=False
         self.alarm_switch=False
         self.dmin=dmin
@@ -114,7 +115,7 @@ class Mesure:
                     fill=config.mesure['color_text_sync'], text="1")
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
                 font=(self.font_family, self.font_size_value),\
-                fill=config.mesure['color_text_sync'], text=self.value.get(),tags='text'+str(self.id))
+                fill=config.mesure['color_text_unsync'], text=self.value.get(),tags='text'+str(self.id))
         self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.1), anchor='n', \
                 font=(self.font_family, self.font_size_unit),\
                 fill=config.mesure['color_text_sync'], text=self.unit)
@@ -168,6 +169,10 @@ class Mesure:
             self.amax.update()
 
     def update(self,value, alarm=False):
+        if(not self.sync):
+            self.sync=True
+            self.canvas.itemconfigure(self.textid, fill=config.mesure['color_text_sync'])
+
         self.value.set(value)
         self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
         self.canvas.update_idletasks()
