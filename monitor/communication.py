@@ -25,9 +25,10 @@ class DataMsg:
         return 'DATA msec_:%05d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
 
 class RespMsg:
-    args_pattern = re.compile('^Fi02_:(\d{3}) Vt___:(\d{4}) FR___:(\d{2}) PEP__:(\d{2}) PIP__:(\d{3}) PPLAT:(\d{3})$')
+    args_pattern = re.compile('^IE___:(\d{2}) Fi02_:(\d{3}) Vt___:(\d{4}) FR___:(\d{2}) PEP__:(\d{2}) PIP__:(\d{3}) PPLAT:(\d{3})$')
 
-    def __init__(self, fio2_pct, vt_ml, fr_pm, pep_mbar, pip_mbar, pplat_mbar):
+    def __init__(self, ie_ratio, fio2_pct, vt_ml, fr_pm, pep_mbar, pip_mbar, pplat_mbar):
+        self.ie_ratio = ie_ratio
         self.fio2_pct = fio2_pct
         self.vt_ml = vt_ml
         self.fr_pm = fr_pm
@@ -40,11 +41,11 @@ class RespMsg:
         if not match:
             print("failed to parse RESP message", file=sys.stderr)
             return None
-        return RespMsg(*[int(g) for g in match.groups()[0:6]])
+        return RespMsg(*[int(g) for g in match.groups()[0:7]])
 
     def __str__(self):
-        args = (self.fio2_pct, self.vt_ml, self.fr_pm, self.pep_mbar, self.pip_mbar, self.pplat_mbar)
-        return 'RESP Fi02_:%03d Vt___:%04d FR___:%02d PEP__:%02d PIP__:%03d PPLAT:%03d' % args
+        args = (self.ie_ratio, self.fio2_pct, self.vt_ml, self.fr_pm, self.pep_mbar, self.pip_mbar, self.pplat_mbar)
+        return 'RESP IE___:%02d Fi02_:%03d Vt___:%04d FR___:%02d PEP__:%02d PIP__:%03d PPLAT:%03d' % args
 
 class SetMsg:
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')

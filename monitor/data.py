@@ -5,6 +5,7 @@ class Data:
     PEP="pep" # pression expiratoire positive (cmH2O)
     FLOW="flow" # debit max inspiratoire (L/min)
     TPLAT="tplat" # temps plateau (ms)
+    IE="I/E"
 
     PEP_ALARM="pep_alarm"
     FIO2="fio2"
