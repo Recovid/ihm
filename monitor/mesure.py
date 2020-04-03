@@ -35,6 +35,8 @@ class AlarmValue():
                 anchor='sw', \
         	font=self.font,fill=config.alarmValue['color_text'], text=str(self.datamanager.value), tags=self.anchor)
         self.value=datamanager.value
+        
+        self.datamanager.widget=self.mesure
 
     def selected_handler(self):
         self.selected=True
@@ -115,6 +117,7 @@ class Mesure:
 
         if(self.dmin is not None or self.dmax is not None):
             self.canvas.bind('<1>', self.click)
+        
 
     def click(self,event):
         MinMaxDialog(self.app,self.title+' ('+self.unit+')',self.dmin, self.dmax)

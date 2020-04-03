@@ -52,6 +52,7 @@ class Knob():
         self.canvas.bind('<ButtonPress-1>',self.onClick)
 
         self.update(self.value)
+        self.setting.widget=self
     
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
