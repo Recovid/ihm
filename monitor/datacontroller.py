@@ -3,6 +3,7 @@
 import time
 import numpy as np
 from .databackend import DataBackend, DataBackendHandler
+from .data import SETTINGS
 
 class TimeDataInputManager:
     def __init__(self, arraysize, data_range):
@@ -85,20 +86,21 @@ class DataInputs:
         self.freeze=freeze
         self.unfreeze=True
 
-class DataOutputManager:
+class SettingManager():
 
-    def __init__(self, backend, key, vmin=0, vmax=100, default=0, step=1):
-        self.vmin=vmin
-        self.vmax=vmax
-        self.step=step
-        self.value=default
-        self.backend=backend
-        self.key=key
+    def __init__(self, controller, setting):
+        self.vmin = setting.vmin
+        self.vmax = setting.vmax
+        self.step = setting.step
+        self.default = setting.default
+        self.key = setting.key
+        self.value = setting.default
+        self.controller = controller
+        self.synchronized = False
 
-    def update(self,value):
-        if(value<=self.vmax or value >= self.vmin):
-            self.value=value
-            self.backend.set_setting(self.key,value)
+    def change(self, value):
+        # NB: go through the controller to ensure correct data management
+        self.controller.change_setting(self.key, value)
 
 class DataController:
 
@@ -106,35 +108,22 @@ class DataController:
         self.backend=backend
         self.mainLoop = mainLoop
         self.inputs=None
-        self.outputs={}
         self.repost_stop_exp = False
         self.repost_stop_ins = False
 
-        # settings
-        self.outputs[backend.VT]=DataOutputManager(backend,backend.VT,100,600,default=300, step=50)
-        self.outputs[backend.FR]=DataOutputManager(backend,backend.FR,12,35,default=18)
-        self.outputs[backend.PEP]=DataOutputManager(backend,backend.PEP,5,20,default=5)
-        self.outputs[backend.FLOW]=DataOutputManager(backend,backend.FLOW,20,60,default=60, step=2)
-        self.outputs[backend.TPLAT]=DataOutputManager(backend,backend.TPLAT,0.1,1,default=0.1, step=0.1)
+        self.reset_settings()
 
-        # alarms
-        self.outputs[backend.PMIN]=DataOutputManager(backend,backend.PMIN,0,30,default=15) # TODO confirm default
-        self.outputs[backend.PMAX]=DataOutputManager(backend,backend.PMAX,1,80,default=60) # TODO confirm default
-        self.outputs[backend.VTMIN]=DataOutputManager(backend,backend.VTMIN,100,1000,default=300, step=50) # TODO confirm default
-        self.outputs[backend.VMMIN]=DataOutputManager(backend,backend.VMMIN,100,1000,default=100, step=50) # TODO confirm default
-        self.outputs[backend.FRMIN]=DataOutputManager(backend,backend.FRMIN,12,35,default=12) # TODO confirm default
+    def reset_settings(self):
+        self.settings = {setting.key: SettingManager(self, setting) for setting in SETTINGS.values()}
 
     def init_inputs(self, xmax, freq):
         self.inputs=DataInputs(xmax,freq)
         self.backend.set_handler(self.inputs.handler)
+
     def new_patient(self, is_woman, size):
-        vt=self.outputs[backend.VT].value # TODO calculate VT
-        
-        sets = self.backend.get_settings()
-        for k,v in sets.items():
-            self.outputs[k].value=v
-        
-        self.outputs[backend.VT].update(vt)
+        vt=self.settings[Data.VT][0] # TODO calculate VT
+        reset_settings()
+        self.settings[Data.VT] = vt
 
     def post_stop_exp(self, time_sec):
         if time_sec == 0:
@@ -168,3 +157,22 @@ class DataController:
             self.post_stop_ins(0)
             self.repost_stop_ins = False
 
+    def change_setting(self, key, value):
+        setting = self.settings[key]
+        if setting.vmin <= value <= setting.vmax:
+            setting.value = value
+            setting.synchronized = False
+            self.backend.set_setting(key, value)
+
+    def received_setting(self, key, value):
+        self.settings[key].value = value
+        self.settings[key].synchronized = True
+        # TODO: update the corresponding widget
+
+    def get_setting(self, key):
+        """
+        Returns the local value of a setting and whether it is synchronized
+        with the controller as a pair (value, synchronized). Values might be
+        desynchronized during connection or when a new change is not acked yet.
+        """
+        return (self.settings[key].value, self.settings[key].value == self.backend.setings[key])

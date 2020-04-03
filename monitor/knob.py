@@ -6,16 +6,13 @@ from .userinputs import OneValueDialog, VTDialog
 from .databackend import DataBackend
 
 class Knob():
-    def __init__(self,app, datamanager,unit,title):
+    def __init__(self,app, setting ,unit,title):
         self.app=app
-        self.value = datamanager.value
-        self.max_range = datamanager.vmax
-        self.min_range = datamanager.vmin
-        self.step = datamanager.step
+        self.setting = setting
+        self.value = setting.value
         self.selected = False
         self.unit = unit
         self.title = title
-        self.datamanager=datamanager
 
       
         self.width = int(app.winfo_screenwidth()*0.1)
@@ -46,10 +43,10 @@ class Knob():
                 fill=config.knob['background'], text=self.title)
 
         #self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
-        #        font=("Helvetica", 12),fill='grey', text=self.min_range)
+        #        font=("Helvetica", 12),fill='grey', text=self.setting.vmin)
 
         #self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
-        #        font=("Helvetica", 12),fill='grey', text=self.max_range)        
+        #        font=("Helvetica", 12),fill='grey', text=self.setting.vmax)        
         
         self.canvas.bind('<Configure>',self.configure)
         self.canvas.bind('<ButtonPress-1>',self.onClick)
@@ -77,10 +74,10 @@ class Knob():
 
     def minus_handler(self, big=False):
         inc = 10 if big else 1
-        self.update(self.value-self.step*inc)
+        self.update(self.value-self.setting.step*inc)
     def plus_handler(self, big=False):
         inc = 10 if big else 1
-        self.update(self.value+self.step*inc)
+        self.update(self.value+self.setting.step*inc)
     def selected_handler(self):
         self.selected = True
         self.canvas.itemconfigure('knob_circle', fill=config.knob['background_selected'])
@@ -90,30 +87,26 @@ class Knob():
 
 
 
-    def update(self,value):
-        if value >= self.min_range and value <= self.max_range:
+    def update(self,value,synchronized=False):
+        if value >= self.setting.vmin and value <= self.setting.vmax:
             self.value = value
-            print(self.max_range, self.min_range, self.value)
-            print((self.value/self.max_range) + self.min_range)
-            self.value_norm = 270 - ((self.value-self.min_range)/(self.max_range- self.min_range)*270)
-            print(self.value_norm)
+            self.value_norm = 270 - ((self.value-self.setting.vmin)/(self.setting.vmax - self.setting.vmin)*270)
             item_txt = self.canvas.find_withtag("knob_value")
             self.canvas.itemconfigure(self.arc_grey,extent=self.value_norm)
             item_txt = self.canvas.find_withtag("knob_value_text")
             self.canvas.itemconfigure(item_txt,text=str(value))
             self.canvas.update_idletasks()
-            #self.datamanager.update(value)
+            # TODO: display the value as (un)synchronized (given as argument)
 
     def onClick(self,event):
-        if(self.datamanager.key==DataBackend.VT):
-            VTDialog(self.app,self.datamanager)
+        if self.setting.key == DataBackend.VT:
+            VTDialog(self.app, self.setting)
         else:
-            OneValueDialog(self.app,self.title+' ('+self.unit+')',self.datamanager)
+            OneValueDialog(self.app,self.title+' ('+self.unit+')', self.setting)
         self.refresh()
 
     def refresh(self):
-        self.value=self.datamanager.value
-        self.update(self.datamanager.value)
+        self.update(self.setting.value, self.setting.synchronized)
 
 
 # Programme de test

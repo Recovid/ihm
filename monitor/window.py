@@ -12,6 +12,7 @@ from .knob import Knob
 from .mesure import Mesure
 from .button import Button, Button2, ButtonPR
 from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
+from .data import Data
 
 
 class Scope:
@@ -123,36 +124,36 @@ class Window:
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
         self.m_pep.canvas.grid(row=1,column=7, sticky="senw")
 
-        self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.outputs[DataBackend.FRMIN])
+        self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.settings[Data.FRMIN])
         self.m_fr.canvas.grid(row=2,column=6, sticky="senw")
 
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
         self.m_pplat.canvas.grid(row=2,column=7, sticky="senw")
 
-        self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.outputs[DataBackend.VMMIN])
+        self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.settings[Data.VMMIN])
         self.m_vm.canvas.grid(row=3,column=6, sticky="senw")
         
-        self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.outputs[DataBackend.PMIN], dmax=self.data_controller.outputs[DataBackend.PMAX])
+        self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.settings[Data.PMIN], dmax=self.data_controller.settings[Data.PMAX])
         self.m_pcrete.canvas.grid(row=3,column=7, sticky="senw")
 
-        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.outputs[DataBackend.VTMIN])
+        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN])
         self.m_vte.canvas.grid(row=4,column=6, sticky="senw")
 
         #BOUTONS EN BAS
  
-        self.k_vt = Knob(self.app, self.data_controller.outputs[DataBackend.VT],'ml','VT')
+        self.k_vt = Knob(self.app, self.data_controller.settings[Data.VT],'ml','VT')
         self.k_vt.canvas.grid(row=5,column=0, sticky="senw")
 
-        self.k_fr = Knob(self.app, self.data_controller.outputs[DataBackend.FR],'bpm','FR')
+        self.k_fr = Knob(self.app, self.data_controller.settings[Data.FR],'bpm','FR')
         self.k_fr.canvas.grid(row=5,column=1, sticky="senw")
 
-        self.k_pep = Knob(self.app, self.data_controller.outputs[DataBackend.PEP],'cmH2O','PEP')
+        self.k_pep = Knob(self.app, self.data_controller.settings[Data.PEP],'cmH2O','PEP')
         self.k_pep.canvas.grid(row=5,column=2, sticky="senw")
 
-        self.k_flow = Knob(self.app, self.data_controller.outputs[DataBackend.FLOW],'L/min','Debit Max')
+        self.k_flow = Knob(self.app, self.data_controller.settings[Data.FLOW],'L/min','Debit Max')
         self.k_flow.canvas.grid(row=5,column=3, sticky="senw")
 
-        self.k_tplat = Knob(self.app, self.data_controller.outputs[DataBackend.TPLAT],'','Tplat')
+        self.k_tplat = Knob(self.app, self.data_controller.settings[Data.TPLAT],'','Tplat')
         self.k_tplat.canvas.grid(row=5,column=4, sticky="senw")
 
         #Boutons Pause

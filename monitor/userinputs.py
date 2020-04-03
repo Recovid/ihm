@@ -126,9 +126,9 @@ class ButtonUserInputManager(UserInputManager):
 
 class OneValueDialog(Dialog):
 
-    def __init__(self, master, title, datamanager):
-        self.datamanager=datamanager
-        self.value=datamanager.value
+    def __init__(self, master, title, setting):
+        self.setting = setting
+        self.value = setting.value
         Dialog.__init__(self, master, title)
 
 
@@ -165,19 +165,19 @@ class OneValueDialog(Dialog):
             inc=1
         elif(event.widget==self.buttons[3]):
             inc=10
-        val = self.value+self.datamanager.step*inc
+        val = self.value+self.setting.step*inc
         if isinstance(val, float):
            val = round(val,1)
-        if val >= self.datamanager.vmax:
-            val = self.datamanager.vmax
-        elif val <= self.datamanager.vmin:
-            val = self.datamanager.vmin
+        if val >= self.setting.vmax:
+            val = self.setting.vmax
+        elif val <= self.setting.vmin:
+            val = self.setting.vmin
         self.value = val
         self.value_var.set(self.value)
 
 
     def apply(self):
-        self.datamanager.update(self.value)
+        self.setting.change(self.value)
 
 class MinMaxDialog(Dialog):
 
@@ -242,14 +242,14 @@ class MinMaxDialog(Dialog):
 
     def apply(self):
         if(self.dmin is not None):
-            self.dmin.update(self.vmin_var.get())
+            self.dmin.change(self.vmin_var.get())
         if(self.dmax is not None):
-            self.dmax.update(self.vmax_var.get())
+            self.dmax.change(self.vmax_var.get())
 
 class VTDialog(Dialog):
 
-    def __init__(self, master, datamanager):
-        self.datamanager=datamanager
+    def __init__(self, master, setting):
+        self.setting = setting
         Dialog.__init__(self, master, 'VT')
 
     def body(self, master):
@@ -316,4 +316,4 @@ class VTDialog(Dialog):
 
     def apply(self):
         vt =int(self.size_var.get())
-        self.datamanager.update(vt)
+        self.setting.change(vt)
