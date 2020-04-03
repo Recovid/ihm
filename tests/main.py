@@ -18,7 +18,7 @@ def nominal_data(t_ms, fr_hz):
     return DataMsg(t_ms, volume_ml, debit_lpm, paw_mbar)
 
 def resp_msg(fr_hz):
-    return RespMsg(ie_ratio=2,fio2_pct=50, vt_ml=500, fr_pm=fr_hz * 60, pep_mbar=5, pip_mbar=50, pplat_mbar=40)
+    return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

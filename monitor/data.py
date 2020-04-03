@@ -8,7 +8,6 @@ class Data:
     IE="I/E"
 
     PEP_ALARM="pep_alarm"
-    FIO2="fio2"
     VTE="vte"
     VTE_ALARM="vte_alarm"
     VTMIN="vtmin"

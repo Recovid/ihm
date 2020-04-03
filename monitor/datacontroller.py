@@ -20,7 +20,6 @@ class DataInputs:
         
         self.inputs = {}
         self.inputs[DataBackend.IE]=0
-        self.inputs[DataBackend.FIO2]=0
         self.inputs[DataBackend.PEP]=0
         self.inputs[DataBackend.PEP_ALARM]=False
         self.inputs[DataBackend.FR]=0

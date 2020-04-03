@@ -67,12 +67,12 @@ class DataBackendFromFile(DataBackend):
                 elif isinstance(msg, RespMsg):
                     self.handler.update_inputs(**{
                         self.IE: round(msg.ie_ratio / 10, 1),
-                        self.FIO2: msg.fio2_pct,
-                        self.VT: msg.vt_ml,
                         self.FR: msg.fr_pm,
-                        self.PEP: msg.pep_mbar,
-                        self.PCRETE: msg.pep_mbar,
-                        self.PPLAT: msg.pplat_mbar,
+                        self.VTE: msg.vte_ml,
+                        self.PCRETE: msg.pcrete_cmH2O,
+                        self.VM: msg.vm_lpm,
+                        self.PPLAT: msg.pplat_cmH2O,
+                        self.PEP: msg.pep_cmH2O,
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -110,12 +110,12 @@ class SerialPortMock(DataBackend):
                 elif isinstance(msg, RespMsg):
                     self.handler.update_inputs(**{
                         self.IE: round(msg.ie_ratio / 10, 1),
-                        self.FIO2: msg.fio2_pct,
-                        self.VT: msg.vt_ml,
                         self.FR: msg.fr_pm,
-                        self.PEP: msg.pep_mbar,
-                        self.PCRETE: msg.pep_mbar,
-                        self.PPLAT: msg.pplat_mbar,
+                        self.VTE: msg.vte_ml,
+                        self.PCRETE: msg.pcrete_cmH2O,
+                        self.VM: msg.vm_lpm,
+                        self.PPLAT: msg.pplat_cmH2O,
+                        self.PEP: msg.pep_cmH2O,
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -165,12 +165,12 @@ class SerialPort(DataBackend):
             elif isinstance(msg, RespMsg):
                 self.handler.update_inputs(**{
                     self.IE: round(msg.ie_ratio / 10, 1),
-                    self.FIO2: msg.fio2_pct,
-                    self.VT: msg.vt_ml,
                     self.FR: msg.fr_pm,
-                    self.PEP: msg.pep_mbar,
-                    self.PCRETE: msg.pep_mbar,
-                    self.PPLAT: msg.pplat_mbar,
+                    self.VTE: msg.vte_ml,
+                    self.PCRETE: msg.pcrete_cmH2O,
+                    self.VM: msg.vm_lpm,
+                    self.PPLAT: msg.pplat_cmH2O,
+                    self.PEP: msg.pep_cmH2O,
                 })
             elif isinstance(msg, SetMsg):
                 self.handler.received_setting(msg.setting, int(msg.value))

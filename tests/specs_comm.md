@@ -43,9 +43,9 @@ Suivi de chacun des champs et données suivants :
 
 - `msec_` (timestamp % 10^5) 00000..99999 (msec)
   NB: L'IHM affiche 15sec @ 60 FPS = 900 trames, le timestamp de trame peut tourner % 100000 sur 5 digits.
-- `Vol__` (Volume d'air) : 0000..1000 (mL)
-- `Deb__` (Débit) : '+'/'-' 000..200. (L/min)
-- `Paw__` (Pression ) : '+'/'-' 000..100.0 (cmH2O)
+- `Vol__` (Volume d'air) : 000..600 (mL)
+- `Deb__` (Débit) : '+'/'-' 00..80 (L/min)
+- `Paw__` (Pression ) : '+'/'-' 000..100 (cmH2O)
 
 Specification sprintf:
 `DATA msec_:%05d Vol_:%03d Deb_:%+03.1f Paw_:%+03.1f\tCS8:%02X\n`
@@ -64,15 +64,15 @@ Envoyé une fois par cycle respiratoire
 Suivi de chacun des champs et données suivants :
 
 - `IE___` (Rapport I/E) : 20 .. 60 (20 => 1/2, 22 => 1/2.2, ...)
-- `Fi02_` (Fraction inspirée en di-Oxygène) : 021..100 (%)
-- `Vt___` (Volume tidal ou courant) : 0300..800 (mL)
-- `FR___` (Fréquence Respiratoire) : 10..35 (1/min)
-- `PEP__` (Pression Expiratoire Positive) : 00..15 (cmH2O) NB: différent du réglage ???
-- `PIP__` (Pression Inspiratoire de Pointe) : 00.0..99.9 (cmH2O) 
-- `PPLAT` (Pression Plateau) : 00.0..99.9 (cmH2O) 
+- `FR___` (Fréquence Respiratoire) : 00..99 (1/min)
+- `VTe__` (Volume tidal ou courant expiré) : 000..999 (mL)
+- `PCRET` (Pression maximale Pcrete) : 00..99 (cmH2O)
+- `VM___` (Volume Minute expiré) : '+'/'-' 00..99 (L/min)
+- `PPLAT` (Pression Plateau) : 00..99 (cmH2O)
+- `PEP__` (Pression Expiratoire Positive) : 00..99 (cmH2O) NB: moyenne Paw sur dernières 100ms expiration
 
 Specification sprintf:
-`RESP IE___:%02d Fi02_:%03d Vt___:%04d FR___:%02d PEP__:%02.1f PIP__:%02.1f PPLAT:%02.1f\tCS8:%02X\n`
+`RESP IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%+02d PPLAT:%02d PEP__:%02d\tCS8:%02X\n`
 
 ## Alarmes
 
