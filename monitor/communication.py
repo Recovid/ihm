@@ -138,26 +138,26 @@ class BeepMsg:
         return 'BEEP dur__:%05d' % self.duration_ms
 
 class PauseInsMsg:
-    def __init__(self, duration_s):
-        self.duration_s = setting
+    def __init__(self, duration_ms):
+        self.duration_ms = duration_ms
 
     def with_args(args_str):
         # TODO: check we have a number
         return PauseInsMsg(int(args_str))
 
     def __str__(self):
-        return 'PINS %02d' % self.duration_s
+        return 'PINS %03d' % self.duration_ms
 
 class PauseExpMsg:
-    def __init__(self, duration_s):
-        self.duration_s = setting
+    def __init__(self, duration_ms):
+        self.duration_ms = duration_ms
 
     def with_args(args_str):
         # TODO: check we have a number
         return PauseExpMsg(int(args_str))
 
     def __str__(self):
-        return 'PEXP %02d' % self.duration_s
+        return 'PEXP %03d' % self.duration_ms
 
 def checksum8(frame):
     assert isinstance(frame, str)

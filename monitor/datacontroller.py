@@ -137,34 +137,34 @@ class DataController:
         reset_settings()
         self.settings[Data.VT] = vt
 
-    def post_stop_exp(self, time_sec):
-        if time_sec == 0:
+    def post_stop_exp(self, time_ms):
+        if time_ms == 0:
             self.backend.stop_exp(0)
         elif self.repost_stop_exp:
-            self.backend.stop_exp(time_sec)
+            self.backend.stop_exp(time_ms)
             # repost 1 sec before timeout end to avoid breath restart
-            self.mainLoop.after((time_sec - 1) * 1000, self.post_stop_exp, time_sec)
+            self.mainLoop.after(time_ms - 100, self.post_stop_exp, time_ms)
 
     def stop_exp(self, on):
         if (on):
             self.repost_stop_exp = True
-            self.post_stop_exp(5)
+            self.post_stop_exp(500)
         else:
             self.post_stop_exp(0)
             self.repost_stop_exp = False
 
-    def post_stop_ins(self, time_sec):
-        if time_sec == 0:
+    def post_stop_ins(self, time_ms):
+        if time_ms == 0:
             self.backend.stop_ins(0)
         elif self.repost_stop_ins:
-            self.backend.stop_ins(time_sec)
+            self.backend.stop_ins(time_ms)
             # repost 1 sec before timeout end to avoid breath restart
-            self.mainLoop.after((time_sec - 1) * 1000, self.post_stop_ins, time_sec)
+            self.mainLoop.after(time_ms - 100, self.post_stop_ins, time_ms)
 
     def stop_ins(self, on):
         if (on):
             self.repost_stop_ins = True
-            self.post_stop_ins(5)
+            self.post_stop_ins(500)
         else:
             self.post_stop_ins(0)
             self.repost_stop_ins = False
