@@ -11,6 +11,7 @@ from .userinputs import OneValueDialog, NewPatientDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button, Button2, ButtonPR
+from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 
 
 class Scope:
@@ -80,6 +81,7 @@ class Window:
         #self.hw = self.app.winfo_height()
         self.alarm_text = tk.StringVar()
         self.alarm_text.set("Some Alarm message text")
+        self.alarmMgr = AlarmManager()
         
         print('ws:',self.ws,' hw:',self.hw)
 
@@ -206,6 +208,7 @@ class Window:
             self.arrows[i].bind('<1>', self.arrows_event,'+')
         self.arrows_frame.grid(row=5,column=6,columnspan=2, sticky="news")
         self.arrows_frame.grid_forget()
+        self.alarmManagerTest()
 
     def freeze_curve(self, freeze):
         if freeze:
@@ -290,14 +293,41 @@ class Window:
         self.app.destroy()
         self.data_backend.stop()
 
+    def updateAlarmDisplay(self):
+        if( self.alarmMgr.GetActivAlarmNb() == 0):
+            self.alarm_text.set("")
+            self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
+        else :
+            self.alarm_text.set(self.alarmMgr.GetCurrentMessageToDisplay())
+            if(self.alarmMgr.GetCurrentMessageLevel() == AlarmLevel.MEDIUM_PRIORITY):
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
+            elif(self.alarmMgr.GetCurrentMessageLevel() == AlarmLevel.HIGH_PRIORITY):
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_High_Priority.png")
+            else:
+                #unknown case
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
+
+
     #note Boris: note sure if this function will be usefull
-    def updateAlarmText(self, newText):
-        self.alarm_msg.set_text(newText)
+    #def updateAlarmText(self, newText):
+        #self.alarm_text.set(newText)
+
+
+
 
     #see what we need to do with this button in function in function of the implementation of alarm system
     def event_bt_Alarm(self, e):
         print("event_bn_alarm pressed")
         #just for test
-        self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
+        #self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
         #self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
 
+    #note Boris this function is here to make test on AlarmManager
+    def alarmManagerTest(self):
+        #alarm1 = Alarm(AlarmType.PRESSION_MAX, AlarmLevel.MEDIUM_PRIORITY)
+        #self.alarmMgr.ActivateAlarm(alarm1)
+        #alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
+        #alarm3 = Alarm(AlarmType.VOLUME_COURANT, AlarmLevel.HIGH_PRIORITY)
+        #self.alarmMgr.ActivateAlarm(alarm3)
+        #self.alarmMgr.ActivateAlarm(alarm2)
+        self.updateAlarmDisplay()
