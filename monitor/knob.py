@@ -35,7 +35,7 @@ class Knob():
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
         self.circle = self.canvas.create_oval(coord, fill=config.knob['background'], width=2,tags='knob_circle')
 
-        self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.10), anchor='n', \
+        self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.05), anchor='n', \
                 font=(config.knob['font_family'], self.font_size_title),\
                 fill=config.knob['background'], text=self.title)
 
@@ -87,17 +87,17 @@ class Knob():
         self.canvas.itemconfig(self.textid, font=(config.knob['font_family'],font_size))
         
         font_size = int(self.width*config.knob['font_ratio_title'])
-        self.canvas.coords(self.unit_textid,(int(self.width*0.5),int(self.height*0.80)))
+        self.canvas.coords(self.unit_textid,(int(self.width*0.5),int(self.height*0.90)))
         self.canvas.itemconfig(self.unit_textid, font=(config.knob['font_family'],font_size))
         
 
-        self.canvas.coords(self.title_textid,(int(self.width*0.5), int(self.height*0.10)))
+        self.canvas.coords(self.title_textid,(int(self.width*0.5), int(self.height*0.04)))
         self.canvas.itemconfig(self.title_textid,font=(config.knob['font_family'],font_size))
 
-        self.canvas.coords(self.min_textid,(int(self.width*0.15), int(self.height*0.85)))
+        self.canvas.coords(self.min_textid,(int(self.width*0.15), int(self.height*0.95)))
         self.canvas.itemconfig(self.min_textid,font=(config.knob['font_family'],font_size, "bold"))
 
-        self.canvas.coords(self.max_textid,(int(self.width*0.85), int(self.height*0.85)))
+        self.canvas.coords(self.max_textid,(int(self.width*0.85), int(self.height*0.95)))
         self.canvas.itemconfig(self.max_textid,font=(config.knob['font_family'],font_size, "bold"))
 
 

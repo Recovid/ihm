@@ -132,10 +132,13 @@ class Window:
         self.m_vte.grid(row=4,column=6, sticky="senw", padx=2, pady=2)
 
         #BOUTONS EN BAS
- 
-        self.knob_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
+        self.leftside = tk.Frame(self.app, height=200)
+        self.leftside.grid(row=1, column=0,rowspan=7, columnspan = 6,sticky=stickyall)
+
+        self.knob_frame = tk.Frame(self.leftside,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9))
-        self.knob_frame.grid(row=4, column=0,rowspan=3, columnspan = 6,sticky=stickyall)
+        #self.knob_frame.grid(row=4, column=0,rowspan=3, columnspan = 6,sticky=stickyall)
+        self.knob_frame.pack(side=tk.BOTTOM, fill=tk.X,expand=1)
 
         #create grid inside knob_frame
         #note Boris: There is probably a better way to do it but i didn't find it
@@ -219,8 +222,9 @@ class Window:
         self.ax_flow.get_xaxis().set_visible(False)
 
 
-        self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
-        self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=3,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.leftside)
+        #self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=3,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.canvas_graph.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution * 1000,blit=True)
 
         self.freeze_time=False

@@ -23,8 +23,8 @@ alarmValue = dict(
 )
 
 knob = dict(
-	width_ratio = 1,
-	height_ratio = 1,
+	width_ratio = 100,
+	height_ratio = 130,
 	font_family = "Helvetica",
 	font_ratio_value = 0.2,
 	font_ratio_unit = 0.1,
