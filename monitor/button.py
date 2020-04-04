@@ -95,7 +95,7 @@ class Button2(tk.Button):
             self.config(image=self.img)
 
     def set_content(self, content, bg=None):
-        self.content=content
+        #self.content=content
         if( content.count('.png') != 0):
             w = self.winfo_width() if self.winfo_width()>1 else 1
             h = self.winfo_height() if self.winfo_height()>1 else 1
@@ -103,13 +103,15 @@ class Button2(tk.Button):
             #    #(event.width-10, event.height-10), Image.ANTIALIAS
             #    (w,h), Image.ANTIALIAS
             #)
-            img = Image.open(self.content)
+            img = Image.open(content)
             self.img = ImageTk.PhotoImage(img)
             self.config(image=self.img)
             if(bg is not None):
                 self.config(bg=bg, activebackground=bg)
         else:
+            print("update text")
             self.config(text=content)
+        self.update_idletasks()
 
     def set_background(self, newbg):
         self.config(bg=newbg,activebackground=newbg)
@@ -123,13 +125,13 @@ class ButtonPR(Button2):
 
         self.bind('<ButtonPress-1>',self.click)
         self.bind('<ButtonRelease-1>',self.unclick)
-    def resize(self, event):
-        if(self.img):
-            img = Image.open(self.content_push if self.content_push is not None and self.pushed else self.content).resize(
-                (event.width-10, event.height-10), Image.ANTIALIAS
-            )
-            self.img = ImageTk.PhotoImage(img)
-            self.config(image=self.img)
+    #def resize(self, event):
+    #    if(self.img):
+    #        img = Image.open(self.content_push if self.content_push is not None and self.pushed else self.content).resize(
+    #            (event.width-10, event.height-10), Image.ANTIALIAS
+    #        )
+    #        self.img = ImageTk.PhotoImage(img)
+    #        self.config(image=self.img)
     
     def click(self, event):
         if(self.pushed):
