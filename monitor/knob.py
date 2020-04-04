@@ -6,13 +6,15 @@ from .userinputs import OneValueDialog, VTDialog
 from .databackend import DataBackend
 
 class Knob():
-    def __init__(self,app, setting ,unit,title):
+    def __init__(self,app, setting ,unit,title, min=None, max=None):
         self.app=app
         self.setting = setting
         self.value = setting.value
         self.selected = False
         self.unit = unit
         self.title = title
+        self.min = min
+        self.max = max
 
       
         self.width = int(app.winfo_screenwidth()*0.1)
@@ -33,20 +35,25 @@ class Knob():
         coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
         self.circle = self.canvas.create_oval(coord, fill=config.knob['background'], width=2,tags='knob_circle')
 
+        self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.10), anchor='n', \
+                font=(config.knob['font_family'], self.font_size_title),\
+                fill=config.knob['background'], text=self.title)
+
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
                 font=(config.knob['font_family'], self.font_size_value),\
                 fill=config.knob['color_text_unsync'], text=str(0),tags='knob_value_text')
         #self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
         #        font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
-        self.title_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.99), anchor='s', \
+        self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.80), anchor='s', \
                 font=(config.knob['font_family'], self.font_size_title),\
-                fill=config.knob['background'], text=self.title)
+                fill=config.knob['background'], text=self.unit)
 
-        #self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='e', \
-        #        font=("Helvetica", 12),fill='grey', text=self.setting.vmin)
 
-        #self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='w', \
-        #        font=("Helvetica", 12),fill='grey', text=self.setting.vmax)        
+        self.min_textid = self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='s', \
+                font=("Helvetica", 12, "bold"),fill='grey', text=self.min)
+
+        self.max_textid = self.canvas.create_text(int(self.width*0.8), int(self.height*0.85), anchor='s', \
+                font=("Helvetica", 12, "bold"),fill='grey', text=self.max)
         
         self.canvas.bind('<Configure>',self.configure)
         self.canvas.bind('<ButtonPress-1>',self.onClick)
@@ -57,10 +64,22 @@ class Knob():
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
         self.height = int(self.canvas.winfo_height())
-        coord = int(self.width*0.1), int(self.height*0.1), int(self.width*0.9), int(self.height*0.9)
+
+        coordHeight = self.height
+        coordWidth = self.width
+
+        if(self.width > self.height ):
+            coordWidth = coordHeight
+        else:
+            coordHeight = coordWidth
+
+        centerx = int(self.width*0.5)
+        centery = int(self.height*0.5)
+
+        coord = int(centerx - coordWidth*0.4), int(centery -coordHeight*0.4), int(centerx + coordWidth*0.4), int(centery + coordHeight*0.4)
         self.canvas.coords(self.arc_green,coord)
         self.canvas.coords(self.arc_grey,coord)
-        coord = int(self.width*0.2), int(self.height*0.2), int(self.width*0.8), int(self.height*0.8)
+        coord = int(centerx - coordWidth*0.3), int(centery -coordHeight*0.3), int(centerx + coordHeight*0.3), int(centery + coordHeight*0.3)
         self.canvas.coords(self.circle,coord)
 
         font_size = int(self.width*config.knob['font_ratio_value'])
@@ -68,9 +87,18 @@ class Knob():
         self.canvas.itemconfig(self.textid, font=(config.knob['font_family'],font_size))
         
         font_size = int(self.width*config.knob['font_ratio_title'])
-        self.canvas.coords(self.title_textid,(int(self.width*0.5),int(self.height)))
-        self.canvas.itemconfig(self.title_textid, font=(config.knob['font_family'],font_size))
+        self.canvas.coords(self.unit_textid,(int(self.width*0.5),int(self.height*0.80)))
+        self.canvas.itemconfig(self.unit_textid, font=(config.knob['font_family'],font_size))
         
+
+        self.canvas.coords(self.title_textid,(int(self.width*0.5), int(self.height*0.10)))
+        self.canvas.itemconfig(self.title_textid,font=(config.knob['font_family'],font_size))
+
+        self.canvas.coords(self.min_textid,(int(self.width*0.15), int(self.height*0.85)))
+        self.canvas.itemconfig(self.min_textid,font=(config.knob['font_family'],font_size, "bold"))
+
+        self.canvas.coords(self.max_textid,(int(self.width*0.85), int(self.height*0.85)))
+        self.canvas.itemconfig(self.max_textid,font=(config.knob['font_family'],font_size, "bold"))
 
 
     def minus_handler(self, big=False):

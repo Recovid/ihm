@@ -18,7 +18,7 @@ class LockScreen(tk.Canvas):
         self.textid = self.create_text(int(self.winfo_width()/2), int(self.winfo_height()/2), anchor='c', \
         		font=config.lockScreen['font_timer'],text=str(self.timer))
         self.title_textid = self.create_text(int(self.winfo_width()/2), int(self.winfo_height()*0.3), anchor='c', \
-                font=config.lockScreen['font_title'],text="Dévérouillage dans:")
+                font=config.lockScreen['font_title'],text="Dévérrouillage dans:")
         self.after(1000, self.update)
     
     def resize(self, event):

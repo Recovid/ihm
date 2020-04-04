@@ -133,20 +133,52 @@ class Window:
 
         #BOUTONS EN BAS
  
-        self.k_vt = Knob(self.app, self.data_controller.settings[Data.VT],'ml','VT')
-        self.k_vt.canvas.grid(row=5,column=0, sticky="senw")
+        self.knob_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
+            height=int(self.hw*0.9))
+        self.knob_frame.grid(row=4, column=0,rowspan=3, columnspan = 6,sticky=stickyall)
 
-        self.k_fr = Knob(self.app, self.data_controller.settings[Data.FR],'bpm','FR')
-        self.k_fr.canvas.grid(row=5,column=1, sticky="senw")
+        #create grid inside knob_frame
+        #note Boris: There is probably a better way to do it but i didn't find it
+        tk.Grid.rowconfigure(self.knob_frame, 1, weight=1)
+        for column_index in range(5):
+            tk.Grid.columnconfigure(self.knob_frame, column_index, weight=1)
+            if(column_index == 0 ):
+                self.k_vt = Knob(self.knob_frame, self.data_controller.settings[Data.VT],'ml','VT', '100', '600')
+                self.k_vt.canvas.grid(row=1,column=column_index, sticky=stickyall)
+            if(column_index == 1  ):
+                self.k_fr = Knob(self.knob_frame, self.data_controller.settings[Data.FR],'bpm','FR', '12', '35')
+                self.k_fr.canvas.grid(row=1,column=column_index, sticky=stickyall)
+            if(column_index == 2):
+                self.k_pep = Knob(self.knob_frame, self.data_controller.settings[Data.PEP],'cmH2O','PEP', '5','20')
+                self.k_pep.canvas.grid(row=1,column=column_index, sticky=stickyall)
+            if(column_index == 3):
+                self.k_flow = Knob(self.knob_frame, self.data_controller.settings[Data.FLOW],'L/min','Debit Max', '20', '60')
+                self.k_flow.canvas.grid(row=1,column=column_index, sticky=stickyall)
+            if(column_index == 4):
+                self.k_tplat = Knob(self.knob_frame, self.data_controller.settings[Data.TPLAT],'','Tplat','0,1', '1,0')
+                self.k_tplat.canvas.grid(row=1,column=column_index, sticky=stickyall)
 
-        self.k_pep = Knob(self.app, self.data_controller.settings[Data.PEP],'cmH2O','PEP')
-        self.k_pep.canvas.grid(row=5,column=2, sticky="senw")
 
-        self.k_flow = Knob(self.app, self.data_controller.settings[Data.FLOW],'L/min','Debit Max')
-        self.k_flow.canvas.grid(row=5,column=3, sticky="senw")
 
-        self.k_tplat = Knob(self.app, self.data_controller.settings[Data.TPLAT],'','Tplat')
-        self.k_tplat.canvas.grid(row=5,column=4, sticky="senw")
+
+#        self.knob_frame.Grid.rowconfigure(1)
+#        self.knob_frame.Grid.columnconfigure(5)
+
+
+        #self.k_vt = Knob(self.app, self.data_controller.settings[Data.VT],'ml','VT')
+        #self.k_vt.canvas.grid(row=5,column=0, sticky="senw")
+
+        #self.k_fr = Knob(self.app, self.data_controller.settings[Data.FR],'bpm','FR')
+        #self.k_fr.canvas.grid(row=5,column=1, sticky="senw")
+
+        #self.k_pep = Knob(self.app, self.data_controller.settings[Data.PEP],'cmH2O','PEP')
+        #self.k_pep.canvas.grid(row=5,column=2, sticky="senw")
+
+        #self.k_flow = Knob(self.app, self.data_controller.settings[Data.FLOW],'L/min','Debit Max')
+        #self.k_flow.canvas.grid(row=5,column=3, sticky="senw")
+
+        #self.k_tplat = Knob(self.app, self.data_controller.settings[Data.TPLAT],'','Tplat')
+        #self.k_tplat.canvas.grid(row=5,column=4, sticky="senw")
 
         #Boutons Pause
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
@@ -183,9 +215,12 @@ class Window:
         self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
         self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, self.data_controller.inputs.flow)
         self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, self.data_controller.inputs.volume)
-        
+        self.ax_pressure.get_xaxis().set_visible(False)
+        self.ax_flow.get_xaxis().set_visible(False)
+
+
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.app)
-        self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=4,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
+        self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=3,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
         self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution * 1000,blit=True)
 
         self.freeze_time=False
@@ -205,7 +240,7 @@ class Window:
         #just here for test
         self.test_cnt = 0
 
-        bt=Button2(self.app, 'Verouiller')
+        bt=Button2(self.app, 'Verrouiller')
         bt.grid(row=4,column=8)
         bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
     
