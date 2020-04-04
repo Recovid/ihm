@@ -158,7 +158,8 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
-        self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
+        #self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
+        self.bt_Alarm = Button2(self.app,"    ")
         self.bt_Alarm.set_background('#4E69AB')
         self.bt_Alarm.grid(row=1, column=8, sticky=stickyall, padx=4, pady=2)
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
@@ -280,16 +281,16 @@ class Window:
     def updateAlarmDisplay(self):
         if( self.alarmMgr.GetActivAlarmNb() == 0):
             self.alarm_text.set("")
-            self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
+            self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png",bg='#4E69AB')
         else :
             self.alarm_text.set(self.alarmMgr.GetCurrentMessageToDisplay())
             if(self.alarmMgr.GetCurrentMessageLevel() == AlarmLevel.MEDIUM_PRIORITY):
-                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png")
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_Medium_Priority.png",bg='yellow')
             elif(self.alarmMgr.GetCurrentMessageLevel() == AlarmLevel.HIGH_PRIORITY):
-                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_High_Priority.png")
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_High_Priority.png", bg='red')
             else:
                 #unknown case
-                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png")
+                self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png",bg='#4E69AB')
 
 
     #note Boris: note sure if this function will be usefull

@@ -80,8 +80,8 @@ class Button2(tk.Button):
         tk.Button.__init__(self,parent,font=config.button['font'],bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
         if(content is not None):
             self.set_content(content)
-            if( content.count('.png') != 0):
-                self.bind('<Configure>', self.resize)
+            #if( content.count('.png') != 0):
+            #    self.bind('<Configure>', self.resize)
         self.bind('<ButtonPress-1>', lambda event : self.config(activebackground=config.button['btn_background_selected']))
         self.bind('<ButtonRelease-1>', lambda event : self.config(activebackground=config.button['btn_background']))
 
@@ -94,22 +94,25 @@ class Button2(tk.Button):
             self.img = ImageTk.PhotoImage(img)
             self.config(image=self.img)
 
-    def set_content(self, content):
+    def set_content(self, content, bg=None):
         self.content=content
         if( content.count('.png') != 0):
             w = self.winfo_width() if self.winfo_width()>1 else 1
             h = self.winfo_height() if self.winfo_height()>1 else 1
-            img = Image.open(self.content).resize(
-                #(event.width-10, event.height-10), Image.ANTIALIAS
-                (w,h), Image.ANTIALIAS
-            )
+            #img = Image.open(self.content).resize(
+            #    #(event.width-10, event.height-10), Image.ANTIALIAS
+            #    (w,h), Image.ANTIALIAS
+            #)
+            img = Image.open(self.content)
             self.img = ImageTk.PhotoImage(img)
             self.config(image=self.img)
+            if(bg is not None):
+                self.config(bg=bg, activebackground=bg)
         else:
             self.config(text=content)
 
     def set_background(self, newbg):
-        self.config(bg=newbg)
+        self.config(bg=newbg,activebackground=newbg)
 
 class ButtonPR(Button2):
     def __init__(self, parent, content, content_push=None):
