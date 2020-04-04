@@ -44,7 +44,7 @@ class RespMsg:
         return RespMsg(*[int(g) for g in match.groups()[0:7]])
 
     def __str__(self):
-        args = (self.ie_ratio, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
+        args = (self.ie_ratio * 10, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
         return 'RESP IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%s%02d PPLAT:%02d PEP__:%02d' % args
 
 class SetMsg:
