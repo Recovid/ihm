@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
+import config
 
 class Dialog(tk.Toplevel):
 
@@ -50,9 +51,9 @@ class Dialog(tk.Toplevel):
 
         box = tk.Frame(self)
 
-        w = tk.Button(box, text="Valider", width=10, height=2, command=self.ok, default=tk.ACTIVE)
+        w = tk.Button(box, text="Valider", width=10, height=2, font=config.button['font_big'], command=self.ok, default=tk.ACTIVE)
         w.pack(side=tk.LEFT, padx=5, pady=5)
-        w = tk.Button(box, text="Annuler", width=10, height=2, command=self.cancel)
+        w = tk.Button(box, text="Annuler", width=10, height=2, font=config.button['font_big'], command=self.cancel)
         w.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.bind("<Return>", self.ok)

@@ -77,7 +77,7 @@ class Button():
 
 class Button2(tk.Button):
     def __init__(self,parent, content=None):
-        tk.Button.__init__(self,parent,bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
+        tk.Button.__init__(self,parent,font=config.button['font'],bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
         if(content is not None):
             self.set_content(content)
             if( content.count('.png') != 0):

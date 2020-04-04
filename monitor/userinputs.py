@@ -148,6 +148,7 @@ class OneValueDialog(Dialog):
         for i in range(4):
             self.buttons.append(Button2(self.frame_buttons,content=self.signs[i]))
             self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+            self.buttons[i].config(font=config.button['font_big'])
             self.buttons[i].bind('<1>',self.click,'+')
         self.frame_buttons.pack(fill=tk.BOTH, expand=1)
 
@@ -201,6 +202,7 @@ class MinMaxDialog(Dialog):
         self.frame_buttons=tk.Frame(master)
         self.frame_buttons.pack(fill=tk.BOTH, expand=1)
 
+
         if(self.dmin is not None):
             tk.Label(fm, text="Min").pack(side=tk.LEFT,fill=tk.X,expand=1)
             self.vmin_var=tk.IntVar()
@@ -209,6 +211,7 @@ class MinMaxDialog(Dialog):
             for i in [0,1]:
                 self.buttons[i]=Button2(self.frame_buttons, content=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+                self.buttons[i].config(font=config.button['font_big'])
                 self.buttons[i].bind('<1>',self.click, '+')
         if(self.dmax is not None):
             tk.Label(fm, text="Max").pack(side=tk.LEFT,fill=tk.X,expand=1)
@@ -218,6 +221,7 @@ class MinMaxDialog(Dialog):
             for i in [2,3]:
                 self.buttons[i]=Button2(self.frame_buttons, content=self.signs[i])
                 self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+                self.buttons[i].config(font=config.button['font_big'])
                 self.buttons[i].bind('<1>',self.click, '+')
 
         return self.label # initial focus
