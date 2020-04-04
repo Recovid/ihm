@@ -212,6 +212,11 @@ class DataController:
         ## switch to 0 when no need to check in older cycles
         Pmax_cycles = 2
         Pmin_startFailing = -1
+        VTmin_cycles = 3
+        FRmin_cycles = 3
+        VMmin_cycles = 3
+        PEPmax_cycles= 8
+        PEPmin_cycles = 8
         for inp in reversed(self.historyDataQueue):
             if Pmax_cycles != 0:
                 if inp.pressure.data[inp.index] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
@@ -235,3 +240,53 @@ class DataController:
                     Pmin_startFailing = 0
                     print ("Pmin alarm stopped")
                     # TODO deactivate PMIN_ALARM
+            if VTmin_cycles != 0:
+                if inp.inputs[DataBackend.VTE] <= self.settings[DataBackend.VTMIN].value:
+                    VTmin_cycles -= 1
+                    if VTmin_cycles == 0:
+                        print ("VTmin alarm")
+                        # TODO activate VTE_ALARM
+                else:
+                    VTmin_cycles = 0
+                    print ("VTmin alarm stopped")
+                    # TODO deactivate VTE_ALARM
+            if FRmin_cycles != 0:
+                if inp.inputs[DataBackend.FR] <= self.settings[DataBackend.FRMIN].value:
+                    FRmin_cycles -= 1
+                    if FRmin_cycles == 0:
+                        print ("FRmin alarm")
+                        # TODO activate FRMIN_ALARM
+                else:
+                    FRmin_cycles = 0
+                    print ("FRmin alarm stopped")
+                    # TODO deactivate FRMIN_ALARM
+            if VMmin_cycles != 0:
+                if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
+                    VMmin_cycles -= 1
+                    if VMmin_cycles == 0:
+                        print ("VMmin alarm")
+                        # TODO activate VMMIN_ALARM
+                else:
+                    VMmin_cycles = 0
+                    print ("VMmin alarm stopped")
+                    # TODO deactivate VMMIN_ALARM
+            if PEPmax_cycles != 0:
+                if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
+                    PEPmax_cycles -= 1
+                    if PEPmax_cycles == 0:
+                        print ("PEPmax alarm")
+                        # TODO activate PEPMAX_ALARM
+                else:
+                    PEPmax_cycles = 0
+                    print ("PEPmax alarm stopped")
+                    # TODO deactivate PEPMAX_ALARM
+            if PEPmin_cycles != 0:
+                if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
+                    PEPmin_cycles -= 1
+                    if PEPmin_cycles == 0:
+                        print ("PEPmin alarm")
+                        # TODO activate PEPMAX_ALARM
+                else:
+                    PEPmin_cycles = 0
+                    print ("PEPmin alarm stopped")
+                    # TODO deactivate PEPMAX_ALARM
