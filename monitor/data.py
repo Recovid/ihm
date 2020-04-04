@@ -1,4 +1,5 @@
 class Data:
+    TIME="timestamp"
     VT="vt" # volume courant (mL)
     FR="fr" # frequence respiratoire (1/min)
     FRMIN="frmin"

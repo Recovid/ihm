@@ -1,9 +1,10 @@
-
 # -*- coding: utf-8 -*-
 import time
 import numpy as np
 from .databackend import DataBackend, DataBackendHandler
 from .data import SETTINGS
+from collections import deque
+from copy import deepcopy
 
 class TimeDataInputManager:
     def __init__(self, arraysize, data_range):
@@ -19,6 +20,7 @@ class DataInputs:
         self.running=True
         
         self.inputs = {}
+        self.inputs[DataBackend.TIME]=0
         self.inputs[DataBackend.IE]=0
         self.inputs[DataBackend.PEP]=0
         self.inputs[DataBackend.PEP_ALARM]=False
@@ -100,9 +102,16 @@ class DataController:
                         if oldval != value:
                             self.parent.inputs.changed=True
                             self.parent.inputs.inputs[key]=value
+            # Assume that this function is only called when RESP is received/treated
+            # (Only wrong with DatabackendDummy now)
+            if len(self.parent.historyDataQueue) == 8:
+                self.parent.historyDataQueue.pop()
+            self.parent.historyDataQueue.append(deepcopy(self.parent.inputs))
+            self.parent.checkHistoryForAlarms()
     
         def update_timedata(self,timestamp, pressure, flow, volume):
             if not self.parent.inputs.freeze:
+                self.parent.inputs.inputs[DataBackend.TIME] = timestamp
                 self.parent.inputs.make_index(timestamp)
                 self.parent.inputs.pressure.data[self.parent.inputs.index]=pressure
                 self.parent.inputs.flow.data[self.parent.inputs.index]=flow
@@ -123,6 +132,7 @@ class DataController:
         self.repost_stop_ins = False
         self.repost_stop_exp_posted = False
         self.repost_stop_ins_posted = False
+        self.historyDataQueue = deque()
 
         self.reset_settings()
 
@@ -189,7 +199,6 @@ class DataController:
                 value = int(value * 1000)
             self.backend.set_setting(key, value)
 
-
     def get_setting(self, key):
         """
         Returns the local value of a setting and whether it is synchronized
@@ -197,3 +206,32 @@ class DataController:
         desynchronized during connection or when a new change is not acked yet.
         """
         return (self.settings[key].value, self.settings[key].value == self.backend.setings[key])
+
+    def checkHistoryForAlarms(self):
+        ## check the 8 last cycles data, from last one to older one
+        ## switch to 0 when no need to check in older cycles
+        Pmax_cycles = 2
+        Pmin_startFailing = -1
+        for inp in reversed(self.historyDataQueue):
+            if Pmax_cycles != 0:
+                if inp.pressure.data[inp.index] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
+                    Pmax_cycles -= 1
+                    if Pmax_cycles == 0:
+                        print ("Pmax alarm")
+                        # TODO activate PMAX_ALARM
+                else:
+                    Pmax_cycles = 0
+                    print ("Pmax alarm stopped")
+                    # TODO deactivate PMAX_ALARM
+            if Pmin_startFailing != 0:
+                if inp.inputs[DataBackend.PCRETE] <= max(self.settings[DataBackend.PMIN].value, inp.inputs[DataBackend.PEP] + 2):
+                    if Pmin_startFailing == -1:
+                        Pmin_startFailing = inp.inputs[DataBackend.TIME]
+                    else:
+                        if Pmin_startFailing - inp.inputs[DataBackend.TIME] > 15:
+                            print ("Pmin alarm")
+                            # TODO activate PMIN_ALARM
+                else:
+                    Pmin_startFailing = 0
+                    print ("Pmin alarm stopped")
+                    # TODO deactivate PMIN_ALARM
