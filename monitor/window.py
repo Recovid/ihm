@@ -67,7 +67,7 @@ class Scope:
 
 class Window:
     
-    def __init__(self):
+    def __init__(self, fullscreen=False):
         self.timewindow=15
         self.freq=20
         self.timeresolution=1.0/self.freq
@@ -75,7 +75,8 @@ class Window:
         self.app = tk.Tk()
 
         self.app.protocol("WM_DELETE_WINDOW", self.app.quit)
-        #self.app.attributes("-fullscreen", True)
+        if(fullscreen):
+            self.app.attributes("-fullscreen", True)
         self.ws = 800
         self.hw = 480
         self.app.geometry("%dx%d"% (self.ws , self.hw))
