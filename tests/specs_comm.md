@@ -74,39 +74,15 @@ Suivi de chacun des champs et données suivants :
 Specification sprintf:
 `RESP IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%+02d PPLAT:%02d PEP__:%02d\tCS8:%02X\n`
 
-## Alarmes
+## Envoi réglages courants
 
-Envoyé toute les x ms (100ms?) jusqu'à acknowledge
+Envoyé après INIT et à chaque modification d'un setting
 
-`ALRM` suivi de 'Activation : ' ou 'Deactivation : ' suivi d'un texte de taille variable ne contenant pas le caractère '\t'.
-
-Textes d'alarmes connues :
-- 'Pression insufflation > seuil maximum : valeur reele > seuil'
-- 'Pression insufflation < seuil minimum : valeur reele < seuil'
-- 'PEP basse : valeur reele < seuil'
-- 'PEP Haute : valeur reele > seuil'
-- 'VTe bas : valeur reele < seuil'
-- 'VTe Haut : valeur reele > seuil'
-- 'Niveau batterie bas : niveau < seuil'
-
-Specification sprintf: 
-`ALRM %s\0\tCS8:%02X\n`
+`SET_` suivi du même champs que contenu dans le message `SET_` acquitté (voir section Réglages).
 
 Exemple:
 ```
-ALRM Activation : Pression insufflation < seuil minimum : 15 < 20\0\tCS8:D8\n
-```
-le changement doit permetre de cree un fichier de log des alarmes et d'afficher/supprimer les alarmes à l'ecran
-
-## Acknowledge Setting
-
-Envoyé à chaque reception d'un setting
-
-`RSET` suivi du même champs que contenu dans le message `SET_` acquitté (voir section Réglages).
-
-Exemple:
-```
-RSET Vt___:0550\tCS8:1A\n
+SET_ Vt___:0550\tCS8:1A\n
 ```
 
 # IHM > Controller
@@ -114,7 +90,7 @@ RSET Vt___:0550\tCS8:1A\n
 ## Réglages
 
 On s'attends a recevoir les réglages (validés par l'IHM) 1 par 1 de manière épisodique avec un identifiant.
-envoye toute les xms (100ms?) jusqu'a acknowledge
+Envoyé 1 fois, l'affichage sera mis à jour à réception de la valeur courante du contrôleur
 
 `SET_` suivi d'un réglage parmi :
 
@@ -147,21 +123,7 @@ PINS 500\tCS8:2F\n
 PEXP 500\tCS8:4E\n
 ```
 
-## Acknowledge Alarmes
-
-Envoyé à chaque reception d'un message d'alarme
-
-`RALM` suivi du même texte que contenu dans le message `ARLM` acquitté (voir section Alarmes).
-
-Specification sprintf :
-`RALM %s\tCS8:%02X\n`
-
-Exemple:
-```
-RALM Pression insufflation < seuil minimum\tCS8:D8\n
-```
-
-## Bip sonore
+## Pause Bip
 
 Envoyé pour désactiver les bip sonores pendant une durée donnée
 
@@ -170,4 +132,27 @@ Envoyé pour désactiver les bip sonores pendant une durée donnée
 Exemple:
 ```
 PBIP 000500\tCS8:2F\n
+```
+
+## Alarmes
+
+UNIQUEMENT loggé !!! Si possible 1 fois lors de l'activation (nécessite de mémoriser la déactivation)
+
+`ALRM` suivi d'un texte de taille variable ne contenant pas le caractère '\t'.
+
+Textes d'alarmes connues :
+- 'Pression insufflation > seuil maximum : valeur reele > seuil'
+- 'Pression insufflation < seuil minimum : valeur reele < seuil'
+- 'PEP basse : valeur reelle < consigne - 2'
+- 'PEP Haute : valeur reelle > consigne + 2'
+- 'VTe bas : valeur reele < seuil'
+- 'VTe Haut : valeur reele > seuil'
+- 'Batterie dégradée, arret imminent'
+
+Specification sprintf: 
+`ALRM %s\tCS8:%02X\n`
+
+Exemple:
+```
+ALRM Activation : Pression insufflation < seuil minimum : 15 < 20\tCS8:D8\n
 ```
