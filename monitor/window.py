@@ -298,6 +298,36 @@ class Window:
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM])
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.inputs.inputs[DataBackend.PCRETE_ALARM])
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.inputs.inputs[DataBackend.VTE_ALARM])
+
+        #check if an alarm has been activated
+        if( self.data_controller.GetAlarmState(AlarmType.PRESSION_MAX)):
+            alarm = Alarm(AlarmType.PRESSION_MAX, AlarmType.PRESSION_MAX.isHighLevel(AlarmType.PRESSION_MAX))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.PRESSION_MIN)):
+            alarm = Alarm(AlarmType.PRESSION_MIN, AlarmType.PRESSION_MIN.isHighLevel(AlarmType.PRESSION_MIN))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.VOLUME_COURANT)):
+            alarm = Alarm(AlarmType.VOLUME_COURANT, AlarmType.VOLUME_COURANT.isHighLevel(AlarmType.VOLUME_COURANT))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.FREQUENCE_RESPIRATOIRE)):
+            alarm = Alarm(AlarmType.FREQUENCE_RESPIRATOIRE, AlarmType.FREQUENCE_RESPIRATOIRE.isHighLevel(AlarmType.FREQUENCE_RESPIRATOIRE))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.VOLUME_MINUTE)):
+            alarm = Alarm(AlarmType.VOLUME_MINUTE, AlarmType.VOLUME_MINUTE.isHighLevel(AlarmType.VOLUME_MINUTE))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.PEP_MAX)):
+            alarm = Alarm(AlarmType.PEP_MAX, AlarmType.PEP_MAX.isHighLevel(AlarmType.PEP_MAX))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.PEP_MIN)):
+            alarm = Alarm(AlarmType.PEP_MIN, AlarmType.PEP_MIN.isHighLevel(AlarmType.PEP_MIN))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.LOW_BATTERY)):
+            alarm = Alarm(AlarmType.LOW_BATTERY, AlarmType.LOW_BATTERY.isHighLevel(AlarmType.LOW_BATTERY))
+            self.alarmMgr.ActivateAlarm(alarm)
+        if( self.data_controller.GetAlarmState(AlarmType.FAILSAFE)):
+            alarm = Alarm(AlarmType.FAILSAFE, AlarmType.FAILSAFE.isHighLevel(AlarmType.FAILSAFE))
+            self.alarmMgr.ActivateAlarm(alarm)
+        self.updateAlarmDisplay()
         return (*lp,*lf,*lv)
 
     def run(self):

@@ -282,3 +282,6 @@ class DataController:
                 else:
                     PEPmin_cycles = 0
                     self.activeAlarms[AlarmType.PEP_MIN] = False
+
+    def GetAlarmState(self, alarmtype):
+        return self.activeAlarms[alarmtype]

@@ -34,7 +34,7 @@ class AlarmType(IntEnum):
 
 
     #note Boris: See if we need this or if the info will be given by the controller
-"""     def isHighLevel(self, alarmtype):
+    def isHighLevel(self, alarmtype):
         switcher = {
             AlarmType.NONE: False,
             AlarmType.PRESSION_MAX: True,
@@ -43,9 +43,15 @@ class AlarmType(IntEnum):
             AlarmType.FREQUENCE_RESPIRATOIRE: False,
             AlarmType.VOLUME_MINUTE: False,
             AlarmType.PEP_MAX: True,
-            AlarmType.PEP_MIN: False
+            AlarmType.PEP_MIN: False,
+            AlarmType.LOW_BATTERY: True,
+            AlarmType.FAILSAFE: False                   #to confirm when specified
         }
-        return switcher.get(alarmtype, False) """
+        if(switcher.get(alarmtype, False)):
+            return AlarmLevel.HIGH_PRIORITY
+        else:
+            return AlarmLevel.MEDIUM_PRIORITY
+        
 
 #number and means of State to clarify
 class AlarmState(Enum):
