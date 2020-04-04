@@ -234,7 +234,7 @@ class DataController:
                         Pmin_startFailing = inp.inputs[DataBackend.TIME]
                     else:
                         if Pmin_startFailing - inp.inputs[DataBackend.TIME] > 15:
-                        self.activeAlarms[AlarmType.PRESSION_MIN] = True
+                            self.activeAlarms[AlarmType.PRESSION_MIN] = True
                 else:
                     Pmin_startFailing = 0
                     self.activeAlarms[AlarmType.PRESSION_MIN] = False

@@ -1,9 +1,9 @@
 
 # -*- coding: utf-8 -*-
 
-from enum import Enum
+from enum import IntEnum, Enum
 
-class AlarmType(Enum):
+class AlarmType(IntEnum):
     #Alarm define from file Recovid_Userneeds v0.1 13h35
     NONE = 0
     PRESSION_MAX = 1
