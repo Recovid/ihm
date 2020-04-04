@@ -10,7 +10,7 @@ from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, Ser
 from .userinputs import OneValueDialog, LockScreen
 from .knob import Knob
 from .mesure import Mesure
-from .button import Button, Button2, ButtonPR
+from .button import Button2, ButtonPR
 from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 from .data import Data
 
@@ -79,8 +79,6 @@ class Window:
         self.ws = 800
         self.hw = 480
         self.app.geometry("%dx%d"% (self.ws , self.hw))
-        #self.ws = self.app.winfo_width()
-        #self.hw = self.app.winfo_height()
         self.alarm_text = tk.StringVar()
         self.alarm_text.set("Some Alarm message text")
         self.alarmMgr = AlarmManager()
@@ -111,10 +109,6 @@ class Window:
 
         #VALEURS A Droite
  
-        #self.m_fio2 = Mesure(self.app,0,'%','FiO2')
-        #self.m_fio2.grid(row=1,column=6, sticky="senw")
-        #self.m_fio2.canvas.grid(row=1,column=6, sticky="senw")
-
         self.m_ie = Mesure(self.app,0, 'I/E', is_frac=True)
         self.m_ie.grid(row=1, column=6, sticky="senw", padx=2, pady=2)
 
@@ -158,7 +152,6 @@ class Window:
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
         self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
-        #self.bt_Alarm = Button2(self.app,"    ")
         self.bt_Alarm.grid(row=1, column=8, sticky="news", padx=4, pady=2)
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
 
@@ -184,7 +177,6 @@ class Window:
         #Graph Init 
 
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(3,4))
-        #self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1)
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
         self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
@@ -215,6 +207,7 @@ class Window:
         bt=Button2(self.app, 'Verouiller')
         bt.grid(row=4,column=8)
         bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
+    
     def freeze_curve(self, freeze):
         if freeze:
             self.freeze_time=True
@@ -262,8 +255,6 @@ class Window:
         lf = self.scope_flow.update(index,self.delta_marker)
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
-            #self.m_fio2.update(self.data_controller.inputs.inputs[DataBackend.FIO2])
-
             self.m_ie.update(self.data_controller.inputs.inputs[DataBackend.IE])
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.inputs.inputs[DataBackend.PEP_ALARM])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
