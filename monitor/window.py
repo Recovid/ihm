@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
-from .userinputs import OneValueDialog
+from .userinputs import OneValueDialog, LockScreen
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button, Button2, ButtonPR
@@ -75,7 +75,6 @@ class Window:
         self.app = tk.Tk()
 
         self.app.protocol("WM_DELETE_WINDOW", self.app.quit)
-
         #self.app.attributes("-fullscreen", True)
         self.ws = 800
         self.hw = 480
@@ -158,10 +157,9 @@ class Window:
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
 
-        #self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
-        self.bt_Alarm = Button2(self.app,"    ")
-        self.bt_Alarm.set_background('#4E69AB')
-        self.bt_Alarm.grid(row=1, column=8, sticky=stickyall, padx=4, pady=2)
+        self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
+        #self.bt_Alarm = Button2(self.app,"    ")
+        self.bt_Alarm.grid(row=1, column=8, sticky="news", padx=4, pady=2)
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
 
         self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
@@ -214,6 +212,9 @@ class Window:
         #just here for test
         self.test_cnt = 0
 
+        bt=Button2(self.app, 'Verouiller')
+        bt.grid(row=4,column=8)
+        bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
     def freeze_curve(self, freeze):
         if freeze:
             self.freeze_time=True

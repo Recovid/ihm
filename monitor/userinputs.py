@@ -4,6 +4,40 @@ import config
 import tkinter as tk
 from .helpers import Dialog
 from .button import Button2, ButtonPR
+from PIL import Image, ImageTk
+
+class LockScreen(tk.Canvas):
+    def __init__(self,master, timer):
+        tk.Canvas.__init__(self, master, width=800, height=480)
+        self.timer=timer
+        self.imgpath="monitor/Alarms_Icon/transparent.png"
+        img = ImageTk.PhotoImage(file="monitor/Alarms_Icon/transparent.png")
+        self.imgid = self.create_image(0, 0, image=img, anchor=tk.NW)
+        self.bind('<Configure>', self.resize)
+        
+        self.textid = self.create_text(int(self.winfo_width()/2), int(self.winfo_height()/2), anchor='c', \
+        		font=config.lockScreen['font_timer'],text=str(self.timer))
+        self.title_textid = self.create_text(int(self.winfo_width()/2), int(self.winfo_height()*0.3), anchor='c', \
+                font=config.lockScreen['font_title'],text="Dévérouillage dans:")
+        self.after(1000, self.update)
+    
+    def resize(self, event):
+        img = Image.open(self.imgpath).resize(
+            #(event.width-10, event.height-10), Image.ANTIALIAS
+            (event.width, event.height), Image.ANTIALIAS
+        )
+        self.img = ImageTk.PhotoImage(img)
+        self.itemconfig(self.imgid,image=self.img)
+        self.coords(self.textid,(int(self.winfo_width()/2), int(self.winfo_height()/2)))
+        self.coords(self.title_textid,(int(self.winfo_width()/2), int(self.winfo_height()*0.2)))
+
+    def update(self):
+        self.timer=self.timer-1
+        if(self.timer>0):
+            self.itemconfig(self.textid,text=str(self.timer))
+            self.after(1000, self.update)
+        else:
+            self.destroy()
 
 class OneValueDialog(Dialog):
 

@@ -48,7 +48,10 @@ button = dict(
 	btn_background_selected = "#c9d2e5",
 	color_text ='white',
 )
-
+lockScreen = dict(
+        font_timer=("Helvetica bold", 100),
+        font_title=("Helvetica bold", 30),
+)
 buttonUserInput = dict(
 	width_ratio = 1,
 	height_ratio = 1,
