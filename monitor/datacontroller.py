@@ -5,6 +5,7 @@ from .databackend import DataBackend, DataBackendHandler
 from .data import SETTINGS
 from collections import deque
 from copy import deepcopy
+from .alarms import AlarmType
 
 class TimeDataInputManager:
     def __init__(self, arraysize, data_range):
@@ -133,6 +134,7 @@ class DataController:
         self.repost_stop_exp_posted = False
         self.repost_stop_ins_posted = False
         self.historyDataQueue = deque()
+        self.activeAlarms = [False] * 10
 
         self.reset_settings()
 
@@ -222,71 +224,57 @@ class DataController:
                 if inp.pressure.data[inp.index] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
                     Pmax_cycles -= 1
                     if Pmax_cycles == 0:
-                        print ("Pmax alarm")
-                        # TODO activate PMAX_ALARM
+                        self.activeAlarms[AlarmType.PRESSION_MAX] = True
                 else:
                     Pmax_cycles = 0
-                    print ("Pmax alarm stopped")
-                    # TODO deactivate PMAX_ALARM
+                    self.activeAlarms[AlarmType.PRESSION_MAX] = False
             if Pmin_startFailing != 0:
                 if inp.inputs[DataBackend.PCRETE] <= max(self.settings[DataBackend.PMIN].value, inp.inputs[DataBackend.PEP] + 2):
                     if Pmin_startFailing == -1:
                         Pmin_startFailing = inp.inputs[DataBackend.TIME]
                     else:
                         if Pmin_startFailing - inp.inputs[DataBackend.TIME] > 15:
-                            print ("Pmin alarm")
-                            # TODO activate PMIN_ALARM
+                        self.activeAlarms[AlarmType.PRESSION_MIN] = True
                 else:
                     Pmin_startFailing = 0
-                    print ("Pmin alarm stopped")
-                    # TODO deactivate PMIN_ALARM
+                    self.activeAlarms[AlarmType.PRESSION_MIN] = False
             if VTmin_cycles != 0:
                 if inp.inputs[DataBackend.VTE] <= self.settings[DataBackend.VTMIN].value:
                     VTmin_cycles -= 1
                     if VTmin_cycles == 0:
-                        print ("VTmin alarm")
-                        # TODO activate VTE_ALARM
+                        self.activeAlarms[AlarmType.VOLUME_COURANT] = True
                 else:
                     VTmin_cycles = 0
-                    print ("VTmin alarm stopped")
-                    # TODO deactivate VTE_ALARM
+                    self.activeAlarms[AlarmType.VOLUME_COURANT] = False
             if FRmin_cycles != 0:
                 if inp.inputs[DataBackend.FR] <= self.settings[DataBackend.FRMIN].value:
                     FRmin_cycles -= 1
                     if FRmin_cycles == 0:
-                        print ("FRmin alarm")
-                        # TODO activate FRMIN_ALARM
+                        self.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE] = True
                 else:
                     FRmin_cycles = 0
-                    print ("FRmin alarm stopped")
-                    # TODO deactivate FRMIN_ALARM
+                    self.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE] = False
             if VMmin_cycles != 0:
                 if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
                     VMmin_cycles -= 1
                     if VMmin_cycles == 0:
-                        print ("VMmin alarm")
-                        # TODO activate VMMIN_ALARM
+                        self.activeAlarms[AlarmType.VOLUME_MINUTE] = True
                 else:
                     VMmin_cycles = 0
-                    print ("VMmin alarm stopped")
-                    # TODO deactivate VMMIN_ALARM
+                    self.activeAlarms[AlarmType.VOLUME_MINUTE] = False
             if PEPmax_cycles != 0:
                 if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
                     PEPmax_cycles -= 1
                     if PEPmax_cycles == 0:
-                        print ("PEPmax alarm")
-                        # TODO activate PEPMAX_ALARM
+                        self.activeAlarms[AlarmType.PEP_MAX] = True
                 else:
                     PEPmax_cycles = 0
-                    print ("PEPmax alarm stopped")
-                    # TODO deactivate PEPMAX_ALARM
+                    self.activeAlarms[AlarmType.PEP_MAX] = False
             if PEPmin_cycles != 0:
                 if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
                     PEPmin_cycles -= 1
                     if PEPmin_cycles == 0:
-                        print ("PEPmin alarm")
-                        # TODO activate PEPMAX_ALARM
+                        self.activeAlarms[AlarmType.PEP_MIN] = True
                 else:
                     PEPmin_cycles = 0
-                    print ("PEPmin alarm stopped")
-                    # TODO deactivate PEPMAX_ALARM
+                    self.activeAlarms[AlarmType.PEP_MIN] = False
