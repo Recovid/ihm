@@ -165,22 +165,22 @@ class Window:
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
 
         self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
-        self.bt_freeze.grid(row=2,column=8,sticky=stickyall, padx=4, pady=2)
+        self.bt_freeze.grid(row=5,column=8,sticky=stickyall, padx=4, pady=2)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         self.bt_si = Button2(self.app,"Pause Inspi")
-        self.bt_si.grid(row=3,column=8, sticky="senw", padx=4, pady=2)
+        self.bt_si.grid(row=2,column=8, sticky="senw", padx=4, pady=2)
         self.bt_si.bind('<ButtonPress-1>',self.stop_ins_event,'+')
         self.bt_si.bind('<ButtonRelease-1>',self.stop_ins_event,'+')
 
         self.bt_se = Button2(self.app ,"Pause Expi")
-        self.bt_se.grid(row=4,column=8, sticky="senw", padx=4, pady=2)
+        self.bt_se.grid(row=3,column=8, sticky="senw", padx=4, pady=2)
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
 
 
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=5,column=8)
+        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=4,column=7)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
 
         #Graph Init 
