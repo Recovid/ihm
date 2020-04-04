@@ -1,4 +1,5 @@
 class Data:
+    MAXPAW="max_paw_between_RespMsg"
     TIME="timestamp"
     VT="vt" # volume courant (mL)
     FR="fr" # frequence respiratoire (1/min)

@@ -21,6 +21,7 @@ class DataInputs:
         self.running=True
         
         self.inputs = {}
+        self.inputs[DataBackend.MAXPAW]=0
         self.inputs[DataBackend.TIME]=0
         self.inputs[DataBackend.IE]=0
         self.inputs[DataBackend.PEP]=0
@@ -108,9 +109,12 @@ class DataController:
             if len(self.parent.historyDataQueue) == 8:
                 self.parent.historyDataQueue.pop()
             self.parent.historyDataQueue.append(deepcopy(self.parent.inputs))
+            self.parent.inputs.inputs[DataBackend.MAXPAW] = 0
             self.parent.checkHistoryForAlarms()
     
         def update_timedata(self,timestamp, pressure, flow, volume):
+            if pressure > self.parent.inputs.inputs[DataBackend.MAXPAW]:
+                self.parent.inputs.inputs[DataBackend.MAXPAW] = pressure
             if not self.parent.inputs.freeze:
                 self.parent.inputs.inputs[DataBackend.TIME] = timestamp
                 self.parent.inputs.make_index(timestamp)
@@ -221,7 +225,7 @@ class DataController:
         PEPmin_cycles = 8
         for inp in reversed(self.historyDataQueue):
             if Pmax_cycles != 0:
-                if inp.pressure.data[inp.index] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
+                if inp.inputs[DataBackend.MAXPAW] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
                     Pmax_cycles -= 1
                     if Pmax_cycles == 0:
                         self.activeAlarms[AlarmType.PRESSION_MAX] = True
