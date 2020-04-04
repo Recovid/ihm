@@ -16,7 +16,7 @@ class AlarmValue():
         self.anchor=anchor
         self.font = tkfont.Font(family=config.alarmValue['font_family'], \
             size=int(self.mesure.height*config.alarmValue['unit_value']), \
-            weight="normal")
+            weight="bold")
         th = self.font.metrics('linespace')
         tw = self.font.measure(str(self.datamanager.value))
         self.rs_h=config.alarmValue['height_ratio']
@@ -64,7 +64,7 @@ class AlarmValue():
             self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width), int(self.mesure.height))
         #self.mesure.canvas.coords(self.rect,self.rect_coord)
 
-        self.font = tkfont.Font(family=config.alarmValue['font_family'], size=int(self.mesure.height*0.1), weight="normal")
+        self.font = tkfont.Font(family=config.alarmValue['font_family'], size=int(self.mesure.height*0.1), weight="bold")
         tw = self.font.measure(str(self.value))
         th = self.font.metrics('linespace')
         text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), \

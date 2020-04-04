@@ -40,9 +40,9 @@ class DataInputs:
         self.freq=freq
         self.arraysize=xmax*freq
 
-        self.pressure=TimeDataInputManager(self.arraysize, (-30,105))
-        self.flow=TimeDataInputManager(self.arraysize, (-100,100))
-        self.volume=TimeDataInputManager(self.arraysize, (0,500))
+        self.pressure=TimeDataInputManager(self.arraysize, (-20,100))
+        self.flow=TimeDataInputManager(self.arraysize, (-80,80))
+        self.volume=TimeDataInputManager(self.arraysize, (0,600))
 
     
     def settings_changed(self,reset=True):
