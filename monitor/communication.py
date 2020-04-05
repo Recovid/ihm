@@ -5,7 +5,7 @@ import sys
 from .data import Data
 
 class DataMsg:
-    args_pattern = re.compile('^msec_:(\d{5}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
+    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar):
         self.timestamp_ms = timestamp_ms
@@ -21,8 +21,8 @@ class DataMsg:
         return DataMsg(*[int(g) for g in match.groups()[0:4]])
 
     def __str__(self):
-        args = (self.timestamp_ms % 100000, self.volume_ml, '-' if self.debit_lpm < 0 else '+', self.debit_lpm, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
-        return 'DATA msec_:%05d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
+        args = (self.timestamp_ms % 1000000, self.volume_ml, '-' if self.debit_lpm < 0 else '+', self.debit_lpm, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
+        return 'DATA msec_:%06d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
 
 class RespMsg:
     args_pattern = re.compile('^IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2})$')

@@ -41,19 +41,19 @@ On s'attend à recevoir @ 25 FPS les dernières valeurs de chaque variable calcu
 `DATA`
 Suivi de chacun des champs et données suivants :
 
-- `msec_` (timestamp % 10^5) 00000..99999 (msec)
-  NB: L'IHM affiche 15sec @ 60 FPS = 900 trames, le timestamp de trame peut tourner % 100000 sur 5 digits.
+- `msec_` (timestamp % 10^6) 000000..999999 (msec)
+  NB: L'IHM affiche 15sec @ 60 FPS = 900 trames, le timestamp de trame peut tourner % 1000000 sur 6 digits.
 - `Vol__` (Volume d'air) : 000..600 (mL)
 - `Deb__` (Débit) : '+'/'-' 00..80 (L/min)
 - `Paw__` (Pression ) : '+'/'-' 000..100 (cmH2O)
 
 Specification sprintf:
-`DATA msec_:%05d Vol_:%03d Deb_:%+03.1f Paw_:%+03.1f\tCS8:%02X\n`
+`DATA msec_:%06d Vol_:%03d Deb_:%+03.1f Paw_:%+03.1f\tCS8:%02X\n`
 
 Exemples:
 ```
-DATA msec_:12300 Vol__:462 Deb__:+051.0 Paw__:+053.0\tCS8:C5\n
-DATA msec_:12400 Vol__:464 Deb__:+051.5 Paw__:+053.6\tCS8:C7\n
+DATA msec_:012300 Vol__:462 Deb__:+051.0 Paw__:+053.0\tCS8:C5\n
+DATA msec_:012400 Vol__:464 Deb__:+051.5 Paw__:+053.6\tCS8:C7\n
 ```
 
 ## Données de cycle respiratoire
