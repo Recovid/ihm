@@ -70,7 +70,7 @@ class Window:
     
     def __init__(self, fullscreen=False):
         self.timewindow=15
-        self.freq=20
+        self.freq=50
         self.timeresolution=1.0/self.freq
 
         self.app = tk.Tk()

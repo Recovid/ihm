@@ -14,7 +14,7 @@ def nominal_data(t_ms, fr_hz):
     sin             = math.sin(t_rad)
     volume_ml     = max(0, 500*sin)
     debit_lpm     = max(10,50*cos)
-    paw_mbar      =        90*cos if cos>0 else 10*cos
+    paw_mbar      =        40*cos if cos>0 else 10*cos
     return DataMsg(t_ms, volume_ml, debit_lpm, paw_mbar)
 
 def resp_msg(fr_hz):
