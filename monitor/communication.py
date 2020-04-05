@@ -79,7 +79,7 @@ class SetMsg:
                 # TODO: check number of digits (len(match.group(2)) == n)
                 return SetMsg(k, int(match.group(2)))
 
-        print("unknown setting:", s, file=sys.stderr)
+        print("unknown setting:", match.group(1), file=sys.stderr)
         return None
 
     def __str__(self):
