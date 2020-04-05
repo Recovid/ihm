@@ -7,12 +7,13 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
-from .userinputs import OneValueDialog, LockScreen
+from .userinputs import OneValueDialog, LockScreen, PowerSettingsDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button2, ButtonPR
 from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 from .data import Data
+import config
 
 
 class Scope:
@@ -244,9 +245,11 @@ class Window:
         #just here for test
         self.test_cnt = 0
 
-        bt=Button2(self.app, 'Verrouiller')
-        bt.grid(row=4,column=8)
-        bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
+        self.bt_pset=Button2(self.app, "monitor/Alarms_Icon/power_settings.png")
+        self.bt_pset.grid(row=4,column=8)
+        self.bt_pset.bind('<ButtonPress-1>', self.pset_event, '+')
+        self.bt_pset.bind('<ButtonRelease-1>', self.pset_event, '+')
+        #bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
     
     def freeze_curve(self, freeze):
         if freeze:
@@ -276,6 +279,16 @@ class Window:
 
     def event_bt_freeze(self,e):
         self.freeze_curve(not self.freeze_time)
+
+    def pset_event(self, event):
+        if(event.type==tk.EventType.ButtonPress):
+            self.pset_timer=self.app.after(5000, self.pset_opendialog)
+        if(event.type==tk.EventType.ButtonRelease):
+            self.app.after_cancel(self.pset_timer)
+
+    def pset_opendialog(self):
+        PowerSettingsDialog(self.app)
+        self.bt_pset.config(activebackground=config.button['btn_background'])
 
     def stop_ins_event(self, e):
         if(e.type==tk.EventType.ButtonPress):

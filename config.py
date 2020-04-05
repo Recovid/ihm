@@ -52,6 +52,13 @@ lockScreen = dict(
         font_timer=("Helvetica bold", 100),
         font_title=("Helvetica bold", 30),
 )
+powerSettings = dict(
+        bg_quit = 'red',
+        bg_lock = 'yellow',
+        font = ("Helvetica bold", 20),
+        fg = 'black',
+)
+
 buttonUserInput = dict(
 	width_ratio = 1,
 	height_ratio = 1,
