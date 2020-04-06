@@ -124,10 +124,12 @@ class Knob():
             # TODO: display the value as (un)synchronized (given as argument)
 
     def onClick(self,event):
+        # NB: self.app actually stores the knob parent (knob_frame) bug dialogs
+        # expect the root window as first arg
         if self.setting.key == DataBackend.VT:
-            VTDialog(self.app, self.setting)
+            VTDialog(self.app.master, self.setting)
         else:
-            OneValueDialog(self.app,self.title+' ('+self.unit+')', self.setting)
+            OneValueDialog(self.app.master,self.title+' ('+self.unit+')', self.setting)
         self.refresh()
 
     def refresh(self):
