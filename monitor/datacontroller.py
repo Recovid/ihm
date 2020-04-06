@@ -285,7 +285,7 @@ class DataController:
                     PEPmax_cycles = 0
                     self.activeAlarms[AlarmType.PEP_MAX] = False
             if PEPmin_cycles != 0:
-                if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
+                if inp.inputs[DataBackend.PEP] <= self.settings[DataBackend.PEP].value - 2:
                     PEPmin_cycles -= 1
                     if PEPmin_cycles == 0:
                         self.activeAlarms[AlarmType.PEP_MIN] = True
