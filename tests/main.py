@@ -8,6 +8,11 @@ from monitor.communication import *
 
 Pmax_Alarm = False
 Pmin_Alarm = False
+VTmin_Alarm = False
+FRmin_Alarm = False
+VMmin_Alarm = False
+PEPmin_Alarm = False
+PEPmax_Alarm = False
 
 def nominal_data(t_ms, fr_hz):
     assert isinstance(t_ms, int) and t_ms >= 0
@@ -26,6 +31,16 @@ def nominal_data(t_ms, fr_hz):
 def resp_msg(fr_hz):
     if Pmin_Alarm:
         return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=10, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
+    elif VTmin_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=300, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
+    elif FRmin_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=10, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
+    elif VMmin_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=4, pplat_cmH2O=40, pep_cmH2O=5)
+    elif PEPmin_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=2)
+    elif PEPmax_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=8)
     else:
         return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
 
@@ -51,6 +66,29 @@ if __name__ == '__main__':
         nominal_cycle.write(serialize_msg(resp_msg(fr_hz)))
         for t_ms in range(0, int(sys.argv[1]), int(1000/fr_pm)):
             if t_ms / period_ms > period_nb:
+                twenty_sec_cycle = int(t_ms / 20000)
+                if twenty_sec_cycle == 1:
+                    Pmax_Alarm = True
+                elif twenty_sec_cycle == 2:
+                    Pmax_Alarm = False
+                    Pmin_Alarm = True
+                elif twenty_sec_cycle == 3:
+                    Pmin_Alarm = False
+                    VTmin_Alarm = True
+                elif twenty_sec_cycle == 4:
+                    VTmin_Alarm = False
+                    FRmin_Alarm = True
+                elif twenty_sec_cycle == 5:
+                    FRmin_Alarm = False
+                    VMmin_Alarm = True
+                elif twenty_sec_cycle == 6 or twenty_sec_cycle == 7:
+                    VMmin_Alarm = False
+                    PEPmin_Alarm = True
+                elif twenty_sec_cycle == 8 or twenty_sec_cycle == 9:
+                    PEPmin_Alarm = False
+                    PEPmax_Alarm = True
+                else:
+                    PEPmax_Alarm = False
                 period_nb += 1
                 nominal_cycle.write(serialize_msg(resp_msg(fr_hz)))
             nominal_cycle.write(serialize_msg(nominal_data(t_ms, fr_hz)))

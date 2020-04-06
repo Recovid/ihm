@@ -95,7 +95,6 @@ class AlarmManager:
         #if there is already an alarm of this type in the list: do not add a new one
         for i in range(len(self.listActivAlarms)):
             if(self.listActivAlarms[i].GetType() == Alarm.GetType() ):
-                print("An alarm of this type is already in the list")
                 return
 
         #To Have always new High Priority (HP) alarm in the top of the list we add HP new Alarm in head of the list and MediumPriority (MP)
