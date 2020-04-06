@@ -107,7 +107,7 @@ class DataController:
             # Assume that this function is only called when RESP is received/treated
             # (Only wrong with DatabackendDummy now)
             if len(self.parent.historyDataQueue) == 8:
-                self.parent.historyDataQueue.pop()
+                self.parent.historyDataQueue.popleft()
             self.parent.historyDataQueue.append(deepcopy(self.parent.inputs))
             self.parent.inputs.inputs[DataBackend.MAXPAW] = 0
             self.parent.checkHistoryForAlarms()
