@@ -6,6 +6,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from monitor.communication import *
 
+Pmax_Alarm = False
+Pmin_Alarm = False
+
 def nominal_data(t_ms, fr_hz):
     assert isinstance(t_ms, int) and t_ms >= 0
     assert isinstance(fr_hz, float) and fr_hz >= 0
@@ -14,11 +17,17 @@ def nominal_data(t_ms, fr_hz):
     sin             = math.sin(t_rad)
     volume_ml     = max(0, 500*sin)
     debit_lpm     = max(10,50*cos)
-    paw_mbar      =        40*cos if cos>0 else 10*cos
+    if Pmax_Alarm:
+        paw_mbar      =        90
+    else:
+        paw_mbar      =        40*cos if cos>0 else 10*cos
     return DataMsg(t_ms, volume_ml, debit_lpm, paw_mbar)
 
 def resp_msg(fr_hz):
-    return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
+    if Pmin_Alarm:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=10, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
+    else:
+        return RespMsg(ie_ratio=2, fr_pm=fr_hz * 60, vte_ml=500, pcrete_cmH2O=50, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
