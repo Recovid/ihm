@@ -9,6 +9,7 @@ class Knob():
     def __init__(self,app, setting ,unit,title, min=None, max=None):
         self.app=app
         self.setting = setting
+        self.setting.widget=self
         self.value = setting.value
         self.selected = False
         self.unit = unit
@@ -17,10 +18,8 @@ class Knob():
         self.max = max
 
       
-        self.width = int(app.winfo_screenwidth()*0.1)
-        self.height = int(app.winfo_screenwidth()*0.1)#120
-        self.width = config.knob['width_ratio'] #int(800*0.09)
-        self.height = config.knob['height_ratio'] #int(800*0.09)#120
+        self.width = config.knob['width']
+        self.height = config.knob['height']
 
         self.font_size_value = int(self.height*config.knob['font_ratio_value'])#22
         self.font_size_unit = int(self.height*config.knob['font_ratio_unit'])#10
@@ -42,12 +41,10 @@ class Knob():
         self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.4), anchor='c', \
                 font=(config.knob['font_family'], self.font_size_value),\
                 fill=config.knob['color_text_unsync'], text=str(0),tags='knob_value_text')
-        #self.canvas.create_text(int(self.width*0.5), int(self.height*0.68), anchor='s', \
-        #        font=("Helvetica", self.font_size_unit),fill='white', text=self.unit,tags='knob_value_unit')
+        
         self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.80), anchor='s', \
                 font=(config.knob['font_family'], self.font_size_title),\
                 fill=config.knob['background'], text=self.unit)
-
 
         self.min_textid = self.canvas.create_text(int(self.width*0.2), int(self.height*0.85), anchor='s', \
                 font=("Helvetica", 12, "bold"),fill='grey', text=self.min)
@@ -59,7 +56,6 @@ class Knob():
         self.canvas.bind('<ButtonPress-1>',self.onClick)
 
         self.update(self.value)
-        self.setting.widget=self
     
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
@@ -137,22 +133,3 @@ class Knob():
     def refresh(self):
         self.update(self.setting.value, self.setting.synchronized)
 
-
-# Programme de test
-
-# app = tk.Tk()
-# app.wm_title("Graphe Matplotlib dans Tkinter")
-
-# btn1 = Knob(app, 0, 400,0,'MLrfr','VT')
-# btn2 = Knob(app, 0, 30,1,'MLrfr','VT')
-# btn3 = Knob(app, 0, 50,2,'MLrfr','VT')
-# btn1.canvas.pack()
-# btn2.canvas.pack()
-# btn3.canvas.pack()
-
-# # for i in range(0,400):
-# #     btn1.update(i)
-# #     btn2.update(i)
-# #     btn3.update(i)
-# #     time.sleep(0.1)
-# app.mainloop()

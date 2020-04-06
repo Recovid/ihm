@@ -23,7 +23,6 @@ class LockScreen(tk.Canvas):
     
     def resize(self, event):
         img = Image.open(self.imgpath).resize(
-            #(event.width-10, event.height-10), Image.ANTIALIAS
             (event.width, event.height), Image.ANTIALIAS
         )
         self.img = ImageTk.PhotoImage(img)

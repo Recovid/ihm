@@ -23,8 +23,8 @@ alarmValue = dict(
 )
 
 knob = dict(
-	width_ratio = 100,
-	height_ratio = 130,
+	width = 100,
+	height = 130,
 	font_family = "Helvetica",
 	font_ratio_value = 0.2,
 	font_ratio_unit = 0.1,
@@ -57,16 +57,6 @@ powerSettings = dict(
         bg_lock = 'yellow',
         font = ("Helvetica bold", 20),
         fg = 'black',
-)
-
-buttonUserInput = dict(
-	width_ratio = 1,
-	height_ratio = 1,
-	font_family = "Helvetica",
-	font_ratio_value = 0.35,
-	background = "white",
-	btn_background = "grey",
-	btn_background_selected = "#c9d2e5",
 )
 
 valueDialog = dict(

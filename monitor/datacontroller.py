@@ -165,11 +165,6 @@ class DataController:
         self.handler = DataController.Handler(self)
         self.backend.set_handler(self.handler)
     
-    def new_patient(self, is_woman, size):
-        vt=self.settings[Data.VT][0] # TODO calculate VT
-        reset_settings()
-        self.settings[Data.VT] = vt
-
     def post_stop_exp(self, time_ms):
         # repost 100 msec before timeout end to avoid breath restart
         if self.repost_stop_exp:

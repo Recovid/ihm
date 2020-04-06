@@ -29,7 +29,6 @@ class AlarmValue():
                 int(self.mesure.width), \
                 int(self.mesure.height))
         text_coord = (int(self.rect_coord[0]+(self.mesure.width*self.rs_w-tw)/2), self.rect_coord[3])
-        #self.rect = self.mesure.canvas.create_rectangle(self.rect_coord,tags=self.anchor, fill=config.alarmValue['background'])
         self.text = self.mesure.canvas.create_text(\
                 text_coord, \
                 anchor='sw', \
@@ -38,31 +37,10 @@ class AlarmValue():
         
         self.datamanager.widget=self.mesure
 
-    def selected_handler(self):
-        self.selected=True
-        self.mesure.canvas.itemconfig(self.rect, \
-            fill=config.alarmValue['background_selected'])
-    def unselected_handler(self):
-        self.selected=False
-        self.mesure.canvas.itemconfig(self.rect, \
-            fill=config.alarmValue['background'])
-        self.value=self.datamanager.value
-        self.update()
-
-    def plus_handler(self, big=False):
-        inc = 10 if big else 1
-        self.value=self.value+self.datamanager.step*inc
-        self.update()
-    def minus_handler(self, big=False):
-        inc = 10 if big else 1
-        self.value=self.value-self.datamanager.step*inc
-        self.update()
-
     def update(self):
         self.rect_coord=(0,int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width*self.rs_w), int(self.mesure.height))
         if(self.anchor=='se'):
             self.rect_coord=(int(self.mesure.width*(1-(self.rs_w))),int(self.mesure.height*(1-self.rs_h)), int(self.mesure.width), int(self.mesure.height))
-        #self.mesure.canvas.coords(self.rect,self.rect_coord)
 
         self.font = tkfont.Font(family=config.alarmValue['font_family'], size=int(self.mesure.height*0.1), weight="bold")
         tw = self.font.measure(str(self.value))
@@ -145,8 +123,6 @@ class Mesure(tk.Frame):
     def configure(self,event):
         self.width = int(self.canvas.winfo_width())
         self.height = int(self.canvas.winfo_height())
-        # self.font_size= int(self.height*0.35)
-        # self.title_font_size= int(self.height*0.1)
         self.font_size_value = int(self.height*(config.mesure['font_ratio_value_frac'] if self.is_frac else config.mesure['font_ratio_value']))
         self.title_font_size= int(self.height*config.mesure['font_ratio_title'])
         self.unit_font_size= int(self.height*config.mesure['font_ratio_unit'])

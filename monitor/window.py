@@ -22,8 +22,6 @@ class Scope:
         self.handler=handler
         self.xstep=xstep
         self.ax=ax
-        # self.ax.set_title(title,loc='left')
-        #self.ax.set_title(title, x=0.46, y=1.0)
         self.ax.set_ylabel(title+'\n'+ylabel)
         self.ax.set_xlim(xlim)
         self.ax.set_ylim(self.handler.get_range())
@@ -81,13 +79,10 @@ class Window:
         self.ws = 800
         self.hw = 480
         self.app.geometry("%dx%d"% (self.ws , self.hw))
-        self.alarm_text = tk.StringVar()
-        self.alarm_text.set("Some Alarm message text")
-        self.alarmMgr = AlarmManager()
         
         print('ws:',self.ws,' hw:',self.hw)
 
-        self.app.wm_title("Graphe Matplotlib dans Tkinter")
+        self.app.wm_title("Recovid")
         for i in range(6):
             tk.Grid.rowconfigure(self.app, i, weight=1, minsize=self.hw/6 if i>0 else self.hw/6/2)
         for i in range(9):
@@ -99,14 +94,17 @@ class Window:
         self.data_controller = DataController(self.data_backend, self.app)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
-        stickyall=tk.N+tk.S+tk.E+tk.W
         #TITLE
         self.title_frame = tk.Frame(self.app, \
             bg='#4E69AB').grid(row=0,column=0,columnspan=9)
         self.title = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)),text='RECOVID', \
-            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=2, sticky=stickyall)
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=2, sticky="news")
+        
+        self.alarm_text = tk.StringVar()
+        self.alarm_text.set("Some Alarm message text")
+        self.alarmMgr = AlarmManager()
         self.alarm_msg = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)), textvariable = self.alarm_text, \
-            anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=7, sticky=stickyall)
+            anchor='n', fg='white',bg='#4E69AB').grid(row=0, column=2, columnspan=7, sticky="news")
 
 
         #VALEURS A Droite
@@ -134,67 +132,40 @@ class Window:
 
         #BOUTONS EN BAS
         self.leftside = tk.Frame(self.app, height=200)
-        self.leftside.grid(row=1, column=0,rowspan=7, columnspan = 6,sticky=stickyall)
+        self.leftside.grid(row=1, column=0,rowspan=7, columnspan = 6,sticky="news")
 
         self.knob_frame = tk.Frame(self.leftside,bg='#c9d2e5',width=int(self.ws*0.1),\
             height=int(self.hw*0.9))
-        #self.knob_frame.grid(row=4, column=0,rowspan=3, columnspan = 6,sticky=stickyall)
         self.knob_frame.pack(side=tk.BOTTOM, fill=tk.X,expand=1)
 
-        #create grid inside knob_frame
-        #note Boris: There is probably a better way to do it but i didn't find it
         tk.Grid.rowconfigure(self.knob_frame, 1, weight=1)
         for column_index in range(5):
             tk.Grid.columnconfigure(self.knob_frame, column_index, weight=1)
             if(column_index == 0 ):
                 self.k_vt = Knob(self.knob_frame, self.data_controller.settings[Data.VT],'ml','VT', '100', '600')
-                self.k_vt.canvas.grid(row=1,column=column_index, sticky=stickyall)
+                self.k_vt.canvas.grid(row=1,column=column_index, sticky="news")
             if(column_index == 1  ):
                 self.k_fr = Knob(self.knob_frame, self.data_controller.settings[Data.FR],'bpm','FR', '12', '35')
-                self.k_fr.canvas.grid(row=1,column=column_index, sticky=stickyall)
+                self.k_fr.canvas.grid(row=1,column=column_index, sticky="news")
             if(column_index == 2):
                 self.k_pep = Knob(self.knob_frame, self.data_controller.settings[Data.PEP],'cmH2O','PEP', '5','20')
-                self.k_pep.canvas.grid(row=1,column=column_index, sticky=stickyall)
+                self.k_pep.canvas.grid(row=1,column=column_index, sticky="news")
             if(column_index == 3):
                 self.k_flow = Knob(self.knob_frame, self.data_controller.settings[Data.FLOW],'L/min','Debit Max', '20', '60')
-                self.k_flow.canvas.grid(row=1,column=column_index, sticky=stickyall)
+                self.k_flow.canvas.grid(row=1,column=column_index, sticky="news")
             if(column_index == 4):
                 self.k_tplat = Knob(self.knob_frame, self.data_controller.settings[Data.TPLAT],'','Tplat','0,1', '1,0')
-                self.k_tplat.canvas.grid(row=1,column=column_index, sticky=stickyall)
+                self.k_tplat.canvas.grid(row=1,column=column_index, sticky="news")
 
-
-
-
-#        self.knob_frame.Grid.rowconfigure(1)
-#        self.knob_frame.Grid.columnconfigure(5)
-
-
-        #self.k_vt = Knob(self.app, self.data_controller.settings[Data.VT],'ml','VT')
-        #self.k_vt.canvas.grid(row=5,column=0, sticky="senw")
-
-        #self.k_fr = Knob(self.app, self.data_controller.settings[Data.FR],'bpm','FR')
-        #self.k_fr.canvas.grid(row=5,column=1, sticky="senw")
-
-        #self.k_pep = Knob(self.app, self.data_controller.settings[Data.PEP],'cmH2O','PEP')
-        #self.k_pep.canvas.grid(row=5,column=2, sticky="senw")
-
-        #self.k_flow = Knob(self.app, self.data_controller.settings[Data.FLOW],'L/min','Debit Max')
-        #self.k_flow.canvas.grid(row=5,column=3, sticky="senw")
-
-        #self.k_tplat = Knob(self.app, self.data_controller.settings[Data.TPLAT],'','Tplat')
-        #self.k_tplat.canvas.grid(row=5,column=4, sticky="senw")
-
-        #Boutons Pause
+        #Boutons Droite
+        
+        #Frame utilisé pour coloriser le backgroud de la colonne 8
         self.btn_frame = tk.Frame(self.app,bg='#c9d2e5',width=int(self.ws*0.1),\
-            height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky=stickyall)
+            height=int(self.hw*0.9)).grid(column=8,row=1,rowspan=5,sticky="news")
 
         self.bt_Alarm = Button2(self.app,"monitor/Alarms_Icon/Icon_High_Priority.png")
         self.bt_Alarm.grid(row=1, column=8, sticky="news", padx=4, pady=2)
         self.bt_Alarm.bind('<ButtonRelease-1>', self.event_bt_Alarm, '+')
-
-        self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
-        self.bt_freeze.grid(row=5,column=8,sticky=stickyall, padx=4, pady=2)
-        self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         self.bt_si = Button2(self.app,"Pause Inspi")
         self.bt_si.grid(row=2,column=8, sticky="senw", padx=4, pady=2)
@@ -206,7 +177,14 @@ class Window:
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
-
+        self.bt_pset=Button2(self.app, "monitor/Alarms_Icon/power_settings.png")
+        self.bt_pset.grid(row=4,column=8)
+        self.bt_pset.bind('<ButtonPress-1>', self.pset_event, '+')
+        self.bt_pset.bind('<ButtonRelease-1>', self.pset_event, '+')
+        
+        self.bt_freeze = ButtonPR(self.app,"Geler\ncourbes", "Resume")
+        self.bt_freeze.grid(row=5,column=8,sticky="news", padx=4, pady=2)
+        self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
         tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=4,column=7)
         self.app.bind('<Control-q>', lambda event: self.app.quit())
@@ -222,9 +200,7 @@ class Window:
         self.ax_pressure.get_xaxis().set_visible(False)
         self.ax_flow.get_xaxis().set_visible(False)
 
-
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.leftside)
-        #self.canvas_graph.get_tk_widget().grid(row=1, column=0, rowspan=3,columnspan=6, sticky=tk.N+tk.S+tk.E+tk.W)
         self.canvas_graph.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         self.animation = matplotlib.animation.FuncAnimation(self.fig_graph, self.update, interval=self.timeresolution * 1000,blit=True)
 
@@ -244,12 +220,6 @@ class Window:
         self.updateAlarmDisplay()
         #just here for test
         self.test_cnt = 0
-
-        self.bt_pset=Button2(self.app, "monitor/Alarms_Icon/power_settings.png")
-        self.bt_pset.grid(row=4,column=8)
-        self.bt_pset.bind('<ButtonPress-1>', self.pset_event, '+')
-        self.bt_pset.bind('<ButtonRelease-1>', self.pset_event, '+')
-        #bt.bind('<1>', lambda e :LockScreen(self.app,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news"))
     
     def freeze_curve(self, freeze):
         if freeze:

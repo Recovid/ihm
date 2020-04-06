@@ -61,18 +61,3 @@ class ButtonPR(Button2):
         if(self.content_push is not None):
             self.set_content(self.content)
 
-
-# app = tk.Tk()
-# app.wm_title("Graphe Matplotlib dans Tkinter")
-
-# bti = ButtonInputs(app)
-# bti.canvas.pack()
-# # btn1 = Button(app,0,'MLrfr')
-# # btn1.canvas.pack()
-# # s = 0
-# # # for i in range(0,400):
-# # #     print('debug:',i)
-# # #     btn1.update(str(i))
-# # #     time.sleep(0.1)
-  
-# app.mainloop()
