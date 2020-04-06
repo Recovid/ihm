@@ -331,7 +331,7 @@ class Window:
 
     #see what we need to do with this button in function in function of the implementation of alarm system
     def event_bt_Alarm(self, e):
-        print("event_bn_alarm pressed")
+        self.data_controller.pause_bip()
 
     def manageAlarmChange(self, alarmtype):
         if( self.data_controller.GetAlarmState(alarmtype) != self.activeAlarms[alarmtype]):
