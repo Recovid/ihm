@@ -55,13 +55,13 @@ class SetMsg:
         (Data.FR, "FR___", 2),
         (Data.PEP, "PEP__", 2),
         (Data.FLOW, "FLOW_", 2),
-        (Data.TPLAT, "TPLAT", 4),
+        (Data.TPLAT, "Tplat", 4),
         # alarms
-        (Data.VTMIN, "VTMIN", 4),
-        (Data.PMAX, "PMAX_", 3),
-        (Data.PMIN, "PMIN_", 3),
-        (Data.FRMIN, "FRMIN", 2),
-        (Data.VMMIN, "VMMIN", 4)
+        (Data.VTMIN, "VTmin", 4),
+        (Data.PMAX, "Pmax_", 3),
+        (Data.PMIN, "Pmin_", 3),
+        (Data.FRMIN, "FRmin", 2),
+        (Data.VMMIN, "VMmin", 4)
 
     ]
 

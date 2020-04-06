@@ -98,13 +98,13 @@ Envoyé 1 fois, l'affichage sera mis à jour à réception de la valeur courante
 - `FR___` (Fréquence Respiratoire) : 12..35 (1/min)
 - `PEP__` (Pression Expiratoire Positive) : 05..20 (cmH2O)
 - `FLOW_` (Débit max inspiratoire) : 20..60 (L/min)
-- `TPLAT` (Temps Plateau) : 0100..1000 (ms)
+- `Tplat` (Temps Plateau) : 0100..1000 (ms)
 
 ou parmi ces réglages d'alarme
 
-- `PMAX_` (Pression max) : 00.0..99.9 (cmH2O) 
-- `PMIN_` (Pression Minimum inspiration) : 00.0..99.9 (cmH2O) 
-- `VTMIN` (Volume Minimum inspiration) : 0200..1000 (mL)
+-`Pmax_` (Pression max) : 00.0..99.9 (cmH2O)
+-`Pmin_` (Pression Minimum inspiration) : 00.0..99.9 (cmH2O)
+-`VTmin` (Volume Minimum inspiration) : 0200..1000 (mL)
 
 Exemple:
 ```
