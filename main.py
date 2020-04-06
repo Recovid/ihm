@@ -5,7 +5,7 @@ import sys, getopt
 def main(argv):
     fullscreen=False
     try:
-        opts, args = getopt.getopt(argv,"fh")
+        opts, args = getopt.getopt(argv,"fhm")
     except getopt.GetoptError:
         print('main.py [-f]')
         sys.exit(2)
@@ -15,7 +15,9 @@ def main(argv):
             sys.exit()
         elif opt == '-f':
             fullscreen=True
-    w=Window(fullscreen)
+        elif opt == '-m':
+            mock=True
+    w=Window(fullscreen, mock)
     w.run()
 
 if __name__ == '__main__':

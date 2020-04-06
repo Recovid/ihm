@@ -66,7 +66,7 @@ class Scope:
 
 class Window:
     
-    def __init__(self, fullscreen=False):
+    def __init__(self, fullscreen = False, mock = False):
         self.timewindow=15
         self.freq=50
         self.timeresolution=1.0/self.freq
@@ -89,8 +89,10 @@ class Window:
             tk.Grid.columnconfigure(self.app, i, weight=1, minsize=self.ws/9)
         
         #self.data_backend = DataBackendDummy(100,100,500)
-        self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
-        #self.data_backend = SerialPortMock("in", "out")
+        if (mock):
+            self.data_backend = SerialPortMock("in", "out")
+        else:
+            self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend, self.app)
         self.data_controller.init_inputs(self.timewindow,self.freq)
         
