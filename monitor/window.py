@@ -285,7 +285,7 @@ class Window:
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR], self.data_controller.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.activeAlarms[AlarmType.VOLUME_MINUTE])
-            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PEP_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
+            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PRESSION_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.activeAlarms[AlarmType.VOLUME_COURANT])
 
         #check if an alarm has been activated
