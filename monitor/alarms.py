@@ -117,6 +117,20 @@ class AlarmManager:
             self.mediumPriorityNb -= 1
         del self.listActivAlarms[0]
 
+    def DeActivateAlarm(self, alarmtype):
+        #delete alarm of the given type
+        indice = 0
+        for i in range(len(self.listActivAlarms)):
+            if(self.listActivAlarms[i].GetType() == alarmtype):
+                indice = i
+                break
+        if( self.listActivAlarms[indice].GetLevel() == AlarmLevel.HIGH_PRIORITY):
+            self.highPriorityNb -= 1
+        elif(self.listActivAlarms[indice].GetLevel() == AlarmLevel.MEDIUM_PRIORITY):
+            self.mediumPriorityNb -= 1
+        
+        self.listActivAlarms.pop(indice)
+
     def ChangeCurrentAlarmState(self, newStatus ):
         self.listActivAlarms[0].ChangeState(newStatus)
 

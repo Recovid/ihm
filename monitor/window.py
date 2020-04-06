@@ -70,6 +70,7 @@ class Window:
         self.timewindow=15
         self.freq=50
         self.timeresolution=1.0/self.freq
+        self.activeAlarms = [False] * 10
 
         self.app = tk.Tk()
 
@@ -220,8 +221,6 @@ class Window:
         self.arrows_frame.grid_forget()
 
         self.updateAlarmDisplay()
-        #just here for test
-        self.test_cnt = 0
     
     def freeze_curve(self, freeze):
         if freeze:
@@ -289,33 +288,16 @@ class Window:
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.activeAlarms[AlarmType.VOLUME_COURANT])
 
         #check if an alarm has been activated
-        if( self.data_controller.GetAlarmState(AlarmType.PRESSION_MAX)):
-            alarm = Alarm(AlarmType.PRESSION_MAX, AlarmType.PRESSION_MAX.isHighLevel(AlarmType.PRESSION_MAX))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.PRESSION_MIN)):
-            alarm = Alarm(AlarmType.PRESSION_MIN, AlarmType.PRESSION_MIN.isHighLevel(AlarmType.PRESSION_MIN))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.VOLUME_COURANT)):
-            alarm = Alarm(AlarmType.VOLUME_COURANT, AlarmType.VOLUME_COURANT.isHighLevel(AlarmType.VOLUME_COURANT))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.FREQUENCE_RESPIRATOIRE)):
-            alarm = Alarm(AlarmType.FREQUENCE_RESPIRATOIRE, AlarmType.FREQUENCE_RESPIRATOIRE.isHighLevel(AlarmType.FREQUENCE_RESPIRATOIRE))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.VOLUME_MINUTE)):
-            alarm = Alarm(AlarmType.VOLUME_MINUTE, AlarmType.VOLUME_MINUTE.isHighLevel(AlarmType.VOLUME_MINUTE))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.PEP_MAX)):
-            alarm = Alarm(AlarmType.PEP_MAX, AlarmType.PEP_MAX.isHighLevel(AlarmType.PEP_MAX))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.PEP_MIN)):
-            alarm = Alarm(AlarmType.PEP_MIN, AlarmType.PEP_MIN.isHighLevel(AlarmType.PEP_MIN))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.LOW_BATTERY)):
-            alarm = Alarm(AlarmType.LOW_BATTERY, AlarmType.LOW_BATTERY.isHighLevel(AlarmType.LOW_BATTERY))
-            self.alarmMgr.ActivateAlarm(alarm)
-        if( self.data_controller.GetAlarmState(AlarmType.FAILSAFE)):
-            alarm = Alarm(AlarmType.FAILSAFE, AlarmType.FAILSAFE.isHighLevel(AlarmType.FAILSAFE))
-            self.alarmMgr.ActivateAlarm(alarm)
+
+        self.manageAlarmChange(AlarmType.PRESSION_MAX)
+        self.manageAlarmChange(AlarmType.PRESSION_MIN)
+        self.manageAlarmChange(AlarmType.VOLUME_COURANT)
+        self.manageAlarmChange(AlarmType.FREQUENCE_RESPIRATOIRE)
+        self.manageAlarmChange(AlarmType.VOLUME_MINUTE)
+        self.manageAlarmChange(AlarmType.PEP_MAX)
+        self.manageAlarmChange(AlarmType.PEP_MIN)
+        self.manageAlarmChange(AlarmType.LOW_BATTERY)
+        self.manageAlarmChange(AlarmType.FAILSAFE)
         self.updateAlarmDisplay()
         return (*lp,*lf,*lv)
 
@@ -350,64 +332,15 @@ class Window:
     #see what we need to do with this button in function in function of the implementation of alarm system
     def event_bt_Alarm(self, e):
         print("event_bn_alarm pressed")
-        #just for test
-        if(self.test_cnt == 0):
-            #do something
-            alarm1 = Alarm(AlarmType.PRESSION_MAX, AlarmLevel.MEDIUM_PRIORITY)
-            self.alarmMgr.ActivateAlarm(alarm1)
-            self.updateAlarmDisplay()
-        elif(self.test_cnt == 1):
-            #do other things
-            alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
-            self.alarmMgr.ActivateAlarm(alarm2)
-            self.updateAlarmDisplay()
 
-        elif(self.test_cnt == 2):
-            #do other things
-            alarm2 = Alarm(AlarmType.PRESSION_MIN, AlarmLevel.HIGH_PRIORITY)
-            self.alarmMgr.ActivateAlarm(alarm2)
-            self.updateAlarmDisplay()
-
-        elif(self.test_cnt == 3):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-
-        elif(self.test_cnt == 4):
-            #do other things
-            alarm4 = Alarm(AlarmType.LOW_BATTERY, AlarmLevel.MEDIUM_PRIORITY)
-            self.alarmMgr.ActivateAlarm(alarm4)
-            self.updateAlarmDisplay()
-            #KO parce que s'il n'y a pas de HIGH_PRIORITY on veut pas insérer en queue
-
-        elif(self.test_cnt == 5):
-            #do other things
-            self.updateAlarmDisplay()
-            alarm5 = Alarm(AlarmType.PEP_MAX, AlarmLevel.HIGH_PRIORITY)
-            self.alarmMgr.ActivateAlarm(alarm5)
-            self.updateAlarmDisplay()
-
-        elif(self.test_cnt == 6):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-
-        elif(self.test_cnt == 7):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-        elif(self.test_cnt == 8):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-        elif(self.test_cnt == 9):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-
-        elif(self.test_cnt == 10):
-            #do other things
-            self.alarmMgr.DeActivateCurrentAlarm()
-            self.updateAlarmDisplay()
-
-        self.test_cnt += 1
+    def manageAlarmChange(self, alarmtype):
+        if( self.data_controller.GetAlarmState(alarmtype) != self.activeAlarms[alarmtype]):
+            if(self.data_controller.GetAlarmState(alarmtype)):
+            #activation of the alarm
+                alarm = Alarm(alarmtype, alarmtype.isHighLevel(alarmtype))
+                self.alarmMgr.ActivateAlarm(alarm)
+            else:
+            #desactivation of the alarm
+                self.alarmMgr.DeActivateAlarm(alarmtype)
+        
+        self.activeAlarms[alarmtype] = self.data_controller.GetAlarmState(alarmtype)
