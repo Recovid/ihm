@@ -4,6 +4,7 @@ import sys, getopt
 
 def main(argv):
     fullscreen=False
+    mock=False
     try:
         opts, args = getopt.getopt(argv,"fhm")
     except getopt.GetoptError:
