@@ -237,3 +237,5 @@ class DataBackendDummy(DataBackend):
                 self.handler.update_inputs(**{self.PCRETE:value,self.PCRETE_ALARM:value>80})
             elif(key==self.TPLAT):
                 self.handler.update_inputs(**{self.PPLAT:value})
+            elif(key==self.IE):
+                self.handler.update_inputs(**{self.IE:value})

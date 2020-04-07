@@ -29,6 +29,7 @@ knob = dict(
 	font_ratio_value = 0.2,
 	font_ratio_unit = 0.1,
 	font_ratio_title = 0.12,
+	font_ratio_unit_frac = 0.08,
 	color_arc = "#4E69AB",
 	background = "grey",
 	background_selected = "#c9d2e5",

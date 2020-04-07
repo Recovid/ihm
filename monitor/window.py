@@ -157,7 +157,7 @@ class Window:
                 self.k_flow = Knob(self.knob_frame, self.data_controller.settings[Data.FLOW],'L/min','Debit Max', '20', '60')
                 self.k_flow.canvas.grid(row=1,column=column_index, sticky="news")
             if(column_index == 4):
-                self.k_tplat = Knob(self.knob_frame, self.data_controller.settings[Data.TPLAT],'','Tplat','0,1', '1,0')
+                self.k_tplat = Knob(self.knob_frame, self.data_controller.settings[Data.IE],'','I/E','2', '6', True)
                 self.k_tplat.canvas.grid(row=1,column=column_index, sticky="news")
 
         #Boutons Droite
