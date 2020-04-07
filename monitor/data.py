@@ -35,8 +35,7 @@ SETTINGS = {
     Data.FR: Setting(Data.FR,12,35,default=18),
     Data.PEP: Setting(Data.PEP,5,20,default=5),
     Data.FLOW: Setting(Data.FLOW,20,60,default=60, step=2),
-    Data.TPLAT: Setting(Data.TPLAT,0.1,1,default=0.1, step=0.1),
-    Data.IE: Setting(Data.IE,1/2, 1/6, default=0.1, step=0.1),
+    Data.IE: Setting(Data.IE, 2, 6, default=2, step=0.1),
 
     # alarms
     Data.PMIN: Setting(Data.PMIN,0,30,default=15), # TODO confirm default

@@ -55,8 +55,7 @@ class SetMsg:
         (Data.FR, "FR___", 2),
         (Data.PEP, "PEP__", 2),
         (Data.FLOW, "FLOW_", 2),
-        (Data.TPLAT, "Tplat", 4),
-        (Data.IE, "IE", 2),
+        (Data.IE, "IE___", 2),
         # alarms
         (Data.VTMIN, "VTmin", 4),
         (Data.PMAX, "Pmax_", 3),

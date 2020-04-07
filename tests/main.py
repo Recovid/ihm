@@ -58,7 +58,7 @@ if __name__ == '__main__':
         nominal_cycle.write(serialize_msg(SetMsg(Data.FR, 19)))
         nominal_cycle.write(serialize_msg(SetMsg(Data.PEP, 6)))
         nominal_cycle.write(serialize_msg(SetMsg(Data.FLOW,58)))
-        nominal_cycle.write(serialize_msg(SetMsg(Data.TPLAT,200)))
+        nominal_cycle.write(serialize_msg(SetMsg(Data.IE,23)))
         nominal_cycle.write(serialize_msg(SetMsg(Data.PMAX,60)))
         nominal_cycle.write(serialize_msg(SetMsg(Data.PMIN,20)))
         nominal_cycle.write(serialize_msg(SetMsg(Data.VTMIN,400)))
