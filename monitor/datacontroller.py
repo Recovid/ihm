@@ -123,19 +123,17 @@ class DataController:
 
                 self.parent.inputs.inputs[DataBackend.TIME] = timestamp
                 self.parent.inputs.make_index(timestamp)
-        
+
+                index = self.parent.inputs.index
+                dataLen = len(self.parent.inputs.pressure.data)
                 if self.parent.inputs.index < prevIndex:
-                    # restart data from origin
-                    self.parent.inputs.pressure.data[self.parent.inputs.index]=pressure
-                    self.parent.inputs.flow.data[self.parent.inputs.index]=flow
-                    self.parent.inputs.volume.data[self.parent.inputs.index]=volume
-                else:
-                    # linear interpolation between prev and current index
-                    for idx in range(prevIndex + 1, self.parent.inputs.index + 1):
-                        coeff = (idx - prevIndex) / (self.parent.inputs.index - prevIndex)
-                        self.parent.inputs.pressure.data[idx] = coeff * pressure + (1 - coeff) * prevPressure
-                        self.parent.inputs.flow.data[idx] = coeff * flow + (1 - coeff) * prevFlow
-                        self.parent.inputs.volume.data[idx] = coeff * volume + (1 - coeff) * prevVolume
+                    index += len(self.parent.inputs.pressure.data)
+                # linear interpolation between prev and current index
+                for idx in range(prevIndex + 1, index + 1):
+                    coeff = (idx - prevIndex) / (self.parent.inputs.index - prevIndex)
+                    self.parent.inputs.pressure.data[idx % dataLen] = coeff * pressure + (1 - coeff) * prevPressure
+                    self.parent.inputs.flow.data[idx % dataLen] = coeff * flow + (1 - coeff) * prevFlow
+                    self.parent.inputs.volume.data[idx % dataLen] = coeff * volume + (1 - coeff) * prevVolume
 
         def received_setting(self, key, value):
             if (key == DataBackend.TPLAT):
