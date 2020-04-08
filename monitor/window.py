@@ -14,6 +14,7 @@ from .button import Button2, ButtonPR
 from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 from .data import Data
 import config
+import time
 
 
 class Scope:
@@ -274,6 +275,8 @@ class Window:
             self.data_controller.stop_exp(False)
 
     def update(self, frame):
+        if time.time() - self.data_controller.lastControllerDataTime > 2:
+            pass # TODO Connection with Controller lost
         index = self.data_controller.inputs.get_index()
         lp = self.scope_pressure.update(index,self.delta_marker)
         lf = self.scope_flow.update(index,self.delta_marker)

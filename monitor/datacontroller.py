@@ -97,6 +97,7 @@ class DataController:
             self.parent=parent
 
         def update_inputs(self, **kwargs):
+            self.parent.lastControllerDataTime = time.time()
             if kwargs is not None:
                 for key, value in kwargs.items():
                     if(key in self.parent.inputs.inputs):
@@ -113,6 +114,7 @@ class DataController:
             self.parent.checkHistoryForAlarms()
     
         def update_timedata(self,timestamp, pressure, flow, volume):
+            self.parent.lastControllerDataTime = time.time()
             if pressure > self.parent.inputs.inputs[DataBackend.MAXPAW]:
                 self.parent.inputs.inputs[DataBackend.MAXPAW] = pressure
             if not self.parent.inputs.freeze:
@@ -136,6 +138,7 @@ class DataController:
                     self.parent.inputs.volume.data[idx % dataLen] = coeff * volume + (1 - coeff) * prevVolume
 
         def received_setting(self, key, value):
+            self.parent.lastControllerDataTime = time.time()
             if (key == DataBackend.IE):
                 value /= 10
             self.parent.settings[key].value = value
@@ -152,6 +155,7 @@ class DataController:
         self.repost_stop_ins_posted = False
         self.historyDataQueue = deque()
         self.activeAlarms = [False] * 10
+        self.lastControllerDataTime = 0
 
         self.reset_settings()
 
