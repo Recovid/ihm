@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
-from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock
+from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock, SerialPort
 from .userinputs import OneValueDialog, LockScreen, PowerSettingsDialog
 from .knob import Knob
 from .mesure import Mesure
@@ -67,7 +67,7 @@ class Scope:
 
 class Window:
     
-    def __init__(self, fullscreen = False, mock = False):
+    def __init__(self, fullscreen = False, mock = False, serial = None):
         self.timewindow=15
         self.freq=50
         self.timeresolution=1.0/self.freq
@@ -91,8 +91,10 @@ class Window:
             tk.Grid.columnconfigure(self.app, i, weight=1, minsize=self.ws/9)
         
         #self.data_backend = DataBackendDummy(100,100,500)
-        if (mock):
+        if mock:
             self.data_backend = SerialPortMock("in", "out")
+        elif serial is not None:
+            self.data_backend = SerialPort(serial)
         else:
             self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend, self.app)

@@ -5,8 +5,9 @@ import sys, getopt
 def main(argv):
     fullscreen=False
     mock=False
+    serial=None
     try:
-        opts, args = getopt.getopt(argv,"fhm")
+        opts, args = getopt.getopt(argv,"fhms:")
     except getopt.GetoptError:
         print('main.py [-f]')
         sys.exit(2)
@@ -18,7 +19,9 @@ def main(argv):
             fullscreen=True
         elif opt == '-m':
             mock=True
-    w=Window(fullscreen, mock)
+        elif opt == '-s':
+            serial = arg
+    w=Window(fullscreen, mock, serial)
     w.run()
 
 if __name__ == '__main__':

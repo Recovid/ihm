@@ -6,7 +6,7 @@ import numpy as np
 import re
 from .communication import *
 from .data import Data, SETTINGS
-#import serial
+import serial
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -144,22 +144,22 @@ class SerialPortMock(DataBackend):
         self.outputPipe.write(serialize_msg(msg))
         self.outputPipe.flush()
 
-'''
 class SerialPort(DataBackend):
     def __init__(self, tty):
         DataBackend.__init__(self)
         self.serialPort = serial.Serial(tty, 9600)
         msg = InitMsg("RecovidIHMV2")
-        self.serialPort.write(serialize_msg(msg))
+        self.serialPort.write(serialize_msg(msg).encode("ascii"))
         self.serialPort.flush()
 
     def run(self):
         self.running=True
         prevTimestamp = 0
         toAdd = 0
-        for line in serial: # replace with serial.readline() if it fails
+        for line in self.serialPort: # replace with serial.readline() if it fails
             if not self.running:
                 break
+            line = line.decode("ascii")
             msg = parse_msg(line)
             if isinstance(msg, DataMsg):
                 timestamp = msg.timestamp_ms
@@ -185,24 +185,23 @@ class SerialPort(DataBackend):
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
-        self.serial.write(serialize_msg(msg))
-        self.serial.flush()
+        self.serialPort.write(serialize_msg(msg.encode("ascii")))
+        self.serialPort.flush()
 
     def stop_ins(self, time_ms):
         msg = PauseInsMsg(time_ms)
-        self.serial.write(serialize_msg(msg))
-        self.serial.flush()
+        self.serialPort.write(serialize_msg(msg).encode("ascii"))
+        self.serialPort.flush()
 
     def pause_bip(self, time_ms):
         msg = PauseBipMsg(time_ms)
-        self.serial.write(serialize_msg(msg))
-        self.serial.flush()
+        self.serialPort.write(serialize_msg(msg).encode("ascii"))
+        self.serialPort.flush()
 
     def set_setting(self, key, value):
         msg = SetMsg(key, value)
-        self.serial.write(serialize_msg(msg))
-        self.serial.flush()
-'''
+        self.serialPort.write(serialize_msg(msg).encode("ascii"))
+        self.serialPort.flush()
 
 class DataBackendDummy(DataBackend):
    
