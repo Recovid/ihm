@@ -111,6 +111,18 @@ class TestSetMsg(unittest.TestCase):
     def test_parse_missing_value(self):
         self.assertIsNone(SetMsg.with_args("VT___:"))
 
+    def test_parse_wrong_digit_count(self):
+        for k, s, n in SetMsg.SETTINGS:
+            with self.subTest(setting=k):
+                self.assertIsNone(SetMsg.with_args(f"{s}:{'0' * (n - 1)}"))
+                self.assertIsNone(SetMsg.with_args(f"{s}:{'0' * (n + 1)}"))
+
+    def test_serialize_value_too_large(self):
+        for k, _, n in SetMsg.SETTINGS:
+            with self.subTest(setting=k):
+                with self.assertRaises(AssertionError):
+                    serialize_msg(SetMsg(k, 10**n))
+
 class TestAlarmMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):

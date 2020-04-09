@@ -81,7 +81,9 @@ class SetMsg(Msg):
             return None
         for k, s, n in SetMsg.SETTINGS:
             if s == match.group(1):
-                # TODO: check number of digits (len(match.group(2)) == n)
+                if len(match.group(2)) != n:
+                    print(f"wrong digit count for setting {k}: {match.group(2)} (expected {n} digits)", file=sys.stderr)
+                    return None
                 return SetMsg(k, int(match.group(2)))
 
         print("unknown setting:", match.group(1), file=sys.stderr)
@@ -90,7 +92,7 @@ class SetMsg(Msg):
     def __str__(self):
         for k, s, n in SetMsg.SETTINGS:
             if self.setting == k:
-                # TODO: check self.value fits on n digits
+                assert self.value <= 10**n - 1, f"setting {k}:{self.value} does not fit on {n} digits"
                 return ('SET_ %s:%0{}d'.format(n)) % (s, self.value)
         assert False, "unknown setting: " + self.setting
 
