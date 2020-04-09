@@ -33,11 +33,65 @@ class TestDataMsg(unittest.TestCase):
         msg = DataMsg(timestamp_ms=123, volume_ml=1, debit_lpm=2, paw_mbar=3)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
 
+    def test_parse_missing_field(self):
+        self.assertIsNone(DataMsg.with_args("Vol__:0100 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:-010"))
+
+    def test_parse_unexpected_field(self):
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+010 Paw__:-008 XxXxX:12"))
+
+    def test_parse_missing_sign(self):
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+010 Paw__:008"))
+
+    def test_parse_wrong_digit_count(self):
+        self.assertIsNone(DataMsg.with_args("msec_:00428 Vol__:0100 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:0042801 Vol__:0100 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:010 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:01001 Deb__:+010 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+01 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+0101 Paw__:-008"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+010 Paw__:-00"))
+        self.assertIsNone(DataMsg.with_args("msec_:004280 Vol__:0100 Deb__:+010 Paw__:-0081"))
+
 class TestRespMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):
         msg = RespMsg(ie_ratio=2.1, fr_pm=25, vte_ml=500, pcrete_cmH2O=10, vm_lpm=10, pplat_cmH2O=40, pep_cmH2O=5)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+    def test_parse_missing_field(self):
+        self.assertIsNone(RespMsg.with_args("FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40"))
+
+    def test_parse_unexpected_field(self):
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05 XxXxX:12"))
+
+    def test_parse_missing_sign(self):
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:10 PPLAT:40 PEP__:05"))
+
+    def test_parse_wrong_digit_count(self):
+        self.assertIsNone(RespMsg.with_args("IE___:2 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:201 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:2 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:251 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:50 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:5001 PCRET:50 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:5 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:501 VM___:+10 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+1 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+101 PPLAT:40 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:4 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:401 PEP__:05"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:0"))
+        self.assertIsNone(RespMsg.with_args("IE___:20 FR___:25 VTe__:500 PCRET:50 VM___:+10 PPLAT:40 PEP__:051"))
 
 class TestSetMsg(unittest.TestCase):
 
@@ -46,6 +100,16 @@ class TestSetMsg(unittest.TestCase):
             with self.subTest(setting=s):
                 msg = SetMsg(s, i)
                 self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+    def test_parse_unknown_setting(self):
+        self.assertIsNone(SetMsg.with_args("XxXxX:12"))
+
+    def test_serialize_unknown_setting(self):
+        with self.assertRaises(AssertionError):
+            serialize_msg(SetMsg("XxXxX", 12))
+
+    def test_parse_missing_value(self):
+        self.assertIsNone(SetMsg.with_args("VT___:"))
 
 class TestAlarmMsg(unittest.TestCase):
 
