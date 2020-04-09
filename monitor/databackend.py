@@ -67,7 +67,7 @@ class DataBackendFromFile(DataBackend):
                     prevTimestamp = timestamp
                 elif isinstance(msg, RespMsg):
                     self.handler.update_inputs(**{
-                        self.IE: round(msg.ie_ratio / 10, 1),
+                        self.IE: msg.ie_ratio,
                         self.FR: msg.fr_pm,
                         self.VTE: msg.vte_ml,
                         self.PCRETE: msg.pcrete_cmH2O,
@@ -110,7 +110,7 @@ class SerialPortMock(DataBackend):
                     prevTimestamp = timestamp
                 elif isinstance(msg, RespMsg):
                     self.handler.update_inputs(**{
-                        self.IE: round(msg.ie_ratio / 10, 1),
+                        self.IE: msg.ie_ratio,
                         self.FR: msg.fr_pm,
                         self.VTE: msg.vte_ml,
                         self.PCRETE: msg.pcrete_cmH2O,
@@ -169,7 +169,7 @@ class SerialPort(DataBackend):
                 prevTimestamp = timestamp
             elif isinstance(msg, RespMsg):
                 self.handler.update_inputs(**{
-                    self.IE: round(msg.ie_ratio / 10, 1),
+                    self.IE: msg.ie_ratio,
                     self.FR: msg.fr_pm,
                     self.VTE: msg.vte_ml,
                     self.PCRETE: msg.pcrete_cmH2O,

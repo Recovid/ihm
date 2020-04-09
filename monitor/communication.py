@@ -45,7 +45,8 @@ class RespMsg(Msg):
         if not match:
             print("failed to parse RESP message", file=sys.stderr)
             return None
-        return RespMsg(*[int(g) for g in match.groups()[0:7]])
+        ie_ratio = round(int(match.group(1)) / 10, 1)
+        return RespMsg(ie_ratio, *[int(g) for g in match.groups()[1:7]])
 
     def __str__(self):
         args = (self.ie_ratio * 10, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
