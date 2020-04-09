@@ -23,6 +23,10 @@ class TestCommonMsgStructure(unittest.TestCase):
         frame = "DATA msec_:04280 Vol__:0000 Deb__:+010 Paw__:+008\tCS8:73\n"
         self.assertEqual(parse_msg(frame), None)
 
+    def test_incomplete_msg(self):
+        frame = "DAT\tCS8:6F\n"
+        self.assertEqual(parse_msg(frame), None)
+
 class TestDataMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):
