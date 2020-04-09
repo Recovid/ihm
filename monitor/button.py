@@ -8,6 +8,7 @@ import time
 class Button2(tk.Button):
     def __init__(self,parent, content=None):
         tk.Button.__init__(self,parent,font=config.button['font'],bg=config.button['btn_background'], activebackground=config.button['btn_background'], fg=config.button['color_text'], activeforeground=config.button['color_text'])
+        self.images = dict()
         if(content is not None):
             self.set_content(content)
         self.bind('<ButtonPress-1>', lambda event : self.config(activebackground=config.button['btn_background_selected']))
@@ -15,8 +16,10 @@ class Button2(tk.Button):
 
     def set_content(self, content, bg=None):
         if( content.count('.png') != 0):
-            img = Image.open(content)
-            self.img = ImageTk.PhotoImage(img)
+            if(content not in self.images):
+                img = Image.open(content)
+                self.images[content] = ImageTk.PhotoImage(img)
+            self.img=self.images[content]
             self.config(image=self.img)
             if(bg is not None):
                 self.config(bg=bg, activebackground=bg)
