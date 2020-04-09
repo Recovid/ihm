@@ -110,17 +110,6 @@ class InitMsg:
     def __str__(self):
         return 'INIT %s' % self.text
 
-class AckAlarmMsg:
-    def __init__(self, alarm_msg):
-        self.alarm_msg = alarm_msg
-
-    def with_args(args_str):
-        alarm_msg = SetMsg.with_args(args_str)
-        return AckAlarmMsg(alarm_msg) if alarm_msg else None
-
-    def __str__(self):
-        return 'RALM' + str(self.alarm_msg)[4:]
-
 class PauseBipMsg:
     def __init__(self, duration_ms):
         self.duration_ms = duration_ms
@@ -182,7 +171,6 @@ def parse_msg(msg_str):
         'RESP': RespMsg.with_args,
         'SET_': SetMsg.with_args,
         'ALRM': AlarmMsg.with_args,
-        'RALM': AckAlarmMsg.with_args,
         'PBIP': PauseBipMsg.with_args,
         'PINS': PauseInsMsg.with_args,
         'PEXP': PauseExpMsg.with_args,
