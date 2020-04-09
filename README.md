@@ -29,6 +29,12 @@ pip install -r requirements.txt
 python main.py
 ```
 
+# Run tests
+
+```
+python -m unittest -b
+```
+
 # Configure Raspbian for autostart
 
 Installer le projet (section précédente).
