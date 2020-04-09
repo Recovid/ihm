@@ -4,7 +4,11 @@ import re
 import sys
 from .data import Data
 
-class DataMsg:
+class Msg:
+    def __eq__(self, other):
+        return type(other) is type(self) and self.__dict__ == other.__dict__
+
+class DataMsg(Msg):
     args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar):
@@ -24,7 +28,7 @@ class DataMsg:
         args = (self.timestamp_ms % 1000000, self.volume_ml, '-' if self.debit_lpm < 0 else '+', self.debit_lpm, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
         return 'DATA msec_:%06d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
 
-class RespMsg:
+class RespMsg(Msg):
     args_pattern = re.compile('^IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2})$')
 
     def __init__(self, ie_ratio, fr_pm, vte_ml, pcrete_cmH2O, vm_lpm, pplat_cmH2O, pep_cmH2O):
@@ -47,7 +51,7 @@ class RespMsg:
         args = (self.ie_ratio * 10, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
         return 'RESP IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%s%02d PPLAT:%02d PEP__:%02d' % args
 
-class SetMsg:
+class SetMsg(Msg):
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')
     SETTINGS = [ # (setting key, serial string, number of digits)
         # resp settings
@@ -89,7 +93,7 @@ class SetMsg:
                 return ('SET_ %s:%0{}d'.format(n)) % (s, self.value)
         assert False, "unknown setting: " + self.setting
 
-class AlarmMsg:
+class AlarmMsg(Msg):
     def __init__(self, text):
         self.text = text
 
@@ -100,7 +104,7 @@ class AlarmMsg:
     def __str__(self):
         return 'ALRM %s' % self.text
 
-class InitMsg:
+class InitMsg(Msg):
     def __init__(self, text):
         self.text = text
 
@@ -110,7 +114,7 @@ class InitMsg:
     def __str__(self):
         return 'INIT %s' % self.text
 
-class PauseBipMsg:
+class PauseBipMsg(Msg):
     def __init__(self, duration_ms):
         self.duration_ms = duration_ms
 
@@ -121,7 +125,7 @@ class PauseBipMsg:
     def __str__(self):
         return 'PBIP %05d' % self.duration_ms
 
-class PauseInsMsg:
+class PauseInsMsg(Msg):
     def __init__(self, duration_ms):
         self.duration_ms = duration_ms
 
@@ -132,7 +136,7 @@ class PauseInsMsg:
     def __str__(self):
         return 'PINS %03d' % self.duration_ms
 
-class PauseExpMsg:
+class PauseExpMsg(Msg):
     def __init__(self, duration_ms):
         self.duration_ms = duration_ms
 
