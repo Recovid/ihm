@@ -147,7 +147,7 @@ class SerialPortMock(DataBackend):
 class SerialPort(DataBackend):
     def __init__(self, tty):
         DataBackend.__init__(self)
-        self.serialPort = serial.Serial(tty, 9600)
+        self.serialPort = serial.Serial(tty, 115200)
         msg = InitMsg("RecovidIHMV2")
         self.serialPort.write(serialize_msg(msg).encode("ascii"))
         self.serialPort.flush()
@@ -179,7 +179,7 @@ class SerialPort(DataBackend):
                 })
             elif isinstance(msg, SetMsg):
                 self.handler.received_setting(msg.setting, int(msg.value))
-            elif isinstance(msg, AlrmMsg):
+            elif isinstance(msg, AlarmMsg):
                 self.handler.received_alarm(msg.codeAlarm, msg.level)
             elif isinstance(msg, InitMsg):
                 # do we need to reset some settings ?
