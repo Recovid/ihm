@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from .datacontroller import DataController
 from .databackend import DataBackend, DataBackendDummy, DataBackendFromFile, SerialPortMock, SerialPort
-from .userinputs import OneValueDialog, LockScreen, PowerSettingsDialog
+from .userinputs import OneValueDialog, LockScreen, SettingsLockDialog, SettingsQuitDialog
 from .knob import Knob
 from .mesure import Mesure
 from .button import Button2, ButtonPR
@@ -183,7 +183,7 @@ class Window:
         self.bt_se.bind('<ButtonPress-1>',self.stop_exp_event,'+')
         self.bt_se.bind('<ButtonRelease-1>',self.stop_exp_event,'+')
        
-        self.bt_pset=Button2(self.app, "monitor/Alarms_Icon/power_settings.png")
+        self.bt_pset=Button2(self.app, "monitor/Alarms_Icon/icn_lock.png")
         self.bt_pset.grid(row=4,column=8)
         self.bt_pset.bind('<ButtonPress-1>', self.pset_event, '+')
         self.bt_pset.bind('<ButtonRelease-1>', self.pset_event, '+')
@@ -192,8 +192,11 @@ class Window:
         self.bt_freeze.grid(row=5,column=8,sticky="news", padx=4, pady=2)
         self.bt_freeze.bind('<Button-1>', self.event_bt_freeze,'+')
 
-        tk.Button(self.app, text='Quitter', command=self.app.quit).grid(row=4,column=7)
-        self.app.bind('<Control-q>', lambda event: self.app.quit())
+        #créer un bouton quitter avec validation
+        self.bt_quit = Button2(self.app, "monitor/Alarms_Icon/power_settings.png")
+        self.bt_quit.grid(row=4, column=7)
+        self.bt_quit.bind('<ButtonPress-1>', self.pquit_event, '+')
+        self.bt_quit.bind('<ButtonRelease-1>', self.pquit_event, '+')
 
         #Graph Init 
 
@@ -256,12 +259,22 @@ class Window:
 
     def pset_event(self, event):
         if(event.type==tk.EventType.ButtonPress):
-            self.pset_timer=self.app.after(5000, self.pset_opendialog)
+            self.pset_timer=self.app.after(5000, self.pset_opendialoglock)
         if(event.type==tk.EventType.ButtonRelease):
             self.app.after_cancel(self.pset_timer)
 
-    def pset_opendialog(self):
-        PowerSettingsDialog(self.app)
+    def pquit_event(self, event):
+        if(event.type==tk.EventType.ButtonPress):
+            self.pset_timer=self.app.after(5000, self.pset_opendialogquit)
+        if(event.type==tk.EventType.ButtonRelease):
+            self.app.after_cancel(self.pset_timer)
+
+    def pset_opendialogquit(self):
+        SettingsQuitDialog(self.app)
+        self.bt_pset.config(activebackground=config.button['btn_background'])
+
+    def pset_opendialoglock(self):
+        SettingsLockDialog(self.app)
         self.bt_pset.config(activebackground=config.button['btn_background'])
 
     def stop_ins_event(self, e):

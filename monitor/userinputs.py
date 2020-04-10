@@ -38,14 +38,14 @@ class LockScreen(tk.Canvas):
         else:
             self.destroy()
 
-class PowerSettingsDialog(tk.Toplevel):
+class SettingsQuitDialog(tk.Toplevel):
 
     def __init__(self, parent):
 
         tk.Toplevel.__init__(self, parent)
         self.transient(parent)
 
-        self.title("Alimentation")
+        self.title("Quitter")
 
         self.parent = parent
 
@@ -56,11 +56,6 @@ class PowerSettingsDialog(tk.Toplevel):
         btquit.config(bg=config.powerSettings['bg_quit'], fg=config.powerSettings['fg'], font=config.powerSettings['font'])
         btquit.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)
         btquit.bind('<1>',self.quitapp,'+')
-        
-        btlock = Button2(body,"Verrouiller")
-        btlock.config(bg=config.powerSettings['bg_lock'], fg=config.powerSettings['fg'], font=config.powerSettings['font'])
-        btlock.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)
-        btlock.bind('<1>', self.lock,'+')
         
         btcancel = Button2(body,"Annuler")
         btcancel.config(fg=config.powerSettings['fg'], font=config.powerSettings['font'])
@@ -88,10 +83,53 @@ class PowerSettingsDialog(tk.Toplevel):
         self.parent.quit()
         self.destroy()
 
+    def cancel(self):
+        self.destroy()
+
+
+class SettingsLockDialog(tk.Toplevel):
+
+    def __init__(self, parent):
+
+        tk.Toplevel.__init__(self, parent)
+        self.transient(parent)
+
+        self.title("Verrouiller")
+
+        self.parent = parent
+
+        self.result = None
+
+        body = tk.Frame(self)
+        
+        btlock = Button2(body,"Verrouiller")
+        btlock.config(bg=config.powerSettings['bg_lock'], fg=config.powerSettings['fg'], font=config.powerSettings['font'])
+        btlock.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)
+        btlock.bind('<1>', self.lock,'+')
+        
+        btcancel = Button2(body,"Annuler")
+        btcancel.config(fg=config.powerSettings['fg'], font=config.powerSettings['font'])
+        btcancel.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)
+        btcancel.bind('<1>', lambda e : self.cancel(),'+')
+        
+        body.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)
+
+        self.wait_visibility()
+        self.grab_set()
+
+
+        self.protocol("WM_DELETE_WINDOW", self.cancel)
+
+        self.geometry("%dx%d" % (config.valueDialog['width'],config.valueDialog['height']))
+        
+        self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
+                                  parent.winfo_rooty()+50))
+
+        self.wait_window(self)
+   
     def lock(self, event):
         self.withdraw()
         self.update_idletasks()
-
 
         LockScreen(self.parent,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news")
         
