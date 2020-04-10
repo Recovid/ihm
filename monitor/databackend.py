@@ -179,6 +179,8 @@ class SerialPort(DataBackend):
                 })
             elif isinstance(msg, SetMsg):
                 self.handler.received_setting(msg.setting, int(msg.value))
+            elif isinstance(msg, AlrmMsg):
+                self.handler.received_alarm(msg.codeAlarm, msg.level)
             elif isinstance(msg, InitMsg):
                 # do we need to reset some settings ?
                 pass

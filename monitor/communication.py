@@ -97,15 +97,21 @@ class SetMsg(Msg):
         assert False, "unknown setting: " + self.setting
 
 class AlarmMsg(Msg):
-    def __init__(self, text):
-        self.text = text
+    args_pattern = re.compile("^level:([0-3]) code_:(\w{5})$")
+    def __init__(self, codeAlarm, level):
+        self.codeAlarm = codeAlarm
+        self.level = level
 
     def with_args(args_str):
-        # TODO: check alarm text is valid
-        return AlarmMsg(args_str)
+        match = re.match(AlarmMsg.args_pattern, args_str)
+        if not match:
+            print("failed to parse ALRM message:", args_str, file=sys.stderr)
+            return None
+        # TODO: check codeAlarm is valid
+        return AlarmMsg(match.group(2), match.group(1))
 
     def __str__(self):
-        return 'ALRM %s' % self.text
+        return 'ALRM level:%d code_:%s' % (self.level, self.codeAlarm)
 
 class InitMsg(Msg):
     def __init__(self, text):
