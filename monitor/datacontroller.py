@@ -147,12 +147,11 @@ class DataController:
             self.parent.settings[key].synchronized = True
             self.parent.settings[key].sync()
 
-        def received_alarm(self, codeAlarm, level):
+        def received_alarm(self, alarm_type):
             if level == 0:
                 self.parent.controllerAlarm = None
             else:
-                self.parent.controllerAlarm = codeAlarm
-            self.parent.controllerAlarmLevel = level
+                self.parent.controllerAlarm = alarm_type
  
     def __init__(self, backend, mainLoop):
         self.backend=backend
@@ -166,7 +165,6 @@ class DataController:
         self.activeAlarms = [False] * 10
         self.lastControllerDataTime = 0
         self.controllerAlarm = None
-        self.controllerAlarmLevel = 0
 
         self.reset_settings()
 

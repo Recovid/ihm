@@ -4,6 +4,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from monitor.communication import *
 from monitor.data import SETTINGS
+from monitor.alarms import AlarmType
 
 class TestCommonMsgStructure(unittest.TestCase):
 
@@ -126,7 +127,7 @@ class TestSetMsg(unittest.TestCase):
 class TestAlarmMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):
-        msg = AlarmMsg("msg")
+        msg = AlarmMsg(AlarmType.LOW_BATTERY)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
 
 class TestInitMsg(unittest.TestCase):
