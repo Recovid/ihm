@@ -12,6 +12,7 @@ class BatteryDisplay():
         self.app = app
         self.value = tk.IntVar()
         self.value.set(0)
+        self.sector = False
         self.id = id
         self.color = 'green'
 
@@ -52,16 +53,17 @@ class BatteryDisplay():
         self.canvas.itemconfig(self.text,font=(config.knob['font_family'],font_size))
 
 
-    def update(self, value):
+    def update(self, value, sector):
         self.value.set(value)
         batteryLevel = int(self.value.get())
-        #print(batteryLevel)
-        if( batteryLevel > config.batteryDisplay['green_thresh']):
+
+        if( sector):
             self.color = 'green'
-        elif( (batteryLevel< config.batteryDisplay['green_thresh']) and (batteryLevel > config.batteryDisplay['yellow_thresh'])):
-            self.color = 'yellow'
         else:
-            self.color = 'red'
+            if( batteryLevel > config.batteryDisplay['yellow_thresh']):
+                self.color = 'yellow'
+            else:
+                self.color = 'red'
 
         item_txt = self.canvas.find_withtag('text_percent')
         self.canvas.itemconfigure(item_txt, text = str(self.value.get()) + '%')

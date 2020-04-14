@@ -86,6 +86,5 @@ newPatientDialog = dict(
 )
 
 batteryDisplay = dict(
-	green_thresh = 66,
-	yellow_thresh = 33,
+	yellow_thresh = 85,
 )

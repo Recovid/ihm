@@ -308,7 +308,7 @@ class Window:
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.activeAlarms[AlarmType.VOLUME_MINUTE])
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PRESSION_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.activeAlarms[AlarmType.VOLUME_COURANT])
-            self.m_battery.update(self.data_controller.inputs.inputs[DataBackend.BATT])
+            self.m_battery.update(self.data_controller.inputs.inputs[DataBackend.BAT], self.data_controller.inputs.inputs[DataBackend.BAT_SECT])
         #check if an alarm has been activated
 
         self.manageAlarmChange(AlarmType.PRESSION_MAX)

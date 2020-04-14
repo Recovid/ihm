@@ -20,7 +20,8 @@ class Data:
     PMIN="pmin"
     VM="VM"
     VMMIN="vmmin"
-    BATT="Battery Level"
+    BAT="Battery Level"
+    BAT_SECT="If Battery is branch on sector"
 
 class Setting:
     def __init__(self, key, vmin=0, vmax=100, default=0, step=1):
