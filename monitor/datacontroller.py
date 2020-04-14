@@ -33,6 +33,7 @@ class DataInputs:
         self.inputs[DataBackend.PCRETE_ALARM]=False
         self.inputs[DataBackend.VTE]=0
         self.inputs[DataBackend.VTE_ALARM]=False
+        self.inputs[DataBackend.BATT]=0
 
         self.changed=False
         

@@ -74,6 +74,8 @@ class DataBackendFromFile(DataBackend):
                         self.VM: msg.vm_lpm,
                         self.PPLAT: msg.pplat_cmH2O,
                         self.PEP: msg.pep_cmH2O,
+                        #to be remove when the var will be linked with controller
+                        self.BATT: 40
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -117,6 +119,8 @@ class SerialPortMock(DataBackend):
                         self.VM: msg.vm_lpm,
                         self.PPLAT: msg.pplat_cmH2O,
                         self.PEP: msg.pep_cmH2O,
+                        #to be remove when the var will be linked with controller
+                        self.BATT: 40
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -176,6 +180,8 @@ class SerialPort(DataBackend):
                     self.VM: msg.vm_lpm,
                     self.PPLAT: msg.pplat_cmH2O,
                     self.PEP: msg.pep_cmH2O,
+                    #to be remove when the var will be linked with controller
+                    self.BATT: 40
                 })
             elif isinstance(msg, SetMsg):
                 self.handler.received_setting(msg.setting, int(msg.value))

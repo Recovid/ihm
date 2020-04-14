@@ -84,3 +84,8 @@ newPatientDialog = dict(
 	font_size_button = 20,
 
 )
+
+batteryDisplay = dict(
+	green_thresh = 66,
+	yellow_thresh = 33,
+)

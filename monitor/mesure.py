@@ -83,7 +83,7 @@ class Mesure(tk.Frame):
         self.canvas.pack(fill=tk.BOTH,expand=1)
         
         self.title_textid = self.canvas.create_text(int(self.width/2), int(self.height*0.05), anchor='n', \
-        		font=(self.font_family, self.font_size_unit),\
+                font=(self.font_family, self.font_size_unit),\
                 fill=config.mesure['color_text_sync'], text=self.title)
         coord_text = int(self.width*0.5), int(self.height*0.5)
         if(self.is_frac):

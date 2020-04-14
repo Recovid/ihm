@@ -15,6 +15,7 @@ from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 from .data import Data
 import config
 import time
+from .battery import BatteryDisplay
 
 
 class Scope:
@@ -135,6 +136,9 @@ class Window:
 
         self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN])
         self.m_vte.grid(row=4,column=6, sticky="senw", padx=2, pady=2)
+
+        self.m_battery = BatteryDisplay(self.app, 0)
+        self.m_battery.canvas.grid(row=5, column=7, sticky="senw", padx=2, pady=2)
 
         #BOUTONS EN BAS
         self.leftside = tk.Frame(self.app, height=200)
@@ -304,7 +308,7 @@ class Window:
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.activeAlarms[AlarmType.VOLUME_MINUTE])
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PRESSION_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.activeAlarms[AlarmType.VOLUME_COURANT])
-
+            self.m_battery.update(self.data_controller.inputs.inputs[DataBackend.BATT])
         #check if an alarm has been activated
 
         self.manageAlarmChange(AlarmType.PRESSION_MAX)

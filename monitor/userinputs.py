@@ -131,7 +131,7 @@ class SettingsLockDialog(tk.Toplevel):
         self.withdraw()
         self.update_idletasks()
 
-        LockScreen(self.parent,5).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news")
+        LockScreen(self.parent,10).grid(row=0,column=0,columnspan=9,rowspan=6, sticky="news")
         
         self.destroy()
 
