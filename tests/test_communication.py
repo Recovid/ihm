@@ -153,3 +153,13 @@ class TestPauseExpMsg(unittest.TestCase):
     def test_parse_serialize_identity(self):
         msg = PauseExpMsg(123)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+class TestSoftResetMsg(unittest.TestCase):
+
+    def test_parse_serialize_identity(self):
+        msg = SoftResetMsg()
+        self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+    def test_parse_unexpected_args(self):
+        self.assertIsNone(SoftResetMsg.with_args('a'))
+        self.assertIsInstance(SoftResetMsg.with_args(' '), SoftResetMsg)

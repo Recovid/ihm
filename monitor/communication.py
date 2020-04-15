@@ -150,6 +150,13 @@ class PauseExpMsg(Msg):
     def __str__(self):
         return 'PEXP %03d' % self.duration_ms
 
+class SoftResetMsg(Msg):
+    def with_args(args_str):
+        return None if args_str.strip() else SoftResetMsg()
+
+    def __str__(self):
+        return 'SRST'
+
 def checksum8(frame):
     assert isinstance(frame, str)
     return sum(ord(c) for c in frame) % 256
@@ -182,6 +189,7 @@ def parse_msg(msg_str):
         'PINS': PauseInsMsg.with_args,
         'PEXP': PauseExpMsg.with_args,
         'INIT': InitMsg.with_args,
+        'SRST': SoftResetMsg.with_args,
     }
     if id_ not in ctors:
         print("unknown message id:", id_, file=sys.stderr)
