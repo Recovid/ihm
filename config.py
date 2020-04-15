@@ -88,3 +88,13 @@ newPatientDialog = dict(
 batteryDisplay = dict(
 	yellow_thresh = 85,
 )
+
+titleDialog = dict(
+	width = 400,
+	height = 300,
+	ref_technique = "Référence Technique du produit: \n completer la ref",
+	ihm_version = "V2.0.0",
+	ctrl_version = "V2.0.0",
+	fab = "Société MinMaxMedical \n Zone Mayencin II - Parc Equation - Bâtiment 1\n 2 Avenue de Vignate \n 38610 Gières - France",
+	inst_util = "Instruction Utilisateur",
+)

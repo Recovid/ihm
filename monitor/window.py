@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib
 import tkinter as tk
+from PIL import Image, ImageTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
@@ -13,6 +14,7 @@ from .mesure import Mesure
 from .button import Button2, ButtonPR
 from .alarms import AlarmType, AlarmState, AlarmLevel, Alarm, AlarmManager
 from .data import Data
+from .title_dlg import TitleDialog
 import config
 import time
 from .battery import BatteryDisplay
@@ -104,9 +106,14 @@ class Window:
         #TITLE
         self.title_frame = tk.Frame(self.app, \
             bg='#4E69AB').grid(row=0,column=0,columnspan=9)
-        self.title = tk.Label(self.title_frame, font=("Helvetica", -int(self.hw*0.05)),text='RECOVID', \
-            anchor='n', fg='white',bg='#4E69AB').grid(row=0,column=0, columnspan=2, sticky="news")
-        
+
+        img = Image.open("monitor/Alarms_Icon/Icon_Title.png")
+        self.icon_title = ImageTk.PhotoImage(img)
+
+        self.title_btn = tk.Button(self.title_frame, image = self.icon_title, relief='flat' )
+        self.title_btn.grid(row=0,column=0, columnspan=2, sticky="news")
+        self.title_btn.bind('<ButtonRelease-1>', self.event_btn_title, '+')
+
         self.alarm_text = tk.StringVar()
         self.alarm_text.set("Some Alarm message text")
         self.alarmMgr = AlarmManager()
@@ -348,9 +355,6 @@ class Window:
     #def updateAlarmText(self, newText):
         #self.alarm_text.set(newText)
 
-
-
-
     #see what we need to do with this button in function in function of the implementation of alarm system
     def event_bt_Alarm(self, e):
         self.data_controller.pause_bip()
@@ -366,3 +370,7 @@ class Window:
                 self.alarmMgr.DeActivateAlarm(alarmtype)
         
         self.activeAlarms[alarmtype] = self.data_controller.GetAlarmState(alarmtype)
+
+
+    def event_btn_title(self,e):
+        TitleDialog(self.app)
