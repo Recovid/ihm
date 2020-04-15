@@ -97,21 +97,15 @@ class SetMsg(Msg):
         assert False, "unknown setting: " + self.setting
 
 class AlarmMsg(Msg):
-    args_pattern = re.compile("^level:([0-3]) code_:(\w{5})$")
-    def __init__(self, codeAlarm, level):
-        self.codeAlarm = codeAlarm
-        self.level = level
+    def __init__(self, alarm_type):
+        self.alarm_type = alarm_type
 
     def with_args(args_str):
-        match = re.match(AlarmMsg.args_pattern, args_str)
-        if not match:
-            print("failed to parse ALRM message:", args_str, file=sys.stderr)
-            return None
-        # TODO: check codeAlarm is valid
-        return AlarmMsg(match.group(2), match.group(1))
+        # TODO: parse alarm code into AlarmType once the mapping is defined
+        return AlarmMsg(int(args_str))
 
     def __str__(self):
-        return 'ALRM level:%d code_:%s' % (self.level, self.codeAlarm)
+        return 'ALRM %02d' % self.alarm_type
 
 class InitMsg(Msg):
     def __init__(self, text):
@@ -156,6 +150,13 @@ class PauseExpMsg(Msg):
     def __str__(self):
         return 'PEXP %03d' % self.duration_ms
 
+class SoftResetMsg(Msg):
+    def with_args(args_str):
+        return None if args_str.strip() else SoftResetMsg()
+
+    def __str__(self):
+        return 'SRST'
+
 def checksum8(frame):
     assert isinstance(frame, str)
     return sum(ord(c) for c in frame) % 256
@@ -188,6 +189,7 @@ def parse_msg(msg_str):
         'PINS': PauseInsMsg.with_args,
         'PEXP': PauseExpMsg.with_args,
         'INIT': InitMsg.with_args,
+        'SRST': SoftResetMsg.with_args,
     }
     if id_ not in ctors:
         print("unknown message id:", id_, file=sys.stderr)

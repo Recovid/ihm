@@ -7,6 +7,8 @@ import re
 from .communication import *
 from .data import Data, SETTINGS
 import serial
+from datetime import datetime
+from pathlib import Path
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -162,37 +164,43 @@ class SerialPort(DataBackend):
         self.running=True
         prevTimestamp = 0
         toAdd = 0
-        for line in self.serialPort: # replace with serial.readline() if it fails
-            if not self.running:
-                break
-            line = line.decode("ascii")
-            msg = parse_msg(line)
-            if isinstance(msg, DataMsg):
-                timestamp = msg.timestamp_ms
-                if prevTimestamp > timestamp:
-                    toAdd += 1000
-                self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
-                prevTimestamp = timestamp
-            elif isinstance(msg, RespMsg):
-                self.handler.update_inputs(**{
-                    self.IE: msg.ie_ratio,
-                    self.FR: msg.fr_pm,
-                    self.VTE: msg.vte_ml,
-                    self.PCRETE: msg.pcrete_cmH2O,
-                    self.VM: msg.vm_lpm,
-                    self.PPLAT: msg.pplat_cmH2O,
-                    self.PEP: msg.pep_cmH2O,
-                    #to be remove when the var will be linked with controller
-                    self.BAT: 40,
-                    self.BAT_SECT: True,
-                })
-            elif isinstance(msg, SetMsg):
-                self.handler.received_setting(msg.setting, int(msg.value))
-            elif isinstance(msg, AlarmMsg):
-                self.handler.received_alarm(msg.codeAlarm, msg.level)
-            elif isinstance(msg, InitMsg):
-                # do we need to reset some settings ?
-                pass
+        writeBuffer = b''
+        with open(str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S.log"), "wb") as logFile:
+            for line in self.serialPort: # replace with serial.readline() if it fails
+                if len(writeBuffer) > 65536:
+                    logFile.write(writeBuffer)
+                    writeBuffer = b''
+                writeBuffer += (line)
+                if not self.running:
+                    break
+                line = line.decode("ascii")
+                msg = parse_msg(line)
+                if isinstance(msg, DataMsg):
+                    timestamp = msg.timestamp_ms
+                    if prevTimestamp > timestamp:
+                        toAdd += 1000
+                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                    prevTimestamp = timestamp
+                elif isinstance(msg, RespMsg):
+                    self.handler.update_inputs(**{
+                        self.IE: msg.ie_ratio,
+                        self.FR: msg.fr_pm,
+                        self.VTE: msg.vte_ml,
+                        self.PCRETE: msg.pcrete_cmH2O,
+                        self.VM: msg.vm_lpm,
+                        self.PPLAT: msg.pplat_cmH2O,
+                        self.PEP: msg.pep_cmH2O,
+                        #to be remove when the var will be linked with controller
+                        self.BAT: 40,
+                        self.BAT_SECT: True,
+                    })
+                elif isinstance(msg, SetMsg):
+                    self.handler.received_setting(msg.setting, int(msg.value))
+                elif isinstance(msg, AlarmMsg):
+                    self.handler.received_alarm(msg.alarm_type)
+                elif isinstance(msg, InitMsg):
+                    # do we need to reset some settings ?
+                    pass
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
