@@ -61,6 +61,7 @@ class AlarmState(Enum):
 class AlarmLevel(Enum):
     HIGH_PRIORITY = 0
     MEDIUM_PRIORITY = 1
+    LOW_PRIORITY = 2
 
 class Alarm:
     def __init__(self, type, level):
