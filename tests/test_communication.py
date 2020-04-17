@@ -127,7 +127,8 @@ class TestSetMsg(unittest.TestCase):
 class TestAlarmMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):
-        msg = AlarmMsg(AlarmType.LOW_BATTERY)
+		exemplemessage = "PMAX PMIN BATT_C CPU_LOST IO_MUTE"
+        msg = AlarmMsg(exemplemessage)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
 
 class TestInitMsg(unittest.TestCase):
