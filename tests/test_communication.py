@@ -127,8 +127,24 @@ class TestSetMsg(unittest.TestCase):
 class TestAlarmMsg(unittest.TestCase):
 
     def test_parse_serialize_identity(self):
-		exemplemessage = "PMAX PMIN BATT_C CPU_LOST IO_MUTE"
-        msg = AlarmMsg(exemplemessage)
+        exemplemessage1 = "ALRM PMAX PMIN BATT_C CPU_LOST IO_MUTE"
+        msg = AlarmMsg(exemplemessage1)
+        self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+        emptymessage = "ALRM"
+        msg = AlarmMsg(emptymessage)
+        self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+        emptymessage2 = "ALRM   "
+        msg = AlarmMsg(emptymessage2)
+        self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+        wrongcode = "ALRM   WRONG_CODE_TEST"
+        msg = AlarmMsg(wrongcode)
+        self.assertEqual(msg, parse_msg(serialize_msg(msg)))
+
+        allcode = "ALRM PMAX PMIN VT_MIN VM_MIN PEP_MAX PEP_MIN BATT_A BATT_B BATT_C BATT_D CPU_LOST P_KO IO_MUTE"
+        msg = AlarmMsg(allcode)
         self.assertEqual(msg, parse_msg(serialize_msg(msg)))
 
 class TestInitMsg(unittest.TestCase):

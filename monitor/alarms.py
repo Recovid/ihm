@@ -21,7 +21,7 @@ class AlarmType(IntEnum):
     CAPT_PRESS = 13
     IO_MUTE = 14
 
-    def GetAssociateCode(self, alarmtype):
+    def GetAssociateCode(alarmtype):
         switcher = {
             AlarmType.NONE: "",
             AlarmType.PRESSION_MAX: "PMAX",

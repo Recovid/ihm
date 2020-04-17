@@ -101,86 +101,90 @@ class AlarmMsg(Msg):
     def __init__(self, args_str):
         self.alarms = [False] * 16
         type = AlarmType.PRESSION_MAX
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.PRESSION_MIN
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.VOLUME_COURANT
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.VOLUME_MINUTE
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.PEP_MAX
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.PEP_MIN
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.BATTERY_A
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.BATTERY_B
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.BATTERY_C
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.BATTERY_D
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.LOST_CPU
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.CAPT_PRESS
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
         type = AlarmType.IO_MUTE
-        if( args_str.count(type.GetAssociateCode(type)) != 0):
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
 
+    def __str__(self):
+        ret = 'ALRM ' + ' '.join(AlarmType.GetAssociateCode(i) for i,v in enumerate(self.alarms) if v)
+        print(ret)
+        return ret
 
     def with_args(args_str):
-       return AlarmMsg(args_str)
+        return AlarmMsg(args_str)
 
     def getAlarmStatus(self, type):
         return self.alarms[type]
