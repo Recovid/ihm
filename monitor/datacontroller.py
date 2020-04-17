@@ -162,7 +162,7 @@ class DataController:
         self.repost_stop_exp_posted = False
         self.repost_stop_ins_posted = False
         self.historyDataQueue = deque()
-        self.activeAlarms = [False] * 10
+        self.activeAlarms = [False] * 16
         self.lastControllerDataTime = 0
         self.controllerAlarm = None
 
@@ -271,14 +271,6 @@ class DataController:
                 else:
                     VTmin_cycles = 0
                     self.activeAlarms[AlarmType.VOLUME_COURANT] = False
-            if FRmin_cycles != 0:
-                if inp.inputs[DataBackend.FR] <= self.settings[DataBackend.FRMIN].value:
-                    FRmin_cycles -= 1
-                    if FRmin_cycles == 0:
-                        self.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE] = True
-                else:
-                    FRmin_cycles = 0
-                    self.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE] = False
             if VMmin_cycles != 0:
                 if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
                     VMmin_cycles -= 1

@@ -102,6 +102,17 @@ class AlarmMsg(Msg):
 
     def with_args(args_str):
         # TODO: parse alarm code into AlarmType once the mapping is defined
+        #will pass here: 
+        #43 Batterie A
+        #44 Batterie B
+        #45 Batterie C
+        #46 Batterie D
+        #47 Batterie E ? 
+        #48 Failsafe ? 
+        #49 Critical Fail
+        #50 P_KO
+        #51: IO_MUTE
+
         return AlarmMsg(int(args_str))
 
     def __str__(self):

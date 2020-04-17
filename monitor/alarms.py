@@ -9,26 +9,38 @@ class AlarmType(IntEnum):
     PRESSION_MAX = 1
     PRESSION_MIN = 2
     VOLUME_COURANT = 3
-    FREQUENCE_RESPIRATOIRE = 4
-    VOLUME_MINUTE = 5
+    VOLUME_MINUTE = 4
+#    FREQUENCE_RESPIRATOIRE = 4
     PEP_MAX = 6
     PEP_MIN = 7
-    LOW_BATTERY = 8
-    FAILSAFE = 9
+    BATTERY_A = 8
+    BATTERY_B = 9
+    BATTERY_C = 10
+    BATTERY_D = 11
+    FAILSAFE = 12
+    LOST_CPU = 13
+    CAPT_PRESS = 14
+    IO_MUTE = 15
+
 
     #41 char max
     def GetMessage(self, alarmtype):
         switcher = {
             AlarmType.NONE: "",
-            AlarmType.PRESSION_MAX: "DEPASSEMENT SEUIL D\'INSUFFLATION MAX",
-            AlarmType.PRESSION_MIN: "PASSAGE SOUS LE SEUIL D\'INSUFFLATION MIN",
-            AlarmType.VOLUME_COURANT: "VTe SOUS LE SEUIL",
-            AlarmType.FREQUENCE_RESPIRATOIRE: "FREQUENCE RESPIRATOIRE SOUS LE SEUIL",
-            AlarmType.VOLUME_MINUTE: "VOLUME MINUTE SOUS LE SEUIL",
-            AlarmType.PEP_MAX: "PEP SUPERIEUR A LA NORME",
-            AlarmType.PEP_MIN: "PEP INFERIEUR A LA NORME",
-            AlarmType.LOW_BATTERY: "BATTERIE DECHARGEE",
-            AlarmType.FAILSAFE: "FAILSAFE"
+            AlarmType.PRESSION_MAX: "Pression voies aérien. > seuil (Pmax)",
+            AlarmType.PRESSION_MIN: "Pression voies aérien. < seuil (Pmin)",
+            AlarmType.VOLUME_COURANT: "Volume Tidal expiré < seuil (VTmin)",
+            AlarmType.VOLUME_MINUTE: "Volume Minute expiré < seuil (VMmin)",
+            AlarmType.PEP_MAX: "PEP > consigne+2 cmH2O (PEPmax)",
+            AlarmType.PEP_MIN: "PEP < consigne-2 cmH20 (PEPmin)",
+            AlarmType.BATTERY_A: "Sur batterie depuis 1 à 15 min",
+            AlarmType.BATTERY_B: "Sur batterie depuis 15 à 20 min",
+            AlarmType.BATTERY_C: "Sur batterie depuis 20 à 25 min",
+            AlarmType.BATTERY_D: "Sur batterie depuis plus de 25 min",
+            AlarmType.FAILSAFE: "FAILSAFE",
+            AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
+            AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
+            AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
         }
         return switcher.get(alarmtype, "")
 
@@ -36,21 +48,28 @@ class AlarmType(IntEnum):
     #note Boris: See if we need this or if the info will be given by the controller
     def isHighLevel(self, alarmtype):
         switcher = {
-            AlarmType.NONE: False,
-            AlarmType.PRESSION_MAX: True,
-            AlarmType.PRESSION_MIN: True,
-            AlarmType.VOLUME_COURANT: False,
-            AlarmType.FREQUENCE_RESPIRATOIRE: False,
-            AlarmType.VOLUME_MINUTE: False,
-            AlarmType.PEP_MAX: True,
-            AlarmType.PEP_MIN: False,
-            AlarmType.LOW_BATTERY: True,
-            AlarmType.FAILSAFE: False                   #to confirm when specified
+            AlarmType.NONE: 2,
+            AlarmType.PRESSION_MAX: 0,
+            AlarmType.PRESSION_MIN: 0,
+            AlarmType.VOLUME_COURANT: 1,
+            AlarmType.VOLUME_MINUTE: 1,
+            AlarmType.PEP_MAX: 0,
+            AlarmType.PEP_MIN: 0,
+            AlarmType.BATTERY_A: 2,
+            AlarmType.BATTERY_B: 1,
+            AlarmType.BATTERY_C: 1,
+            AlarmType.BATTERY_D: 0,
+            AlarmType.FAILSAFE: 0,
+            AlarmType.LOST_CPU: 0,
+            AlarmType.CAPT_PRESS: 0,
+            AlarmType.IO_MUTE: 2,
         }
-        if(switcher.get(alarmtype, False)):
+        if(switcher.get(alarmtype, 0) == 0):
             return AlarmLevel.HIGH_PRIORITY
-        else:
+        elif(switcher.get(alarmtype, 0) == 1):
             return AlarmLevel.MEDIUM_PRIORITY
+        else:
+            return AlarmLevel.LOW_PRIORITY
         
 
 #number and means of State to clarify
@@ -84,67 +103,108 @@ class Alarm:
 
 class AlarmManager:
     def __init__(self):
-        self.listActivAlarms = []
-        self.highPriorityNb = 0
-        self.mediumPriorityNb = 0
-        #current alarms mean the Alarm Which is display on the screen : the first of the list
+        self.listHighAlarms = []
+        self.listMedAlarms = []
+        self.listLowAlarms = []
 
     def GetActivAlarmNb(self):
-        return len(self.listActivAlarms)
+        return len(self.listHighAlarms) + len(self.listMedAlarms) + len(self.listLowAlarms)
 
     def ActivateAlarm(self, Alarm):
-        #if there is already an alarm of this type in the list: do not add a new one
-        for i in range(len(self.listActivAlarms)):
-            if(self.listActivAlarms[i].GetType() == Alarm.GetType() ):
-                return
 
-        #To Have always new High Priority (HP) alarm in the top of the list we add HP new Alarm in head of the list and MediumPriority (MP)
-        #on the back of the list. Moreover with this method we have always the newest HP alarm display
-        if( Alarm.GetLevel() == AlarmLevel.MEDIUM_PRIORITY):
-            self.listActivAlarms.insert(self.highPriorityNb, Alarm)
-            self.mediumPriorityNb += 1
+        currentType = Alarm.GetType()
+        if( currentType == AlarmLevel.HIGH_PRIORITY):
 
-        elif( Alarm.GetLevel() == AlarmLevel.HIGH_PRIORITY):
-            self.listActivAlarms.insert(0, Alarm)
-            self.highPriorityNb += 1
+            for i in range(len(self.listHighAlarms)):
+                if(self.listHighAlarms[i].GetType() == currentType ):
+                    return
+            self.listHighAlarms.insert(0, Alarm)
+
+
+        elif( currentType == Alarm.Level.MEDIUM_PRIORITY):
+            for i in range(len(self.listMedAlarms)):
+                if(self.listMedAlarms[i].GetType() == currentType ):
+                    return
+            self.listMedAlarms.insert(0, Alarm)
+
+        else:
+            for i in range(len(self.listLowAlarms)):
+                if(self.listLowAlarms[i].GetType() == currentType ):
+                    return
+            self.listLowAlarms.insert(0, Alarm)
 
     def DeActivateCurrentAlarm(self):
         #delete the alarm of the list
-        if( self.GetActivAlarmNb() == 0):
-            return
-        if(self.GetCurrentMessageLevel() == AlarmLevel.HIGH_PRIORITY):
-            self.highPriorityNb -= 1
-        elif(self.GetCurrentMessageLevel() == AlarmLevel.MEDIUM_PRIORITY):
-            self.mediumPriorityNb -= 1
-        del self.listActivAlarms[0]
+        if( len(self.listHighAlarms) != 0):
+            del self.listHighAlarms[0]
+
+        elif( len(self.listMedAlarms) != 0):
+            del self.listMedAlarms[0]
+
+        elif( len(self.listLowAlarms) != 0):
+            del self.listLowAlarms[0]
 
     def DeActivateAlarm(self, alarmtype):
         #delete alarm of the given type
         indice = 0
-        for i in range(len(self.listActivAlarms)):
-            if(self.listActivAlarms[i].GetType() == alarmtype):
+        found = False
+        for i in range(len(self.listHighAlarms)):
+            if(self.listHighAlarms[i].GetType() == alarmtype):
                 indice = i
+                found = True
                 break
-        if( self.listActivAlarms[indice].GetLevel() == AlarmLevel.HIGH_PRIORITY):
-            self.highPriorityNb -= 1
-        elif(self.listActivAlarms[indice].GetLevel() == AlarmLevel.MEDIUM_PRIORITY):
-            self.mediumPriorityNb -= 1
-        
-        self.listActivAlarms.pop(indice)
+        if( found ):
+            self.listHighAlarms.pop(indice)
+            return
 
-    def ChangeCurrentAlarmState(self, newStatus ):
-        self.listActivAlarms[0].ChangeState(newStatus)
+        for i in range(len(self.listMedAlarms)):
+            if(self.listMedAlarms[i].GetType() == alarmtype):
+                indice = i
+                found = True
+                break
+        if( found ):
+            self.listMedAlarms.pop(indice)
+            return
+
+        for i in range(len(self.listLowAlarms)):
+            if(self.listLowAlarms[i].GetType() == alarmtype):
+                indice = i
+                found = True
+                break
+        if( found ):
+            self.listLowAlarms.pop(indice)
+            return
 
     def GetCurrentMessageState(self):
         #return current message Status
-        return self.listActivAlarms[0].GetState()
+        if( len(self.listHighAlarms) != 0):
+            return self.listHighAlarms[0].GetState()
+        elif( len(self.listMedAlarms) != 0):
+            return self.listMedAlarms[0].GetState()
+        elif( len(self.listLowAlarms) != 0):
+            return self.listLowAlarms[0].GetState()
+        
+        return ''
 
 
     def GetCurrentMessageToDisplay(self):
         #should return the associate message
-        type = self.listActivAlarms[0].GetType()
+        type = AlarmType.NONE
+        if( len(self.listHighAlarms) != 0):
+            type = self.listHighAlarms[0].GetType()
+        elif( len(self.listMedAlarms) != 0):
+            type = self.listMedAlarms[0].GetType()
+        elif( len(self.listLowAlarms) != 0):
+            type = self.listLowAlarms[0].GetType()
         return type.GetMessage(type)
 
     def GetCurrentMessageLevel(self):
         #return the level of the current alarm
-        return self.listActivAlarms[0].GetLevel()
+        if( len(self.listHighAlarms) != 0):
+            return self.listHighAlarms[0].GetLevel()
+        elif( len(self.listMedAlarms) != 0):
+            return self.listMedAlarms[0].GetLevel()
+        elif( len(self.listLowAlarms) != 0):
+            return self.listLowAlarms[0].GetLevel()
+        
+        return AlarmLevel.LOW_PRIORITY

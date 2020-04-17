@@ -74,7 +74,7 @@ class Window:
         self.timewindow=15
         self.freq=50
         self.timeresolution=1.0/self.freq
-        self.activeAlarms = [False] * 10
+        self.activeAlarms = [False] * 16
 
         self.app = tk.Tk()
 
@@ -310,7 +310,7 @@ class Window:
         if(self.data_controller.inputs.changed):
             self.m_ie.update(self.data_controller.inputs.inputs[DataBackend.IE])
             self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.activeAlarms[AlarmType.PEP_MAX] or self.data_controller.activeAlarms[AlarmType.PEP_MIN])
-            self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR], self.data_controller.activeAlarms[AlarmType.FREQUENCE_RESPIRATOIRE])
+            self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.activeAlarms[AlarmType.VOLUME_MINUTE])
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PRESSION_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
@@ -324,12 +324,17 @@ class Window:
         self.manageAlarmChange(AlarmType.PRESSION_MAX)
         self.manageAlarmChange(AlarmType.PRESSION_MIN)
         self.manageAlarmChange(AlarmType.VOLUME_COURANT)
-        self.manageAlarmChange(AlarmType.FREQUENCE_RESPIRATOIRE)
         self.manageAlarmChange(AlarmType.VOLUME_MINUTE)
         self.manageAlarmChange(AlarmType.PEP_MAX)
         self.manageAlarmChange(AlarmType.PEP_MIN)
-        self.manageAlarmChange(AlarmType.LOW_BATTERY)
+        self.manageAlarmChange(AlarmType.BATTERY_A)
+        self.manageAlarmChange(AlarmType.BATTERY_B)
+        self.manageAlarmChange(AlarmType.BATTERY_C)
+        self.manageAlarmChange(AlarmType.BATTERY_D)
         self.manageAlarmChange(AlarmType.FAILSAFE)
+        self.manageAlarmChange(AlarmType.LOST_CPU)
+        self.manageAlarmChange(AlarmType.CAPT_PRESS)
+        self.manageAlarmChange(AlarmType.IO_MUTE)
         self.updateAlarmDisplay()
         return (*lp,*lf,*lv)
 
