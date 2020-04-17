@@ -17,11 +17,28 @@ class AlarmType(IntEnum):
     BATTERY_B = 9
     BATTERY_C = 10
     BATTERY_D = 11
-    FAILSAFE = 12
-    LOST_CPU = 13
-    CAPT_PRESS = 14
-    IO_MUTE = 15
+    LOST_CPU = 12
+    CAPT_PRESS = 13
+    IO_MUTE = 14
 
+    def GetAssociateCode(self, alarmtype):
+        switcher = {
+            AlarmType.NONE: "",
+            AlarmType.PRESSION_MAX: "PMAX",
+            AlarmType.PRESSION_MIN: "PMIN",
+            AlarmType.VOLUME_COURANT: "VOL_CUR",
+            AlarmType.VOLUME_MINUTE: "VOL_MIN",
+            AlarmType.PEP_MAX: "PEPMAX",
+            AlarmType.PEP_MIN: "PEPMIN",
+            AlarmType.BATTERY_A: "BATT_A",
+            AlarmType.BATTERY_B: "BATT_B",
+            AlarmType.BATTERY_C: "BATT_C",
+            AlarmType.BATTERY_D: "BATT_D",
+            AlarmType.LOST_CPU: "CPU_LOST",
+            AlarmType.CAPT_PRESS: "P_KO",
+            AlarmType.IO_MUTE: "IO_MUTE",
+        }
+        return switcher.get(alarmtype, "")
 
     #41 char max
     def GetMessage(self, alarmtype):
@@ -37,7 +54,6 @@ class AlarmType(IntEnum):
             AlarmType.BATTERY_B: "Sur batterie depuis 15 à 20 min",
             AlarmType.BATTERY_C: "Sur batterie depuis 20 à 25 min",
             AlarmType.BATTERY_D: "Sur batterie depuis plus de 25 min",
-            AlarmType.FAILSAFE: "FAILSAFE",
             AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
             AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
             AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
@@ -59,7 +75,6 @@ class AlarmType(IntEnum):
             AlarmType.BATTERY_B: 1,
             AlarmType.BATTERY_C: 1,
             AlarmType.BATTERY_D: 0,
-            AlarmType.FAILSAFE: 0,
             AlarmType.LOST_CPU: 0,
             AlarmType.CAPT_PRESS: 0,
             AlarmType.IO_MUTE: 2,
@@ -121,7 +136,7 @@ class AlarmManager:
             self.listHighAlarms.insert(0, Alarm)
 
 
-        elif( currentType == Alarm.Level.MEDIUM_PRIORITY):
+        elif( currentType == AlarmLevel.MEDIUM_PRIORITY):
             for i in range(len(self.listMedAlarms)):
                 if(self.listMedAlarms[i].GetType() == currentType ):
                     return

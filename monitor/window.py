@@ -147,6 +147,9 @@ class Window:
         self.m_battery = BatteryDisplay(self.app, 0)
         self.m_battery.canvas.grid(row=5, column=7, sticky="senw", padx=2, pady=2)
 
+#        self.m_tplat = Mesure(self.app,0,'TPlat','sec')
+#        self.m_tplat.canvas.grid(row=5, column=6, sticky="senw", padx=2, pady=2)
+
         #BOUTONS EN BAS
         self.leftside = tk.Frame(self.app, height=200)
         self.leftside.grid(row=1, column=0,rowspan=7, columnspan = 6,sticky="news")
@@ -309,12 +312,12 @@ class Window:
         lv = self.scope_volume.update(index,self.delta_marker)
         if(self.data_controller.inputs.changed):
             self.m_ie.update(self.data_controller.inputs.inputs[DataBackend.IE])
-            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.activeAlarms[AlarmType.PEP_MAX] or self.data_controller.activeAlarms[AlarmType.PEP_MIN])
+            self.m_pep.update(self.data_controller.inputs.inputs[DataBackend.PEP], self.data_controller.calculateAlarms[AlarmType.PEP_MAX] or self.data_controller.calculateAlarms[AlarmType.PEP_MIN])
             self.m_fr.update(self.data_controller.inputs.inputs[DataBackend.FR])
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
-            self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.activeAlarms[AlarmType.VOLUME_MINUTE])
-            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.activeAlarms[AlarmType.PRESSION_MAX] or self.data_controller.activeAlarms[AlarmType.PRESSION_MIN])
-            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.activeAlarms[AlarmType.VOLUME_COURANT])
+            self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.calculateAlarms[AlarmType.VOLUME_MINUTE])
+            self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.calculateAlarms[AlarmType.PRESSION_MAX] or self.data_controller.calculateAlarms[AlarmType.PRESSION_MIN])
+            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT])
 
 
             self.m_battery.update('A', True)
@@ -331,7 +334,6 @@ class Window:
         self.manageAlarmChange(AlarmType.BATTERY_B)
         self.manageAlarmChange(AlarmType.BATTERY_C)
         self.manageAlarmChange(AlarmType.BATTERY_D)
-        self.manageAlarmChange(AlarmType.FAILSAFE)
         self.manageAlarmChange(AlarmType.LOST_CPU)
         self.manageAlarmChange(AlarmType.CAPT_PRESS)
         self.manageAlarmChange(AlarmType.IO_MUTE)

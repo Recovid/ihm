@@ -33,8 +33,6 @@ class DataInputs:
         self.inputs[DataBackend.PCRETE_ALARM]=False
         self.inputs[DataBackend.VTE]=0
         self.inputs[DataBackend.VTE_ALARM]=False
-        self.inputs[DataBackend.BAT]=0
-        self.inputs[DataBackend.BAT_SECT]=True
 
         self.changed=False
         
@@ -147,11 +145,11 @@ class DataController:
             self.parent.settings[key].synchronized = True
             self.parent.settings[key].sync()
 
-        def received_alarm(self, alarm_type):
-            if level == 0:
-                self.parent.controllerAlarm = None
-            else:
-                self.parent.controllerAlarm = alarm_type
+        def received_alarm(self, alarmTab):
+            if( isinstance(alarmTab, list)):
+                for i in alarmTab:
+                    self.parent.activeAlarms[i] = alarmTab[i]
+
  
     def __init__(self, backend, mainLoop):
         self.backend=backend
@@ -162,6 +160,9 @@ class DataController:
         self.repost_stop_exp_posted = False
         self.repost_stop_ins_posted = False
         self.historyDataQueue = deque()
+        #calculate alarms are just to display the background of Mesure in red
+        # 8 is to use the enum alarmtype
+        self.calculateAlarms = [False] * 8
         self.activeAlarms = [False] * 16
         self.lastControllerDataTime = 0
         self.controllerAlarm = None
@@ -249,10 +250,10 @@ class DataController:
                 if inp.inputs[DataBackend.MAXPAW] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
                     Pmax_cycles -= 1
                     if Pmax_cycles == 0:
-                        self.activeAlarms[AlarmType.PRESSION_MAX] = True
+                        self.calculateAlarms[AlarmType.PRESSION_MAX] = True
                 else:
                     Pmax_cycles = 0
-                    self.activeAlarms[AlarmType.PRESSION_MAX] = False
+                    self.calculateAlarms[AlarmType.PRESSION_MAX] = False
             if Pmin_startFailing != 0:
                 if inp.inputs[DataBackend.PCRETE] <= max(self.settings[DataBackend.PMIN].value, inp.inputs[DataBackend.PEP] + 2):
                     if Pmin_startFailing == -1:
@@ -262,39 +263,39 @@ class DataController:
                             self.activeAlarms[AlarmType.PRESSION_MIN] = True
                 else:
                     Pmin_startFailing = 0
-                    self.activeAlarms[AlarmType.PRESSION_MIN] = False
+                    self.calculateAlarms[AlarmType.PRESSION_MIN] = False
             if VTmin_cycles != 0:
                 if inp.inputs[DataBackend.VTE] <= self.settings[DataBackend.VTMIN].value:
                     VTmin_cycles -= 1
                     if VTmin_cycles == 0:
-                        self.activeAlarms[AlarmType.VOLUME_COURANT] = True
+                        self.calculateAlarms[AlarmType.VOLUME_COURANT] = True
                 else:
                     VTmin_cycles = 0
-                    self.activeAlarms[AlarmType.VOLUME_COURANT] = False
+                    self.calculateAlarms[AlarmType.VOLUME_COURANT] = False
             if VMmin_cycles != 0:
                 if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
                     VMmin_cycles -= 1
                     if VMmin_cycles == 0:
-                        self.activeAlarms[AlarmType.VOLUME_MINUTE] = True
+                        self.calculateAlarms[AlarmType.VOLUME_MINUTE] = True
                 else:
                     VMmin_cycles = 0
-                    self.activeAlarms[AlarmType.VOLUME_MINUTE] = False
+                    self.calculateAlarms[AlarmType.VOLUME_MINUTE] = False
             if PEPmax_cycles != 0:
                 if inp.inputs[DataBackend.PEP] >= self.settings[DataBackend.PEP].value + 2:
                     PEPmax_cycles -= 1
                     if PEPmax_cycles == 0:
-                        self.activeAlarms[AlarmType.PEP_MAX] = True
+                        self.calculateAlarms[AlarmType.PEP_MAX] = True
                 else:
                     PEPmax_cycles = 0
-                    self.activeAlarms[AlarmType.PEP_MAX] = False
+                    self.calculateAlarms[AlarmType.PEP_MAX] = False
             if PEPmin_cycles != 0:
                 if inp.inputs[DataBackend.PEP] <= self.settings[DataBackend.PEP].value - 2:
                     PEPmin_cycles -= 1
                     if PEPmin_cycles == 0:
-                        self.activeAlarms[AlarmType.PEP_MIN] = True
+                        self.calculateAlarms[AlarmType.PEP_MIN] = True
                 else:
                     PEPmin_cycles = 0
-                    self.activeAlarms[AlarmType.PEP_MIN] = False
+                    self.calculateAlarms[AlarmType.PEP_MIN] = False
 
     def GetAlarmState(self, alarmtype):
         return self.activeAlarms[alarmtype]

@@ -76,9 +76,6 @@ class DataBackendFromFile(DataBackend):
                         self.VM: msg.vm_lpm,
                         self.PPLAT: msg.pplat_cmH2O,
                         self.PEP: msg.pep_cmH2O,
-                        #to be remove when the var will be linked with controller
-                        self.BAT: 40,
-                        self.BAT_SECT: True,
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -122,9 +119,6 @@ class SerialPortMock(DataBackend):
                         self.VM: msg.vm_lpm,
                         self.PPLAT: msg.pplat_cmH2O,
                         self.PEP: msg.pep_cmH2O,
-                        #to be remove when the var will be linked with controller
-                        self.BAT: 40,
-                        self.BAT_SECT: True,
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
@@ -190,14 +184,11 @@ class SerialPort(DataBackend):
                         self.VM: msg.vm_lpm,
                         self.PPLAT: msg.pplat_cmH2O,
                         self.PEP: msg.pep_cmH2O,
-                        #to be remove when the var will be linked with controller
-                        self.BAT: 40,
-                        self.BAT_SECT: True,
                     })
                 elif isinstance(msg, SetMsg):
                     self.handler.received_setting(msg.setting, int(msg.value))
                 elif isinstance(msg, AlarmMsg):
-                    self.handler.received_alarm(msg.alarm_type)
+                    self.handler.received_alarm(msg.getAlarms())
                 elif isinstance(msg, InitMsg):
                     # do we need to reset some settings ?
                     pass
