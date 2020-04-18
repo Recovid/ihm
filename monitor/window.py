@@ -147,8 +147,8 @@ class Window:
         self.m_battery = BatteryDisplay(self.app, 0)
         self.m_battery.canvas.grid(row=5, column=7, sticky="senw", padx=2, pady=2)
 
-#        self.m_tplat = Mesure(self.app,0,'TPlat','sec')
-#        self.m_tplat.canvas.grid(row=5, column=6, sticky="senw", padx=2, pady=2)
+        self.m_tplat = Mesure(self.app,0,'TPlat','sec', is_tplat= True)
+        self.m_tplat.grid(row=5, column=6, sticky="senw", padx=2, pady=2)
 
         #BOUTONS EN BAS
         self.leftside = tk.Frame(self.app, height=200)
@@ -319,7 +319,16 @@ class Window:
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.calculateAlarms[AlarmType.PRESSION_MAX] or self.data_controller.calculateAlarms[AlarmType.PRESSION_MIN])
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT])
 
-
+            #(1/FR)/(1+IE) - VT/debit Max inspiratoire
+            IE = 1/self.data_controller.inputs.inputs[DataBackend.IE]
+            #VT mL >> convert in L
+            VT = self.data_controller.settings[Data.VT].value / 1000
+            #FR in cycle per min >> must be in cycle per sec
+            FR = self.data_controller.settings[Data.FR].value/60
+            #Debt max in L/min >> must be in L/sec to have TPlat in sec
+            Dmax = self.data_controller.settings[Data.FLOW].value/60
+            tplat = ((1/FR)/(1+IE)) - VT/Dmax
+            self.m_tplat.update(tplat, (tplat<0.01))
             self.m_battery.update('A', True)
             #'A', 'B', 'C' to adapt in function of the ihm battery alarm type
         #check if an alarm has been activated

@@ -53,11 +53,13 @@ class AlarmValue():
 
 
 class Mesure(tk.Frame):
-    def __init__(self,app,id,title, unit=None ,dmin=None, dmax=None, is_frac=False ):
+    def __init__(self,app,id,title, unit=None ,dmin=None, dmax=None, is_frac=False, is_tplat=False ):
         tk.Frame.__init__(self, app, bg='white')
         self.app=app
         self.value = tk.IntVar()
+        self.floatValue = tk.DoubleVar()
         self.value.set(0)
+        self.floatValue.set(0.0)
         self.state = 0
         self.id = id
         self.unit = unit
@@ -68,6 +70,7 @@ class Mesure(tk.Frame):
         self.dmin=dmin
         self.dmax=dmax
         self.is_frac=is_frac
+        self.is_tplat= is_tplat
         self.amin=None
         self.amax=None
 
@@ -108,6 +111,9 @@ class Mesure(tk.Frame):
         if(self.dmin is not None or self.dmax is not None):
             self.canvas.bind('<1>', self.click)
             self.config(borderwidth=2 , relief='raised')
+
+        if( self.is_tplat):
+            self.canvas.configure(background=config.mesure['background_tplat'])
         
 
     def click(self,event):
@@ -150,10 +156,14 @@ class Mesure(tk.Frame):
     def update(self,value, alarm=False):
         if(not self.sync):
             self.sync=True
-            self.canvas.itemconfigure(self.textid, fill=config.mesure['color_text_sync'])
-
+            self.canvas.itemconfigure(self.textid, fill=config.mesure['color_text_sync'], font=(config.mesure['font_family'], int(self.font_size_value*0.9)))
         self.value.set(value)
-        self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
+        
+        if( self.is_tplat):
+            self.floatValue.set(round(value,2))
+            self.canvas.itemconfigure('text'+str(self.id), text=self.floatValue.get())
+        else:
+            self.canvas.itemconfigure('text'+str(self.id), text=self.value.get())
         self.canvas.update_idletasks()
         if(self.alarm!=alarm):
             self.set_alarm(alarm)
@@ -164,9 +174,13 @@ class Mesure(tk.Frame):
             self.canvas.configure(background=config.mesure['background_alarmOn'])
             self.alarm_switch=False
             self.update_alarm()
+            if( self.is_tplat):
+                self.canvas.configure(background=config.mesure['background_tplat_alarmOn'])
         else:
             self.canvas.configure(background=config.mesure['background'])
             self.canvas.after_cancel(self.alarm_id)
+            if( self.is_tplat):
+                self.canvas.configure(background=config.mesure['background_tplat'])
         self.canvas.update_idletasks()
 
     def update_alarm(self):
