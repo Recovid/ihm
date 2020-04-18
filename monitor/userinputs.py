@@ -40,18 +40,31 @@ class LockScreen(tk.Canvas):
 
 class SettingsQuitDialog(tk.Toplevel):
 
-    def __init__(self, parent):
+    def __init__(self, parent, text = None):
 
         tk.Toplevel.__init__(self, parent)
         self.transient(parent)
 
         self.title("Quitter")
+        self.width = config.titleDialog['width']
+        self.height = config.titleDialog['height']
+
+        self.hasText = False
+        self.text = ''
+        if( text is not None):
+            self.hasText = True
+            self.text = text
 
         self.parent = parent
 
         self.result = None
 
         body = tk.Frame(self)
+
+        if( self.hasText):
+            labelText = tk.Label(body, font=("Helvetica", int(self.height*0.045)), text=self.text)
+            labelText.pack(padx=5, pady=5, fill=tk.BOTH, expand=1)
+
         btquit = Button2(body,"Quitter")
         btquit.config(bg=config.powerSettings['bg_quit'], fg=config.powerSettings['fg'], font=config.powerSettings['font'])
         btquit.pack(padx=5, pady=5,fill=tk.BOTH, expand=1)

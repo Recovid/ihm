@@ -178,6 +178,12 @@ class AlarmMsg(Msg):
         else: 
             self.alarms[type] = False
 
+        type = AlarmType.ON_OFF_PRESSED
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
+            self.alarms[type] = True
+        else: 
+            self.alarms[type] = False
+
     def __str__(self):
         ret = 'ALRM ' + ' '.join(AlarmType.GetAssociateCode(i) for i,v in enumerate(self.alarms) if v)
         print(ret)

@@ -20,6 +20,7 @@ class AlarmType(IntEnum):
     LOST_CPU = 12
     CAPT_PRESS = 13
     IO_MUTE = 14
+    ON_OFF_PRESSED = 15
 
     def GetAssociateCode(alarmtype):
         switcher = {
@@ -37,6 +38,7 @@ class AlarmType(IntEnum):
             AlarmType.LOST_CPU: "CPU_LOST",
             AlarmType.CAPT_PRESS: "P_KO",
             AlarmType.IO_MUTE: "IO_MUTE",
+            AlarmType.ON_OFF_PRESSED: "ON_OFF",
         }
         return switcher.get(alarmtype, "")
 
@@ -57,6 +59,7 @@ class AlarmType(IntEnum):
             AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
             AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
             AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
+            AlarmType.ON_OFF_PRESSED: "Bouton ON OFF Pressé",
         }
         return switcher.get(alarmtype, "")
 
@@ -78,6 +81,7 @@ class AlarmType(IntEnum):
             AlarmType.LOST_CPU: 0,
             AlarmType.CAPT_PRESS: 0,
             AlarmType.IO_MUTE: 2,
+            AlarmType.ON_OFF_PRESSED: 2,
         }
         if(switcher.get(alarmtype, 0) == 0):
             return AlarmLevel.HIGH_PRIORITY

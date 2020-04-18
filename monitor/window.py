@@ -345,6 +345,7 @@ class Window:
         self.manageAlarmChange(AlarmType.LOST_CPU)
         self.manageAlarmChange(AlarmType.CAPT_PRESS)
         self.manageAlarmChange(AlarmType.IO_MUTE)
+        self.manageButtonOnOffPressed()
         self.updateAlarmDisplay()
         return (*lp,*lf,*lv)
 
@@ -404,3 +405,8 @@ class Window:
 
     def event_btn_title(self,e):
         TitleDialog(self.app)
+
+    def manageButtonOnOffPressed(self):
+        type = AlarmType.ON_OFF_PRESSED
+        if( (self.data_controller.GetAlarmState(type) != self.activeAlarms[type]) and self.data_controller.GetAlarmState(type)):
+            SettingsQuitDialog(self.app, "Appuye sur le bouton On'/Off\n du controlleur")
