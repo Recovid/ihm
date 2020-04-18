@@ -50,10 +50,10 @@ class AlarmType(IntEnum):
             AlarmType.VOLUME_MINUTE: "Volume Minute expiré < seuil (VMmin)",
             AlarmType.PEP_MAX: "PEP > consigne+2 cmH2O (PEPmax)",
             AlarmType.PEP_MIN: "PEP < consigne-2 cmH20 (PEPmin)",
-            AlarmType.BATTERY_A: "Sur batterie depuis 1 à 15 min",
-            AlarmType.BATTERY_B: "Sur batterie depuis 15 à 20 min",
-            AlarmType.BATTERY_C: "Sur batterie depuis 20 à 25 min",
-            AlarmType.BATTERY_D: "Sur batterie depuis plus de 25 min",
+            AlarmType.BATTERY_A: "Sur batterie depuis 1 à 15 min",                              #message battery A
+            AlarmType.BATTERY_B: "Sur batterie depuis plus de 25 min",                          #message battery D
+            AlarmType.BATTERY_C: "Sur batterie depuis 15 à 20 min",                             #message battery B
+            AlarmType.BATTERY_D: "Sur batterie depuis 20 à 25 min",                             #message battery C
             AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
             AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
             AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
@@ -72,9 +72,9 @@ class AlarmType(IntEnum):
             AlarmType.PEP_MAX: 0,
             AlarmType.PEP_MIN: 0,
             AlarmType.BATTERY_A: 2,
-            AlarmType.BATTERY_B: 1,
+            AlarmType.BATTERY_B: 0,
             AlarmType.BATTERY_C: 1,
-            AlarmType.BATTERY_D: 0,
+            AlarmType.BATTERY_D: 1,
             AlarmType.LOST_CPU: 0,
             AlarmType.CAPT_PRESS: 0,
             AlarmType.IO_MUTE: 2,

@@ -329,8 +329,7 @@ class Window:
             Dmax = self.data_controller.settings[Data.FLOW].value/60
             tplat = ((1/FR)/(1+IE)) - VT/Dmax
             self.m_tplat.update(tplat, (tplat<0.01))
-            self.m_battery.update('A', True)
-            #'A', 'B', 'C' to adapt in function of the ihm battery alarm type
+
         #check if an alarm has been activated
 
         self.manageAlarmChange(AlarmType.PRESSION_MAX)
@@ -369,6 +368,18 @@ class Window:
                 #unknown case
                 self.bt_Alarm.set_content("monitor/Alarms_Icon/Icon_No_Alarm.png",bg='#4E69AB')
 
+        #update battery icon
+        #'A', 'B', 'C' to adapt in function of the ihm battery alarm type
+        if(self.activeAlarms[AlarmType.BATTERY_B]):
+            self.m_battery.update('D', False)
+        elif( self.activeAlarms[AlarmType.BATTERY_D]):
+            self.m_battery.update('C', False)
+        elif( self.activeAlarms[AlarmType.BATTERY_C]):
+            self.m_battery.update('B', False)
+        elif( self.activeAlarms[AlarmType.BATTERY_A]):
+            self.m_battery.update('A', False)
+        else:
+            self.m_battery.update('A', True)
 
     #note Boris: note sure if this function will be usefull
     #def updateAlarmText(self, newText):
