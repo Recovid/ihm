@@ -13,6 +13,7 @@ class Data:
     VTE="vte"
     VTE_ALARM="vte_alarm"
     VTMIN="vtmin"
+    VTMAX="vtmax"
     PPLAT="pplat"
     PCRETE="pcrete"
     PCRETE_ALARM="pcrete_alarm"
@@ -41,6 +42,7 @@ SETTINGS = {
     Data.PMIN: Setting(Data.PMIN,0,30,default=15), # TODO confirm default
     Data.PMAX: Setting(Data.PMAX,1,80,default=60), # TODO confirm default
     Data.VTMIN: Setting(Data.VTMIN,100,1000,default=300, step=50), # TODO confirm default
+    Data.VTMAX: Setting(Data.VTMAX,100,1000,default=1000, step=50), # TODO confirm default
     Data.VMMIN: Setting(Data.VMMIN,100,1000,default=100, step=50), # TODO confirm default
     Data.FRMIN: Setting(Data.FRMIN,12,35,default=12), # TODO confirm default
 }

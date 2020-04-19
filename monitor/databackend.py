@@ -9,6 +9,7 @@ from .data import Data, SETTINGS
 import serial
 from datetime import datetime
 from pathlib import Path
+import tkinter as tk
 
 class DataBackendHandler:
     def update_timedata(self,timestamp, pressure, flow, volume):
@@ -96,6 +97,8 @@ class SerialPortMock(DataBackend):
         self.outputPipe.flush()
 
     def run(self):
+        self.app = tk.Tk()
+        self.timer = self.app.after(100000)                 #just here to define timer
         self.running=True
         prevTimestamp = 0
         toAdd = 0
@@ -103,7 +106,11 @@ class SerialPortMock(DataBackend):
             for line in f:
                 if not self.running:
                     break
+
+                self.app.after_cancel(self.timer)
+                self.handler.alarmPerteCtrl(False)
                 msg = parse_msg(line)
+                self.timer = self.app.after(120, self.handler.alarmPerteCtrl(True))
                 if isinstance(msg, DataMsg):
                     timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:

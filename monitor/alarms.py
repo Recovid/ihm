@@ -8,7 +8,8 @@ class AlarmType(IntEnum):
     NONE = 0
     PRESSION_MAX = 1
     PRESSION_MIN = 2
-    VOLUME_COURANT = 3
+    VOLUME_COURANT_MIN = 3
+    VOLUME_COURANT_MAX = 5
     VOLUME_MINUTE = 4
 #    FREQUENCE_RESPIRATOIRE = 4
     PEP_MAX = 6
@@ -27,7 +28,8 @@ class AlarmType(IntEnum):
             AlarmType.NONE: "",
             AlarmType.PRESSION_MAX: "PMAX",
             AlarmType.PRESSION_MIN: "PMIN",
-            AlarmType.VOLUME_COURANT: "VT_MIN",
+            AlarmType.VOLUME_COURANT_MIN: "VT_MIN",
+            AlarmType.VOLUME_COURANT_MAX: "VT_MAX",
             AlarmType.VOLUME_MINUTE: "VM_MIN",
             AlarmType.PEP_MAX: "PEP_MAX",
             AlarmType.PEP_MIN: "PEP_MIN",
@@ -48,14 +50,15 @@ class AlarmType(IntEnum):
             AlarmType.NONE: "",
             AlarmType.PRESSION_MAX: "Pression voies aérien. > seuil (Pmax)",
             AlarmType.PRESSION_MIN: "Pression voies aérien. < seuil (Pmin)",
-            AlarmType.VOLUME_COURANT: "Volume Tidal expiré < seuil (VTmin)",
+            AlarmType.VOLUME_COURANT_MIN: "Volume Tidal expiré < seuil (VTmin)",
+            AlarmType.VOLUME_COURANT_MAX: "Volume Tidal expiré > seuil (VTmax)",
             AlarmType.VOLUME_MINUTE: "Volume Minute expiré < seuil (VMmin)",
             AlarmType.PEP_MAX: "PEP > consigne+2 cmH2O (PEPmax)",
             AlarmType.PEP_MIN: "PEP < consigne-2 cmH20 (PEPmin)",
             AlarmType.BATTERY_A: "Sur batterie depuis 1 à 15 min",                              #message battery A
-            AlarmType.BATTERY_B: "Sur batterie depuis plus de 25 min",                          #message battery D
-            AlarmType.BATTERY_C: "Sur batterie depuis 15 à 20 min",                             #message battery B
-            AlarmType.BATTERY_D: "Sur batterie depuis 20 à 25 min",                             #message battery C
+            AlarmType.BATTERY_B: "Rebrancher: Bat. Faible, Arret Imminent",                          #message battery D
+            AlarmType.BATTERY_C: "Plus que 15 min de Batterie restante",                             #message battery B
+            AlarmType.BATTERY_D: "Plus que 10 min de Batterie restante",                             #message battery C
             AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
             AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
             AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
@@ -70,7 +73,8 @@ class AlarmType(IntEnum):
             AlarmType.NONE: 2,
             AlarmType.PRESSION_MAX: 0,
             AlarmType.PRESSION_MIN: 0,
-            AlarmType.VOLUME_COURANT: 1,
+            AlarmType.VOLUME_COURANT_MIN: 1,
+            AlarmType.VOLUME_COURANT_MAX: 1,
             AlarmType.VOLUME_MINUTE: 1,
             AlarmType.PEP_MAX: 0,
             AlarmType.PEP_MIN: 0,

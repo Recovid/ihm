@@ -141,7 +141,7 @@ class Window:
         self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.settings[Data.PMIN], dmax=self.data_controller.settings[Data.PMAX])
         self.m_pcrete.grid(row=3,column=7, sticky="senw", padx=2, pady=2)
 
-        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN])
+        self.m_vte = Mesure(self.app,0,'VTe','mL', dmin=self.data_controller.settings[Data.VTMIN], dmax=self.data_controller.settings[Data.VTMAX])
         self.m_vte.grid(row=4,column=6, sticky="senw", padx=2, pady=2)
 
         self.m_battery = BatteryDisplay(self.app, 0)
@@ -317,7 +317,7 @@ class Window:
             self.m_pplat.update(self.data_controller.inputs.inputs[DataBackend.PPLAT])
             self.m_vm.update(self.data_controller.inputs.inputs[DataBackend.VM], self.data_controller.calculateAlarms[AlarmType.VOLUME_MINUTE])
             self.m_pcrete.update(self.data_controller.inputs.inputs[DataBackend.PCRETE], self.data_controller.calculateAlarms[AlarmType.PRESSION_MAX] or self.data_controller.calculateAlarms[AlarmType.PRESSION_MIN])
-            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT])
+            self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT_MIN] or self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT_MAX])
 
             #(1/FR)/(1+IE) - VT/debit Max inspiratoire
             IE = 1/self.data_controller.inputs.inputs[DataBackend.IE]
@@ -334,7 +334,8 @@ class Window:
 
         self.manageAlarmChange(AlarmType.PRESSION_MAX)
         self.manageAlarmChange(AlarmType.PRESSION_MIN)
-        self.manageAlarmChange(AlarmType.VOLUME_COURANT)
+        self.manageAlarmChange(AlarmType.VOLUME_COURANT_MAX)
+        self.manageAlarmChange(AlarmType.VOLUME_COURANT_MIN)
         self.manageAlarmChange(AlarmType.VOLUME_MINUTE)
         self.manageAlarmChange(AlarmType.PEP_MAX)
         self.manageAlarmChange(AlarmType.PEP_MIN)

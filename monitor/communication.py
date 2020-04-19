@@ -112,7 +112,13 @@ class AlarmMsg(Msg):
         else: 
             self.alarms[type] = False
 
-        type = AlarmType.VOLUME_COURANT
+        type = AlarmType.VOLUME_COURANT_MIN
+        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
+            self.alarms[type] = True
+        else: 
+            self.alarms[type] = False
+
+        type = AlarmType.VOLUME_COURANT_MAX
         if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
         else: 

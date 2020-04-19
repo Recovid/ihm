@@ -150,6 +150,9 @@ class DataController:
                 for i in alarmTab:
                     self.parent.activeAlarms[i] = alarmTab[i]
 
+        def alarmPerteCtrl(self, isActive):
+            self.parent.active.Alarms[AlarmType.LOST_CPU] = isActive
+
  
     def __init__(self, backend, mainLoop):
         self.backend=backend
@@ -241,6 +244,7 @@ class DataController:
         Pmax_cycles = 2
         Pmin_startFailing = -1
         VTmin_cycles = 3
+        VTmax_cycles = 3
         FRmin_cycles = 3
         VMmin_cycles = 3
         PEPmax_cycles = 3
@@ -268,10 +272,19 @@ class DataController:
                 if inp.inputs[DataBackend.VTE] <= self.settings[DataBackend.VTMIN].value:
                     VTmin_cycles -= 1
                     if VTmin_cycles == 0:
-                        self.calculateAlarms[AlarmType.VOLUME_COURANT] = True
+                        self.calculateAlarms[AlarmType.VOLUME_COURANT_MIN] = True
                 else:
                     VTmin_cycles = 0
-                    self.calculateAlarms[AlarmType.VOLUME_COURANT] = False
+                    self.calculateAlarms[AlarmType.VOLUME_COURANT_MIN] = False
+            if VTmax_cycles != 0:
+                if inp.inputs[DataBackend.VTE] >= self.settings[DataBackend.VTMAX].value:
+                    VTmax_cycles -= 1
+                    if VTmax_cycles == 0:
+                        self.calculateAlarms[AlarmType.VOLUME_COURANT_MAX] = True
+                else:
+                    VTmax_cycles = 0
+                    self.calculateAlarms[AlarmType.VOLUME_COURANT_MAX] = False
+
             if VMmin_cycles != 0:
                 if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
                     VMmin_cycles -= 1
