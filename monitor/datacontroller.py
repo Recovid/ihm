@@ -216,7 +216,7 @@ class DataController:
             self.repost_stop_ins = False
 
     def pause_bip(self):
-        self.backend.pause_bip(30000)
+        self.backend.pause_bip(120 * 1000)
 
     def change_setting(self, key, value):
         setting = self.settings[key]
