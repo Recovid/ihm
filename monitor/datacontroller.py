@@ -243,8 +243,8 @@ class DataController:
         VTmin_cycles = 3
         FRmin_cycles = 3
         VMmin_cycles = 3
-        PEPmax_cycles= 8
-        PEPmin_cycles = 8
+        PEPmax_cycles = 3
+        PEPmin_cycles = 3
         for inp in reversed(self.historyDataQueue):
             if Pmax_cycles != 0:
                 if inp.inputs[DataBackend.MAXPAW] >= max(self.settings[DataBackend.PMAX].value, inp.inputs[DataBackend.PEP] + 10):
