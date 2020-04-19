@@ -175,7 +175,7 @@ class SerialPort(DataBackend):
                 self.app.after_cancel(self.timer)
                 self.handler.alarmPerteCtrl(False)
                 msg = parse_msg(line)
-                self.timer = self.app.after(120, self.handler.alarmPerteCtrl(True))
+                self.timer = self.app.after(5000, self.handler.alarmPerteCtrl(True))
                 if isinstance(msg, DataMsg):
                     timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:
