@@ -135,7 +135,7 @@ class Window:
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')
         self.m_pplat.grid(row=2,column=7, sticky="senw", padx=2, pady=2)
 
-        self.m_vm = Mesure(self.app,0,'VM','L/min', dmin=self.data_controller.settings[Data.VMMIN])
+        self.m_vm = Mesure(self.app,0,'VMe','L/min', dmin=self.data_controller.settings[Data.VMMIN])
         self.m_vm.grid(row=3,column=6, sticky="senw", padx=2, pady=2)
         
         self.m_pcrete = Mesure(self.app,0,'Pcrete','cmH2O', dmin=self.data_controller.settings[Data.PMIN], dmax=self.data_controller.settings[Data.PMAX])

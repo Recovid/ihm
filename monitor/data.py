@@ -19,7 +19,7 @@ class Data:
     PCRETE_ALARM="pcrete_alarm"
     PMAX="pmax"
     PMIN="pmin"
-    VM="VM"
+    VM="VMe"
     VMMIN="vmmin"
 
 class Setting:
