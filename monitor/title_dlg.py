@@ -20,11 +20,6 @@ class TitleDialog(tk.Toplevel):
         self.height = config.titleDialog['height']
 
 
-        self.geometry("%dx%d" % (self.width,self.height))
-        
-        self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
-                                  parent.winfo_rooty()+50))
-
         #tk.Grid.rowconfigure
         tk.Grid.rowconfigure(self.body, 0, weight=1, minsize=self.height/10)
         tk.Grid.rowconfigure(self.body, 3, weight=1, minsize=self.height/8)
@@ -47,7 +42,8 @@ class TitleDialog(tk.Toplevel):
         self.display = tk.Label(self.body, font=("Helvetica", int(self.height*0.1)), textvariable=self.active_text)
         self.display.grid(row=1, column=0, columnspan=3, sticky="senw")
 
-        self.ref = Button2(self.body, "monitor/Alarms_Icon/Icon_Ref_Produit.png")
+        self.ref = Button2(self.body, "monitor/Alarms_Icon/Icon_Ref_Produit.png", scaleWidth = self.width / 3)
+        self.ref.set_background("white")
         self.ref.grid(row=2,column=0, sticky="senw")
         self.ref.bind('<ButtonPress-1>', self.onPushButtonRef, '+')
 
@@ -55,7 +51,8 @@ class TitleDialog(tk.Toplevel):
         self.util.grid(row=2, column=1, sticky="senw")
 
 
-        self.fab = Button2(self.body, "monitor/Alarms_Icon/Icon_Fab.png")
+        self.fab = Button2(self.body, "monitor/Alarms_Icon/Icon_Fab.png", scaleWidth = self.width / 3)
+        self.fab.set_background("white")
         self.fab.grid(row=2, column=2, sticky="senw")
         self.fab.bind('<ButtonPress-1>', self.onPushButtonFab, '+')
 
@@ -68,7 +65,14 @@ class TitleDialog(tk.Toplevel):
 
         self.wait_visibility()
         self.grab_set()
-        
+
+
+
+        self.geometry("%dx%d" % (self.width,self.height))
+
+        self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
+                                  parent.winfo_rooty()+50))
+
 
         self.wait_window(self)
 
