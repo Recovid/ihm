@@ -91,12 +91,12 @@ class Mesure(tk.Frame):
         coord_text = int(self.width*0.5), int(self.height*0.5)
         if(self.is_frac):
             coord_text = int(self.width*0.6), int(self.height*0.6)
-            coord_line = (int(self.width*0.2),int(self.height*0.8),int(self.width*0.8),int(self.height*0.2))
+            coord_line = (int(self.width*0.3),int(self.height*0.55),int(self.width*0.7),int(self.height*0.55))
             self.frac_line = self.canvas.create_line(coord_line, fill=config.mesure['color_text_sync'],width=3)
-            self.text_one_id = self.canvas.create_text(int(self.width*0.3), int(self.height*0.3), anchor='c', \
-                    font=(self.font_family, self.font_size_value),\
+            self.text_one_id = self.canvas.create_text(int(self.width*0.5), int(self.height*0.20), anchor='c', \
+                    font=(self.font_family, int(self.font_size_value*0.9)),\
                     fill=config.mesure['color_text_sync'], text="1")
-        self.textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.5), anchor='c', \
+        self.textid = self.canvas.create_text(int(self.width*0.55), int(self.height*0.55), anchor='c', \
                 font=(self.font_family, self.font_size_value),\
                 fill=config.mesure['color_text_unsync'], text=self.value.get(),tags='text'+str(self.id))
         self.unit_textid = self.canvas.create_text(int(self.width*0.5), int(self.height*0.1), anchor='n', \
@@ -134,12 +134,13 @@ class Mesure(tk.Frame):
         self.unit_font_size= int(self.height*config.mesure['font_ratio_unit'])
         coord_text = int(self.width*0.5), int(self.height*0.5)
         if(self.is_frac):
-            coord_text = int(self.width*0.6), int(self.height*0.6)
-            coord_line = (int(self.width*0.3),int(self.height*0.7),int(self.width*0.6),int(self.height*0.3))
+            coord_text = int(self.width*0.5), int(self.height*0.75)
+            coord_line = (int(self.width*0.3),int(self.height*0.55),int(self.width*0.7),int(self.height*0.55))
             self.canvas.coords(self.frac_line, coord_line)
-            coord_one_text = int(self.width*0.3), int(self.height*0.4)
-            self.canvas.itemconfig(self.text_one_id, font=(config.mesure['font_family'],self.font_size_value))
+            coord_one_text = int(self.width*0.5), int(self.height*0.35)
+            self.canvas.itemconfig(self.text_one_id, font=(config.mesure['font_family'], int(self.font_size_value*0.8)))
             self.canvas.coords(self.text_one_id,coord_one_text)
+            self.canvas.itemconfig(self.textid, font=(config.mesure['font_family'], int(self.font_size_value*0.8)))
         self.canvas.coords(self.textid,coord_text)
         self.canvas.itemconfig(self.textid, font=(config.mesure['font_family'],self.font_size_value))
         self.canvas.coords(self.title_textid,(int(self.width/2),int(self.height*0.05)))
@@ -159,7 +160,7 @@ class Mesure(tk.Frame):
             self.canvas.itemconfigure(self.textid, fill=config.mesure['color_text_sync'], font=(config.mesure['font_family'], int(self.font_size_value*0.9)))
         self.value.set(value)
         
-        if( self.is_tplat):
+        if( self.is_frac or self.is_tplat):
             self.floatValue.set(round(value,2))
             self.canvas.itemconfigure('text'+str(self.id), text=self.floatValue.get())
         else:
