@@ -75,6 +75,7 @@ class SettingManager():
         self.vmin = setting.vmin
         self.vmax = setting.vmax
         self.step = setting.step
+        self.bigStep = setting.bigStep
         self.default = setting.default
         self.key = setting.key
         self.value = setting.default
@@ -245,7 +246,6 @@ class DataController:
         Pmin_startFailing = -1
         VTmin_cycles = 3
         VTmax_cycles = 3
-        FRmin_cycles = 3
         VMmin_cycles = 3
         PEPmax_cycles = 3
         PEPmin_cycles = 3
@@ -284,7 +284,6 @@ class DataController:
                 else:
                     VTmax_cycles = 0
                     self.calculateAlarms[AlarmType.VOLUME_COURANT_MAX] = False
-
             if VMmin_cycles != 0:
                 if inp.inputs[DataBackend.VM] <= self.settings[DataBackend.VMMIN].value:
                     VMmin_cycles -= 1

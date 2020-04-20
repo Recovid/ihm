@@ -129,7 +129,7 @@ class Window:
         self.m_pep = Mesure(self.app,0,'PEP','cmH2O')
         self.m_pep.grid(row=1,column=7, sticky="senw", padx=2, pady=2)
 
-        self.m_fr = Mesure(self.app,0,'FR','/min', dmin=self.data_controller.settings[Data.FRMIN])
+        self.m_fr = Mesure(self.app,0,'FR','/min')
         self.m_fr.grid(row=2,column=6, sticky="senw", padx=2, pady=2)
 
         self.m_pplat = Mesure(self.app,0,'Pplat','cmH2O')

@@ -186,14 +186,14 @@ class OneValueDialog(Dialog):
     def click(self, event):
         inc=0
         if(event.widget==self.buttons[0]):
-            inc=-10
+            inc = -self.setting.bigStep
         elif(event.widget==self.buttons[1]):
-            inc=-1
+            inc = -self.setting.step
         elif(event.widget==self.buttons[2]):
-            inc=1
+            inc = self.setting.step
         elif(event.widget==self.buttons[3]):
-            inc=10
-        val = self.value+self.setting.step*inc
+            inc = self.setting.bigStep
+        val = self.value + inc
         if isinstance(val, float):
            val = round(val,1)
         if val >= self.setting.vmax:
@@ -296,10 +296,10 @@ class VTDialog(Dialog):
         tk.Label(genreFrame, text="Genre").pack(side=tk.TOP,fill=tk.BOTH,expand=1)
         self.w_button = ButtonPR(genreFrame,"Femme")
         self.w_button.pack(side=tk.TOP,fill=tk.BOTH,expand=1)
-        self.w_button.push()
         self.w_button.bind('<1>',self.wm_switch,'+')
         self.h_button = ButtonPR(genreFrame,"Homme")
         self.h_button.pack(side=tk.TOP,fill=tk.BOTH,expand=1)
+        self.h_button.push()
         self.h_button.bind('<1>',self.wm_switch,'+')
         genreFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
 
@@ -307,7 +307,7 @@ class VTDialog(Dialog):
 
         tk.Label(sizeFrame, text="Taille").pack(side=tk.TOP,fill=tk.BOTH,expand=1)
         self.size_var=tk.IntVar()
-        self.size_var.set(180)
+        self.size_var.set(152)
         self.size_label = tk.Label(sizeFrame, font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_size']), textvariable=self.size_var).pack(side=tk.TOP,fill=tk.BOTH,expand=1)
 
         fg = tk.Frame(sizeFrame)
@@ -344,14 +344,14 @@ class VTDialog(Dialog):
     def click(self, event):
         inc=0
         if(event.widget==self.buttons[0]):
-            inc=-10
+            inc = -self.setting.bigStep
         elif(event.widget==self.buttons[1]):
-            inc=-1
+            inc = -self.setting.step
         elif(event.widget==self.buttons[2]):
-            inc=1
+            inc = self.setting.step
         elif(event.widget==self.buttons[3]):
-            inc=10
-        val = self.value+self.setting.step*inc
+            inc = self.setting.bigStep
+        val = self.value + inc
         if isinstance(val, float):
            val = round(val,1)
         if val >= self.setting.vmax:
@@ -371,7 +371,12 @@ class VTDialog(Dialog):
         elif self.h_button.pushed:
             X = 50
         P = X + 0.91 * (int(self.size_var.get()) - 152.4)
-        self.value = round(P * 6)
+        val = round(P * 6 / self.setting.step) * self.setting.step
+        if val >= self.setting.vmax:
+            val = self.setting.vmax
+        elif val <= self.setting.vmin:
+            val = self.setting.vmin
+        self.value = val
         self.value_var.set(self.value)
 
     def wm_switch(self, event):

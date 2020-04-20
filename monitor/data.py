@@ -23,26 +23,26 @@ class Data:
     VMMIN="vmmin"
 
 class Setting:
-    def __init__(self, key, vmin=0, vmax=100, default=0, step=1):
+    def __init__(self, key, vmin=0, vmax=100, default=0, step=1, bigStep=1):
         self.vmin=vmin
         self.vmax=vmax
         self.step=step
+        self.bigStep=bigStep
         self.default=default
         self.key=key
 
 SETTINGS = {
     # resp. cycle
-    Data.VT: Setting(Data.VT,100,600,default=300, step=50),
-    Data.FR: Setting(Data.FR,12,35,default=18),
-    Data.PEP: Setting(Data.PEP,5,20,default=5),
-    Data.FLOW: Setting(Data.FLOW,20,60,default=60, step=2),
-    Data.IE: Setting(Data.IE, 2, 6, default=2, step=0.1),
+    Data.VT: Setting(Data.VT,100,600,default=300, step=10, bigStep=50),
+    Data.FR: Setting(Data.FR,12,35,default=18, bigStep=5),
+    Data.PEP: Setting(Data.PEP,5,20,default=5, bigStep=2),
+    Data.FLOW: Setting(Data.FLOW,20,60,default=60, step=2, bigStep=5),
+    Data.IE: Setting(Data.IE, 2, 6, default=2, step=0.1, bigStep=0.2),
 
     # alarms
-    Data.PMIN: Setting(Data.PMIN,0,30,default=15), # TODO confirm default
-    Data.PMAX: Setting(Data.PMAX,1,80,default=60), # TODO confirm default
-    Data.VTMIN: Setting(Data.VTMIN,100,1000,default=300, step=50), # TODO confirm default
-    Data.VTMAX: Setting(Data.VTMAX,100,1000,default=1000, step=50), # TODO confirm default
-    Data.VMMIN: Setting(Data.VMMIN,100,1000,default=100, step=50), # TODO confirm default
-    Data.FRMIN: Setting(Data.FRMIN,12,35,default=12), # TODO confirm default
+    Data.PMAX: Setting(Data.PMAX,12,90,default=60, step=1),
+    Data.PMIN: Setting(Data.PMIN,2,60,default=20, step=1),
+    Data.VTMIN: Setting(Data.VTMIN,100,1000,default=150, step=50),
+    Data.VTMAX: Setting(Data.VTMAX,100,1000,default=1000, step=50),
+    Data.VMMIN: Setting(Data.VMMIN,2,30,default=3, step=1),
 }
