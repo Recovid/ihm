@@ -158,7 +158,7 @@ class SerialPort(DataBackend):
 
     def run(self):
         self.running=True
-        self.timer = self.app.after(100000)                 #just here to define timer
+        self.timer = self.app.after(None)                 #just here to define timer
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
