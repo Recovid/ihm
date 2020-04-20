@@ -158,7 +158,7 @@ class SerialPort(DataBackend):
 
     def run(self):
         self.running=True
-        self.timer = self.app.after(None)                 #just here to define timer
+        self.timer = None
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
@@ -172,7 +172,8 @@ class SerialPort(DataBackend):
                     break
                 line = line.decode("ascii")
 
-                self.app.after_cancel(self.timer)
+                if self.timer is not None:
+                    self.app.after_cancel(self.timer)
                 self.handler.alarmPerteCtrl(False)
                 msg = parse_msg(line)
                 self.timer = self.app.after(5000, lambda: self.handler.alarmPerteCtrl(True))
