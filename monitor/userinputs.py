@@ -281,44 +281,98 @@ class VTDialog(Dialog):
 
     def __init__(self, master, setting):
         self.setting = setting
+        self.value = setting.value
         Dialog.__init__(self, master, 'VT')
 
     def body(self, master):
-        self.geometry("%dx%d" % (config.minMaxDialog['width'],config.minMaxDialog['height']))
+        self.geometry("%dx%d" % (config.minMaxDialog['width']
+            , 1.4 * config.minMaxDialog['height']))
 
         tk.Label(master, text=self.title()).pack(fill=tk.X)
-        
-        tk.Label(master, text="Genre").pack(fill=tk.X)
 
-        fg = tk.Frame(master)
-        self.w_button = ButtonPR(fg,"Femme")
-        self.w_button.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        hFrame = tk.Frame(master)
+
+        genreFrame = tk.Frame(hFrame)
+        tk.Label(genreFrame, text="Genre").pack(side=tk.TOP,fill=tk.BOTH,expand=1)
+        self.w_button = ButtonPR(genreFrame,"Femme")
+        self.w_button.pack(side=tk.TOP,fill=tk.BOTH,expand=1)
         self.w_button.push()
         self.w_button.bind('<1>',self.wm_switch,'+')
-        self.h_button = ButtonPR(fg,"Homme")
-        self.h_button.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        self.h_button = ButtonPR(genreFrame,"Homme")
+        self.h_button.pack(side=tk.TOP,fill=tk.BOTH,expand=1)
         self.h_button.bind('<1>',self.wm_switch,'+')
-        fg.pack(fill=tk.X,expand=1)
-        
-        tk.Label(master, text="Taille").pack(fill=tk.X)
-        
+        genreFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+
+        sizeFrame = tk.Frame(hFrame)
+
+        tk.Label(sizeFrame, text="Taille").pack(side=tk.TOP,fill=tk.BOTH,expand=1)
         self.size_var=tk.IntVar()
         self.size_var.set(180)
-        self.size_label = tk.Label(master, font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_size']), textvariable=self.size_var).pack(fill=tk.X)
-        
-        fsb = tk.Frame(master)
-        self.s_minus = Button2(fsb,"-")
+        self.size_label = tk.Label(sizeFrame, font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_size']), textvariable=self.size_var).pack(side=tk.TOP,fill=tk.BOTH,expand=1)
+
+        fg = tk.Frame(sizeFrame)
+        self.s_minus = Button2(fg,"-")
         self.s_minus.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
         self.s_minus.config(font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_button']))
         self.s_minus.bind('<1>',self.size_change,'+')
-        self.s_plus = Button2(fsb,"+")
+        self.s_plus = Button2(fg,"+")
         self.s_plus.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
         self.s_plus.config(font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_button']))
         self.s_plus.bind('<1>',self.size_change,'+')
+        fg.pack(side=tk.TOP,fill=tk.BOTH,expand=1)
 
-        fsb.pack(fill=tk.BOTH,expand=1)
+        sizeFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=1)
+        hFrame.pack(fill=tk.X)
+
+        tk.Label(master, text="Volume").pack(fill=tk.X)
+        self.value_var=tk.StringVar()
+        self.value_var.set(str(self.value))
+        self.label = tk.Label(master, font=(config.newPatientDialog['font_family'], config.newPatientDialog['font_size_size']), textvariable=self.value_var).pack(fill=tk.X)
+
+        self.signs = ['--','-','+','++']
+        self.buttons = []
+        self.frame_buttons=tk.Frame(master)
+        for i in range(4):
+            self.buttons.append(Button2(self.frame_buttons,content=self.signs[i]))
+            self.buttons[i].pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+            self.buttons[i].config(font=config.button['font_big'])
+            self.buttons[i].bind('<1>',self.click,'+')
+        self.frame_buttons.pack(fill=tk.BOTH, expand=1)
         
         return self # initial focus
+
+    def click(self, event):
+        inc=0
+        if(event.widget==self.buttons[0]):
+            inc=-10
+        elif(event.widget==self.buttons[1]):
+            inc=-1
+        elif(event.widget==self.buttons[2]):
+            inc=1
+        elif(event.widget==self.buttons[3]):
+            inc=10
+        val = self.value+self.setting.step*inc
+        if isinstance(val, float):
+           val = round(val,1)
+        if val >= self.setting.vmax:
+            val = self.setting.vmax
+        elif val <= self.setting.vmin:
+            val = self.setting.vmin
+        self.value = val
+        self.value_var.set(self.value)
+
+    def autoVolume(self):
+        # P = X + 0,91 (taille en cm - 152,4)
+        # X= 50 pour les hommes
+        # X=45,5 pour les femmes
+        # Vt = P * 6ml/kg
+        if self.w_button.pushed:
+            X = 45.5
+        elif self.h_button.pushed:
+            X = 50
+        P = X + 0.91 * (int(self.size_var.get()) - 152.4)
+        self.value = round(P * 6)
+        self.value_var.set(self.value)
 
     def wm_switch(self, event):
         if(event.widget==self.w_button):
@@ -333,6 +387,8 @@ class VTDialog(Dialog):
             else:
                 self.w_button.push()
                 self.w_button.focus_set()
+        self.autoVolume()
+
     def size_change(self,event):
         size =self.size_var.get()
         if(event.widget==self.s_minus):
@@ -344,16 +400,7 @@ class VTDialog(Dialog):
             if(size>222):
                 size=222
         self.size_var.set(size)
+        self.autoVolume()
 
     def apply(self):
-        # P = X + 0,91 (taille en cm - 152,4)
-        # X= 50 pour les hommes
-        # X=45,5 pour les femmes
-        # Vt = P * 6ml/kg
-        if self.w_button.pushed:
-            X = 45.5
-        elif self.h_button.pushed:
-            X = 50
-        P = X + 0.91 * (int(self.size_var.get()) - 152.4)
-        vt = round(P * 6)
-        self.setting.change(vt)
+        self.setting.change(self.value)
