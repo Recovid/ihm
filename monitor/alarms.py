@@ -61,7 +61,7 @@ class AlarmType(IntEnum):
             AlarmType.BATTERY_D: "Plus que 10 min de Batterie restante",                             #message battery C
             AlarmType.LOST_CPU: "Erreur critique, arrêt immédiat (failure)",
             AlarmType.CAPT_PRESS: "Pression mesurée incohérente",
-            AlarmType.IO_MUTE: "Re-Basculer interrupteur sur I",
+            AlarmType.IO_MUTE: "Re-Basculer interrupteur sur MARCHE",
             AlarmType.ON_OFF_PRESSED: "Bouton ON OFF Pressé",
         }
         return switcher.get(alarmtype, "")

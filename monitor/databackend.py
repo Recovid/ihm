@@ -148,16 +148,16 @@ class SerialPortMock(DataBackend):
         self.outputPipe.flush()
 
 class SerialPort(DataBackend):
-    def __init__(self, tty):
+    def __init__(self, tty, app):
         DataBackend.__init__(self)
         self.serialPort = serial.Serial(tty, 115200)
         msg = InitMsg("RecovidIHMV2")
         self.serialPort.write(serialize_msg(msg).encode("ascii"))
         self.serialPort.flush()
+        self.app = app
 
     def run(self):
         self.running=True
-        self.app = tk.Tk()
         self.timer = self.app.after(100000)                 #just here to define timer
         prevTimestamp = 0
         toAdd = 0
@@ -175,7 +175,7 @@ class SerialPort(DataBackend):
                 self.app.after_cancel(self.timer)
                 self.handler.alarmPerteCtrl(False)
                 msg = parse_msg(line)
-                self.timer = self.app.after(5000, self.handler.alarmPerteCtrl(True))
+                self.timer = self.app.after(5000, lambda: self.handler.alarmPerteCtrl(True))
                 if isinstance(msg, DataMsg):
                     timestamp = msg.timestamp_ms
                     if prevTimestamp > timestamp:

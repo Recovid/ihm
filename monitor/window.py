@@ -97,7 +97,7 @@ class Window:
         if mock:
             self.data_backend = SerialPortMock("in", "out")
         elif serial is not None:
-            self.data_backend = SerialPort(serial)
+            self.data_backend = SerialPort(serial, self.app)
         else:
             self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend, self.app)
