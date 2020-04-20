@@ -6,6 +6,14 @@ import tkinter as tk
 import tkinter.font as tkfont
 from PIL import Image, ImageTk
 import time
+from enum import IntEnum
+
+class BatteryState(IntEnum):
+    SECTOR=0
+    STATE_FULL=1
+    STATE_MID=2
+    STATE_LOW=3
+    STATE_EMPTY=4
 
 class BatteryDisplay():
     def __init__(self, app, id):
@@ -15,7 +23,7 @@ class BatteryDisplay():
         self.sector = False
         self.id = id
         self.color = 'green'
-
+        self.currentState = BatteryState.STATE_FULL
         self.width = int(app.winfo_screenwidth()*config.mesure['ratio_width'])
         self.height = self.width
 
@@ -53,41 +61,55 @@ class BatteryDisplay():
         self.disp_batt_loading()
 
     def disp_batt_loading(self):
+        if( self.currentState == BatteryState.SECTOR ):
+	        return
         if( self.current_window1 is not None):
             self.canvas.delete(self.current_window1)
         if( self.current_window2 is not None):
             self.canvas.delete(self.current_window2)
         self.current_window1 = self.canvas.create_window(int(self.height/2), int(self.width/4), window=self.sector_icon)
         self.current_window2 = self.canvas.create_window(int(self.height/2), int(self.width*3/4), window=self.loading_icon)
+        self.currentState= BatteryState.SECTOR
 
     def disp_batt_full(self):
+        if( self.currentState == BatteryState.STATE_FULL):
+            return
         if( self.current_window1 is not None):
             self.canvas.delete(self.current_window1)
         if( self.current_window2 is not None):
             self.canvas.delete(self.current_window2)
         self.canvas.create_window(int(self.height/2), int(self.width/2), window=self.full_icon)
+        self.currentState = BatteryState.STATE_FULL
 
     def disp_batt_mid(self):
+        if( self.currentState == BatteryState.STATE_MID):
+            return
         if( self.current_window1 is not None):
             self.canvas.delete(self.current_window1)
         if( self.current_window2 is not None):
             self.canvas.delete(self.current_window2)
         self.canvas.create_window(int(self.height/2), int(self.width/2), window=self.mid_icon)
+        self.currentState = BatteryState.STATE_MID
 
     def disp_batt_low(self):
+        if( self.currentState == BatteryState.STATE_LOW):
+            return
         if( self.current_window1 is not None):
             self.canvas.delete(self.current_window1)
         if( self.current_window2 is not None):
             self.canvas.delete(self.current_window2)
         self.canvas.create_window(int(self.height/2), int(self.width/2), window=self.low_icon)
+        self.currentState = BatteryState.STATE_LOW
 
     def disp_no_batt(self):
+        if( self.currentState == BatteryState.STATE_EMPTY):
+            return
         if( self.current_window1 is not None):
             self.canvas.delete(self.current_window1)
         if( self.current_window2 is not None):
             self.canvas.delete(self.current_window2)
         self.canvas.create_window(int(self.height/2), int(self.width/2), window=self.no_bat_icon)
-
+        self.currentState = BatteryState.STATE_EMPTY
 
     def update(self, value, sector):
         self.value.set(value)
