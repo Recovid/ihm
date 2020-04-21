@@ -148,8 +148,9 @@ class AlarmMsg(Msg):
         else: 
             self.alarms[type] = False
 
+        #special case for BATTERY_E which exist only in the Ctrl, in the IHM it's branch to the BATTERY_B alarm
         type = AlarmType.BATTERY_B
-        if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
+        if( (args_str.count(AlarmType.GetAssociateCode(type)) != 0) or (args_str.count("BATT_E") != 0)):
             self.alarms[type] = True
         else: 
             self.alarms[type] = False
@@ -166,6 +167,7 @@ class AlarmMsg(Msg):
         else: 
             self.alarms[type] = False
 
+        
         type = AlarmType.LOST_CPU
         if( args_str.count(AlarmType.GetAssociateCode(type)) != 0):
             self.alarms[type] = True
