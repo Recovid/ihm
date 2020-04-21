@@ -227,6 +227,8 @@ class Window:
         self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.volumeScale ,self.timeresolution, self.data_controller.inputs.volume)
         self.ax_pressure.get_xaxis().set_visible(False)
         self.ax_flow.get_xaxis().set_visible(False)
+        self.ax_flow.get_yaxis().set_ticks([config.curves["flow_min"], 0, config.curves["flow_max"]])
+    
 
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.leftside)
         self.canvas_graph.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
