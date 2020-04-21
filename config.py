@@ -14,6 +14,15 @@ mesure = dict(
 	height_ratio_unit = 0.19,
 )
 
+curves = dict(
+	pressure_min = 0,
+	pressure_max = 60,
+	flow_min = -40,
+	flow_max = 60,
+	volume_min = 0,
+	volume_max = 600,
+)
+
 alarmValue = dict(
 	width_ratio = 0.3,
 	height_ratio = 0.25,

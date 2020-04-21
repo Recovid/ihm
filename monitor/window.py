@@ -21,14 +21,14 @@ from .battery import BatteryDisplay
 
 
 class Scope:
-    def __init__(self, ax, title, ylabel, xlim, xstep, handler):
+    def __init__(self, ax, title, ylabel, xlim, ylim, xstep, handler):
 
         self.handler=handler
         self.xstep=xstep
         self.ax=ax
         self.ax.set_ylabel(title+'\n'+ylabel)
         self.ax.set_xlim(xlim)
-        self.ax.set_ylim(self.handler.get_range())
+        self.ax.set_ylim(ylim)
 
         self.tdata=np.arange(xlim[0], xlim[1], xstep)
 
@@ -217,9 +217,14 @@ class Window:
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(3,4))
         self.fig_graph.tight_layout()
         self.xlim=(0,self.timewindow)
-        self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.timeresolution, self.data_controller.inputs.pressure)
-        self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.timeresolution, self.data_controller.inputs.flow)
-        self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.timeresolution, self.data_controller.inputs.volume)
+        
+        self.pressureScale = (config.curves["pressure_min"], config.curves["pressure_max"])
+        self.flowScale = (config.curves["flow_min"], config.curves["flow_max"])
+        self.volumeScale = (config.curves["volume_min"], config.curves["volume_max"])
+
+        self.scope_pressure=Scope(self.ax_pressure,"Pression","cmH2O",self.xlim, self.pressureScale, self.timeresolution, self.data_controller.inputs.pressure)
+        self.scope_flow=Scope(self.ax_flow,"Débit","L/min",self.xlim, self.flowScale ,self.timeresolution, self.data_controller.inputs.flow)
+        self.scope_volume=Scope(self.ax_volume,"Volume","mL",self.xlim, self.volumeScale ,self.timeresolution, self.data_controller.inputs.volume)
         self.ax_pressure.get_xaxis().set_visible(False)
         self.ax_flow.get_xaxis().set_visible(False)
 
