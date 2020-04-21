@@ -7,9 +7,9 @@ pip install -r requirements.txt
 
 echo "setxkbmap fr" >> ~/.bashrc
 
-sudo echo "dtoverlay=disable-bt" >> /boot/config.txt
-sudo echo "enable_uart=1" >> /boot/config.txt
-sudo echo "lcd_rotate=2" >> /boot/config.txt
-sed -i -e 's/root=/console=serial0,115200 root=/' /boot/cmdline.txt
+echo "dtoverlay=disable-bt" | sudo tee -a /boot/config.txt
+echo "enable_uart=1" | sudo tee -a /boot/config.txt
+echo "lcd_rotate=2" | sudo tee -a /boot/config.txt
+sudo sed -i -e 's/root=/console=serial0,115200 root=/' /boot/cmdline.txt
 
 echo "Vous devez maintenant rebooter la raspberry"
