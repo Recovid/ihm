@@ -152,7 +152,7 @@ class DataController:
                     self.parent.activeAlarms[i] = alarmTab[i]
 
         def alarmPerteCtrl(self, isActive):
-            self.parent.active.Alarms[AlarmType.LOST_CPU] = isActive
+            self.parent.activeAlarms[AlarmType.LOST_CPU] = isActive
 
  
     def __init__(self, backend, mainLoop):
