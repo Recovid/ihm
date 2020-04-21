@@ -27,6 +27,7 @@ class Scope:
         self.xstep=xstep
         self.ax=ax
         self.ax.set_ylabel(title+'\n'+ylabel)
+        #set_ylabel('misaligned 1', bbox=box)
         self.ax.set_xlim(xlim)
         self.ax.set_ylim(ylim)
 
@@ -215,7 +216,7 @@ class Window:
         #Graph Init 
 
         self.fig_graph, (self.ax_pressure, self.ax_flow, self.ax_volume) = plt.subplots(3, 1,figsize=(3,4))
-        self.fig_graph.tight_layout()
+        self.fig_graph.tight_layout(h_pad = 0.005)
         self.xlim=(0,self.timewindow)
         
         self.pressureScale = (config.curves["pressure_min"], config.curves["pressure_max"])
@@ -228,6 +229,7 @@ class Window:
         self.ax_pressure.get_xaxis().set_visible(False)
         self.ax_flow.get_xaxis().set_visible(False)
         self.ax_flow.get_yaxis().set_ticks([config.curves["flow_min"], 0, config.curves["flow_max"]])
+        self.fig_graph.align_ylabels()
     
 
         self.canvas_graph = FigureCanvasTkAgg(self.fig_graph, self.leftside)
