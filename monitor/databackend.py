@@ -147,6 +147,38 @@ class SerialPortMock(DataBackend):
         self.outputPipe.write(serialize_msg(msg))
         self.outputPipe.flush()
 
+def readTSI(self, dev, bdrate, startTime, tsiFile):
+    samplesNb = 1000
+    periodMs = 10
+    ser = serial.Serial(dev, bdrate, timeout=10)
+    command = "SSR" + str(periodMs).zfill(4)
+    ser.write(command.encode())
+    ser.write(b'\r')
+    line = str(ser.readline())[2:][:-5]
+    if line != 'OK':
+        print("ERROR : TSI DIDN'T ACK COMMAND SET PERIOD TO", periodMs)
+        return
+    writeBuffer = b''
+    while self.running:
+        command = "DCFxx" + str(samplesNb).zfill(4)
+        ser.write(command.encode())
+        ser.write(b'\r')
+        line = str(ser.readline())[2:][:-5]
+        if line != 'OK':
+            print("ERROR : TSI DIDN'T ACK COMMAND START MEASUREMENT")
+            return
+        if len(writeBuffer) > 65536:
+            tsiFile.write(writeBuffer)
+            writeBuffer = b''
+        for counter in range(0, samplesNb):
+            if not self.running:
+                return
+            line = str(ser.readline())
+            if len(line) > 0:
+                Fslm_Tsi = float(line[2:][:-5])
+                millis = int(round(time.time() * 1000) - startTime)
+                writeBuffer += (str(millis) + "\t" + str(Fslm_Tsi) + "\n").encode("ascii")
+
 class SerialPort(DataBackend):
     def __init__(self, tty, app):
         DataBackend.__init__(self)
@@ -165,13 +197,19 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
+        startTime = int(round(time.time() * 1000))
         basename = str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S")
+        with open(basename + "_tsi.log", "wb") as tsiFile:
+            thread_tsi = Thread(target=readTSI, args=(self, '/dev/ttyUSB0', 38400, startTime, tsiFile))
+            thread_tsi.start()
+
         with open(basename + ".log", "wb") as logFile:
             for line in self.serialPort: # replace with serial.readline() if it fails
                 if len(writeBuffer) > 65536:
                     logFile.write(writeBuffer)
                     writeBuffer = b''
-                writeBuffer += (line)
+                millis = int(round(time.time() * 1000) - startTime)
+                writeBuffer += (str(millis) + "\t").encode("ascii") + (line)
                 if not self.running:
                     break
 
@@ -209,6 +247,7 @@ class SerialPort(DataBackend):
                     elif isinstance(msg, InitMsg):
                         # do we need to reset some settings ?
                         pass
+        thread_tsi.join()
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
