@@ -55,34 +55,37 @@ class DataBackendFromFile(DataBackend):
         self.running=True
         prevTimestamp = 0
         toAdd = 0
-        with open(self.inputFile, "r") as f:
-            for line in f:
-                if not self.running:
-                    break
-                msg = parse_msg(line)
-                if isinstance(msg, DataMsg):
-                    timestamp = msg.timestamp_ms
-                    if prevTimestamp > timestamp:
-                        toAdd += 1000
-                    else: # do not wait when the timestamp overflow
-                        time.sleep((timestamp - prevTimestamp)/1000)
-                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
-                    prevTimestamp = timestamp
-                elif isinstance(msg, RespMsg):
-                    self.handler.update_inputs(**{
-                        self.IE: msg.ie_ratio,
-                        self.FR: msg.fr_pm,
-                        self.VTE: msg.vte_ml,
-                        self.PCRETE: msg.pcrete_cmH2O,
-                        self.VM: msg.vm_lpm,
-                        self.PPLAT: msg.pplat_cmH2O,
-                        self.PEP: msg.pep_cmH2O,
-                    })
-                elif isinstance(msg, SetMsg):
-                    self.handler.received_setting(msg.setting, int(msg.value))
-                elif isinstance(msg, InitMsg):
-                    # do we need to reset some settings ?
-                    pass
+        try:
+            with open(self.inputFile, "r") as f:
+                for line in f:
+                    if not self.running:
+                        break
+                    msg = parse_msg(line)
+                    if isinstance(msg, DataMsg):
+                        timestamp = msg.timestamp_ms
+                        if prevTimestamp > timestamp:
+                            toAdd += 1000
+                        else: # do not wait when the timestamp overflow
+                            time.sleep((timestamp - prevTimestamp)/1000)
+                        self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                        prevTimestamp = timestamp
+                    elif isinstance(msg, RespMsg):
+                        self.handler.update_inputs(**{
+                            self.IE: msg.ie_ratio,
+                            self.FR: msg.fr_pm,
+                            self.VTE: msg.vte_ml,
+                            self.PCRETE: msg.pcrete_cmH2O,
+                            self.VM: msg.vm_lpm,
+                            self.PPLAT: msg.pplat_cmH2O,
+                            self.PEP: msg.pep_cmH2O,
+                        })
+                    elif isinstance(msg, SetMsg):
+                        self.handler.received_setting(msg.setting, int(msg.value))
+                    elif isinstance(msg, InitMsg):
+                        # do we need to reset some settings ?
+                        pass
+        except:
+            print("Error when opening file inDatabackend from file")
 
     def set_setting(self, key, value):
         pass # settings do nothing for a trace file
@@ -100,32 +103,35 @@ class SerialPortMock(DataBackend):
         self.running=True
         prevTimestamp = 0
         toAdd = 0
-        with open(self.inputPipe, "r") as f:
-            for line in f:
-                if not self.running:
-                    break
-                msg = parse_msg(line)
-                if isinstance(msg, DataMsg):
-                    timestamp = msg.timestamp_ms
-                    if prevTimestamp > timestamp:
-                        toAdd += 1000
-                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
-                    prevTimestamp = timestamp
-                elif isinstance(msg, RespMsg):
-                    self.handler.update_inputs(**{
-                        self.IE: msg.ie_ratio,
-                        self.FR: msg.fr_pm,
-                        self.VTE: msg.vte_ml,
-                        self.PCRETE: msg.pcrete_cmH2O,
-                        self.VM: msg.vm_lpm,
-                        self.PPLAT: msg.pplat_cmH2O,
-                        self.PEP: msg.pep_cmH2O,
-                    })
-                elif isinstance(msg, SetMsg):
-                    self.handler.received_setting(msg.setting, int(msg.value))
-                elif isinstance(msg, InitMsg):
-                    # do we need to reset some settings ?
-                    pass
+        try:
+            with open(self.inputPipe, "r") as f:
+                for line in f:
+                    if not self.running:
+                        break
+                    msg = parse_msg(line)
+                    if isinstance(msg, DataMsg):
+                        timestamp = msg.timestamp_ms
+                        if prevTimestamp > timestamp:
+                            toAdd += 1000
+                        self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                        prevTimestamp = timestamp
+                    elif isinstance(msg, RespMsg):
+                        self.handler.update_inputs(**{
+                            self.IE: msg.ie_ratio,
+                            self.FR: msg.fr_pm,
+                            self.VTE: msg.vte_ml,
+                            self.PCRETE: msg.pcrete_cmH2O,
+                            self.VM: msg.vm_lpm,
+                            self.PPLAT: msg.pplat_cmH2O,
+                            self.PEP: msg.pep_cmH2O,
+                        })
+                    elif isinstance(msg, SetMsg):
+                        self.handler.received_setting(msg.setting, int(msg.value))
+                    elif isinstance(msg, InitMsg):
+                        # do we need to reset some settings ?
+                        pass
+        except:
+            print("error when opening file in Serial Port Mock")
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
@@ -152,8 +158,11 @@ class SerialPort(DataBackend):
         DataBackend.__init__(self)
         self.serialPort = serial.Serial(tty, 115200)
         msg = InitMsg("RecovidIHMV2")
-        self.serialPort.write(serialize_msg(msg).encode("ascii"))
-        self.serialPort.flush()
+        try:
+            self.serialPort.write(serialize_msg(msg).encode("ascii"))
+            self.serialPort.flush()
+        except:
+            print("Exception when writting init message on the serial port")
         self.app = app
 
     def run(self):
@@ -162,64 +171,84 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
-        with open(str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S.log"), "wb") as logFile:
-            for line in self.serialPort: # replace with serial.readline() if it fails
-                if len(writeBuffer) > 65536:
-                    logFile.write(writeBuffer)
-                    writeBuffer = b''
-                writeBuffer += (line)
-                if not self.running:
-                    break
-                line = line.decode("ascii")
+        try:
+            with self.open(str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S.log"), "wb") as (logFile, err):
+                for line in self.serialPort: # replace with serial.readline() if it fails
+                    if len(writeBuffer) > 65536:
+                        logFile.write(writeBuffer)
+                        writeBuffer = b''
+                    writeBuffer += (line)
+                    if not self.running:
+                        break
 
-                if self.timer is not None:
-                    self.app.after_cancel(self.timer)
-                self.handler.alarmPerteCtrl(False)
-                msg = parse_msg(line)
-                self.timer = self.app.after(5000, lambda: self.handler.alarmPerteCtrl(True))
-                if isinstance(msg, DataMsg):
-                    timestamp = msg.timestamp_ms
-                    if prevTimestamp > timestamp:
-                        toAdd += 1000
-                    self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
-                    prevTimestamp = timestamp
-                elif isinstance(msg, RespMsg):
-                    self.handler.update_inputs(**{
-                        self.IE: msg.ie_ratio,
-                        self.FR: msg.fr_pm,
-                        self.VTE: msg.vte_ml,
-                        self.PCRETE: msg.pcrete_cmH2O,
-                        self.VM: msg.vm_lpm,
-                        self.PPLAT: msg.pplat_cmH2O,
-                        self.PEP: msg.pep_cmH2O,
-                    })
-                elif isinstance(msg, SetMsg):
-                    self.handler.received_setting(msg.setting, int(msg.value))
-                elif isinstance(msg, AlarmMsg):
-                    self.handler.received_alarm(msg.getAlarms())
-                elif isinstance(msg, InitMsg):
-                    # do we need to reset some settings ?
-                    pass
+                    try:
+                        line = line.decode("ascii")
+
+                    except:
+                        print("Exception when decoding the line in the serial port")
+                    else :
+                        if self.timer is not None:
+                            self.app.after_cancel(self.timer)
+                        self.handler.alarmPerteCtrl(False)
+                        msg = parse_msg(line)
+                        self.timer = self.app.after(5000, lambda: self.handler.alarmPerteCtrl(True))
+                        if isinstance(msg, DataMsg):
+                            timestamp = msg.timestamp_ms
+                            if prevTimestamp > timestamp:
+                                toAdd += 1000
+                            self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                            prevTimestamp = timestamp
+                        elif isinstance(msg, RespMsg):
+                            self.handler.update_inputs(**{
+                                self.IE: msg.ie_ratio,
+                                self.FR: msg.fr_pm,
+                                self.VTE: msg.vte_ml,
+                                self.PCRETE: msg.pcrete_cmH2O,
+                                self.VM: msg.vm_lpm,
+                                self.PPLAT: msg.pplat_cmH2O,
+                                self.PEP: msg.pep_cmH2O,
+                            })
+                        elif isinstance(msg, SetMsg):
+                            self.handler.received_setting(msg.setting, int(msg.value))
+                        elif isinstance(msg, AlarmMsg):
+                            self.handler.received_alarm(msg.getAlarms())
+                        elif isinstance(msg, InitMsg):
+                            # do we need to reset some settings ?
+                            pass
+        except:
+            print("error when opening serial port")
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
-        self.serialPort.write(serialize_msg(msg.encode("ascii")))
-        self.serialPort.flush()
+        try:
+            self.serialPort.write(serialize_msg(msg.encode("ascii")))
+            self.serialPort.flush()
+        except:
+            print("Exception when writting Pause exp message on the serial port")
 
     def stop_ins(self, time_ms):
         msg = PauseInsMsg(time_ms)
-        self.serialPort.write(serialize_msg(msg).encode("ascii"))
-        self.serialPort.flush()
+        try:
+            self.serialPort.write(serialize_msg(msg).encode("ascii"))
+            self.serialPort.flush()
+        except: 
+            print("Exception when writting Pause insp message on the serial port")
 
     def pause_bip(self, time_ms):
         msg = PauseBipMsg(time_ms)
-        self.serialPort.write(serialize_msg(msg).encode("ascii"))
-        self.serialPort.flush()
+        try:
+            self.serialPort.write(serialize_msg(msg).encode("ascii"))
+            self.serialPort.flush()
+        except:
+            print("Exception when writting Pause bip message on the serial port")
 
     def set_setting(self, key, value):
         msg = SetMsg(key, value)
-        self.serialPort.write(serialize_msg(msg).encode("ascii"))
-        self.serialPort.flush()
+        try:
+            self.serialPort.write(serialize_msg(msg).encode("ascii"))
+            self.serialPort.flush()
+        except:
+            print("Exception when writting Set setting message on the serial port")
 
 class DataBackendDummy(DataBackend):
    
