@@ -165,7 +165,8 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
-        with open(str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S.log"), "wb") as (logFile, err):
+        basename = str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S")
+        with open(basename + ".log", "wb") as logFile:
             for line in self.serialPort: # replace with serial.readline() if it fails
                 if len(writeBuffer) > 65536:
                     logFile.write(writeBuffer)
