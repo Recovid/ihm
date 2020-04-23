@@ -17,8 +17,8 @@ mesure = dict(
 curves = dict(
 	pressure_min = 0,
 	pressure_max = 60,
-	flow_min = -40,
-	flow_max = 60,
+	flow_min = -10,
+	flow_max = 90,
 	volume_min = 0,
 	volume_max = 600,
 )
