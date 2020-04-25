@@ -197,11 +197,13 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
-        startTime = int(round(time.time() * 1000))
         basename = str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S")
-        with open(basename + "_tsi.log", "wb") as tsiFile:
-            thread_tsi = Thread(target=readTSI, args=(self, '/dev/ttyUSB0', 38400, startTime, tsiFile))
-            thread_tsi.start()
+            startTime = int(round(time.time() * 1000))
+        tsiFound = Path('/dev/ttyUSB0').exists()
+        if tsiFile:
+            with open(basename + "_tsi.log", "wb") as tsiFile:
+                thread_tsi = Thread(target=readTSI, args=(self, '/dev/ttyUSB0', 38400, startTime, tsiFile))
+                thread_tsi.start()
 
         with open(basename + ".log", "wb") as logFile:
             for line in self.serialPort: # replace with serial.readline() if it fails
@@ -247,7 +249,8 @@ class SerialPort(DataBackend):
                     elif isinstance(msg, InitMsg):
                         # do we need to reset some settings ?
                         pass
-        thread_tsi.join()
+        if tsiFile:
+            thread_tsi.join()
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
