@@ -167,11 +167,14 @@ def readTSI(self, dev, bdrate, startTime, tsiFile):
         if line != 'OK':
             print("ERROR : TSI DIDN'T ACK COMMAND START MEASUREMENT")
             return
-        if len(writeBuffer) > 65536:
+        if len(writeBuffer) > 20000:
             tsiFile.write(writeBuffer)
             writeBuffer = b''
         for counter in range(0, samplesNb):
             if not self.running:
+                tsiFile.write(writeBuffer)
+                tsiFile.flush()
+                writeBuffer = b''
                 return
             line = str(ser.readline())
             if len(line) > 0:
@@ -207,12 +210,15 @@ class SerialPort(DataBackend):
 
         with open(basename + ".log", "wb") as logFile:
             for line in self.serialPort: # replace with serial.readline() if it fails
-                if len(writeBuffer) > 65536:
+                if len(writeBuffer) > 20000:
                     logFile.write(writeBuffer)
                     writeBuffer = b''
                 millis = int(round(time.time() * 1000) - startTime)
                 writeBuffer += (str(millis) + "\t").encode("ascii") + (line)
                 if not self.running:
+                    logFile.write(writeBuffer)
+                    logFile.flush()
+                    writeBuffer = b''
                     break
 
                 try:
