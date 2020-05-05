@@ -188,7 +188,7 @@ class SimpleWDG(Thread):
         Thread.__init__(self)
         self.trig_time=trig_time
         self.func = func
-        seff.running = False
+        self.running = False
         self.start_time = None
 
     def run(self):
