@@ -140,11 +140,12 @@ class DataController:
 
         def received_setting(self, key, value):
             self.parent.lastControllerDataTime = time.time()
-            if (key == DataBackend.IE):
-                value /= 10
-            self.parent.settings[key].value = value
-            self.parent.settings[key].synchronized = True
-            self.parent.settings[key].sync()
+            if key in self.parent.settings:
+                if (key == DataBackend.IE):
+                    value /= 10
+                self.parent.settings[key].value = value
+                self.parent.settings[key].synchronized = True
+                self.parent.settings[key].sync()
 
         def received_alarm(self, alarmTab):
             if( isinstance(alarmTab, list)):
