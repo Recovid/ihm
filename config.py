@@ -17,10 +17,10 @@ mesure = dict(
 curves = dict(
 	pressure_min = 0,
 	pressure_max = 60,
-	flow_min = -10,
-	flow_max = 90,
+	flow_min = -80,
+	flow_max = 70,
 	volume_min = 0,
-	volume_max = 600,
+	volume_max = 650,
 )
 
 alarmValue = dict(

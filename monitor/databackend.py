@@ -288,7 +288,7 @@ class SerialPort(DataBackend):
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
         try:
-            self.serialPort.write(serialize_msg(msg.encode("ascii")))
+            self.serialPort.write(serialize_msg(msg).encode("ascii"))
             self.serialPort.flush()
         except:
             print("Exception when writting Pause exp message on the serial port")
