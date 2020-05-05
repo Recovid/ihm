@@ -184,22 +184,27 @@ def readTSI(self, dev, bdrate, startTime, tsiFile):
                 writeBuffer += (str(millis) + "\t" + str(Fslm_Tsi) + "\n").encode("ascii")
 
 class SimpleWDG(Thread):
-    def __init__(self, trigtime, func):
+    def __init__(self, trig_time, func):
         Thread.__init__(self)
-        self.trigtime=trigtime
+        self.trig_time=trig_time
         self.func = func
         seff.running = False
-        self.start_time=None
+        self.start_time = None
 
     def run(self):
-        self.running =True
+        self.running = True
         while self.running:
             if self.start_time is not None:
-                if time.time()-self.start_time > self.trigtime:
+                if time.time()-self.start_time > self.trig_time:
                     self.func()
                     self.start_time=None
-        time.sleep(self.trigtime/10)
+            time.sleep(self.trig_time/10.0)
 
+    def stop(self):
+        self.running = False
+
+    def reset(self):
+        self.start_time = time.time()
 
 class SerialPort(DataBackend):
     def __init__(self, tty, app):
@@ -215,7 +220,8 @@ class SerialPort(DataBackend):
 
     def run(self):
         self.running=True
-        self.timer = None
+        self.wdg = SimpleWDG(5,lambda: self.handler.alarmPerteCtrl(True))
+        self.wdg.start()
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
@@ -227,6 +233,7 @@ class SerialPort(DataBackend):
            thread_tsi = Thread(target=readTSI, args=(self, '/dev/ttyUSB0', 38400, startTime, tsiFile))
            thread_tsi.start()
 
+
         with open(basename + ".log", "wb") as logFile:
             for line in self.serialPort: # replace with serial.readline() if it fails
                 if len(writeBuffer) > 20000:
@@ -234,9 +241,7 @@ class SerialPort(DataBackend):
                     writeBuffer = b''
                 millis = int(round(time.time() * 1000) - startTime)
                 writeBuffer += (str(millis) + "\t").encode("ascii") + (line)
-                print(self.running)
                 if not self.running:
-                    print("fin serial")
                     logFile.write(writeBuffer)
                     logFile.flush()
                     writeBuffer = b''
@@ -244,18 +249,13 @@ class SerialPort(DataBackend):
 
                 try:
                     line = line.decode("ascii")
-                    print(line)
 
                 except:
                     print("Exception when decoding the line in the serial port")
                 else :
-                    if self.timer is not None:
-                        self.app.after_cancel(self.timer)
                     self.handler.alarmPerteCtrl(False)
                     msg = parse_msg(line)
-                    print("B after")
-                    self.timer = self.app.after(5000, lambda: self.handler.alarmPerteCtrl(True))
-                    print("A after")
+                    self.wdg.reset()
                     if isinstance(msg, DataMsg):
                         timestamp = msg.timestamp_ms
                         if prevTimestamp > timestamp:
@@ -279,9 +279,11 @@ class SerialPort(DataBackend):
                     elif isinstance(msg, InitMsg):
                         # do we need to reset some settings ?
                         pass
+        self.wdg.stop()
+        self.wdg.join()
         if tsiFound:
             thread_tsi.join()
-        print("fin serial TSI")
+        print("fin thread serial")
 
     def stop_exp(self, time_ms):
         msg = PauseExpMsg(time_ms)
