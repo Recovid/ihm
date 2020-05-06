@@ -209,7 +209,7 @@ class SimpleWDG(Thread):
 class SerialPort(DataBackend):
     def __init__(self, tty, app):
         DataBackend.__init__(self)
-        self.serialPort = serial.Serial(tty, 115200)
+        self.serialPort = serial.Serial(tty, 115200, timeout=1)
         msg = InitMsg("RecovidIHMV2")
         try:
             self.serialPort.write(serialize_msg(msg).encode("ascii"))
@@ -235,50 +235,48 @@ class SerialPort(DataBackend):
 
 
         with open(basename + ".log", "wb") as logFile:
-            for line in self.serialPort: # replace with serial.readline() if it fails
-                if len(writeBuffer) > 20000:
-                    logFile.write(writeBuffer)
-                    writeBuffer = b''
-                millis = int(round(time.time() * 1000) - startTime)
-                writeBuffer += (str(millis) + "\t").encode("ascii") + (line)
-                if not self.running:
-                    logFile.write(writeBuffer)
-                    logFile.flush()
-                    writeBuffer = b''
-                    break
-
-                try:
-                    line = line.decode("ascii")
-
-                except:
-                    print("Exception when decoding the line in the serial port")
-                else :
-                    self.handler.alarmPerteCtrl(False)
-                    msg = parse_msg(line)
-                    self.wdg.reset()
-                    if isinstance(msg, DataMsg):
-                        timestamp = msg.timestamp_ms
-                        if prevTimestamp > timestamp:
-                            toAdd += 1000
-                        self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
-                        prevTimestamp = timestamp
-                    elif isinstance(msg, RespMsg):
-                        self.handler.update_inputs(**{
-                            self.IE: msg.ie_ratio,
-                            self.FR: msg.fr_pm,
-                            self.VTE: msg.vte_ml,
-                            self.PCRETE: msg.pcrete_cmH2O,
-                            self.VM: msg.vm_lpm,
-                            self.PPLAT: msg.pplat_cmH2O,
-                            self.PEP: msg.pep_cmH2O,
-                        })
-                    elif isinstance(msg, SetMsg):
-                        self.handler.received_setting(msg.setting, int(msg.value))
-                    elif isinstance(msg, AlarmMsg):
-                        self.handler.received_alarm(msg.getAlarms())
-                    elif isinstance(msg, InitMsg):
-                        # do we need to reset some settings ?
-                        pass
+            while self.running:
+                line = self.serialPort.readline()
+                if len(line)>0 :
+                    if len(writeBuffer) > 20000:
+                        logFile.write(writeBuffer)
+                        writeBuffer = b''
+                    millis = int(round(time.time() * 1000) - startTime)
+                    writeBuffer += (str(millis) + "\t").encode("ascii") + (line)
+                    try:
+                        line = line.decode("ascii")
+                    except:
+                        print("Exception when decoding the line in the serial port")
+                    else :
+                        self.handler.alarmPerteCtrl(False)
+                        msg = parse_msg(line)
+                        self.wdg.reset()
+                        if isinstance(msg, DataMsg):
+                            timestamp = msg.timestamp_ms
+                            if prevTimestamp > timestamp:
+                                toAdd += 1000
+                            self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                            prevTimestamp = timestamp
+                        elif isinstance(msg, RespMsg):
+                            self.handler.update_inputs(**{
+                                self.IE: msg.ie_ratio,
+                                self.FR: msg.fr_pm,
+                                self.VTE: msg.vte_ml,
+                                self.PCRETE: msg.pcrete_cmH2O,
+                                self.VM: msg.vm_lpm,
+                                self.PPLAT: msg.pplat_cmH2O,
+                                self.PEP: msg.pep_cmH2O,
+                            })
+                        elif isinstance(msg, SetMsg):
+                            self.handler.received_setting(msg.setting, int(msg.value))
+                        elif isinstance(msg, AlarmMsg):
+                            self.handler.received_alarm(msg.getAlarms())
+                        elif isinstance(msg, InitMsg):
+                            # do we need to reset some settings ?
+                            pass
+            logFile.write(writeBuffer)
+            logFile.flush()
+            writeBuffer = b''
         self.wdg.stop()
         self.wdg.join()
         if tsiFound:
