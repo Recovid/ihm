@@ -257,6 +257,16 @@ class SerialPort(DataBackend):
                                 toAdd += 1000
                             self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
                             prevTimestamp = timestamp
+                        elif isinstance(msg, DataXMsg):
+                            timestamp = msg.timestamp_ms
+                            if prevTimestamp > timestamp:
+                                toAdd += 1000
+                            self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
+                            prevTimestamp = timestamp
+                            self.handler.update_inputs(**{
+                                self.PPLAT: msg.pplat_cmH2O,
+                                self.PEP: msg.pep_cmH2O,
+                            })
                         elif isinstance(msg, RespMsg):
                             self.handler.update_inputs(**{
                                 self.IE: msg.ie_ratio,
