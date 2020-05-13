@@ -229,9 +229,10 @@ class SerialPort(DataBackend):
         except:
             print("Exception when writting init message on the serial port")
         self.app = app
-        self.prefix=prefix
-        if prefix != "":
+        if prefix:
             self.prefix = prefix+"_"
+        else:
+            self.prefix = ""
 
     def run(self):
         self.running=True
