@@ -329,7 +329,10 @@ class Window:
             self.m_vte.update(self.data_controller.inputs.inputs[DataBackend.VTE], self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT_MIN] or self.data_controller.calculateAlarms[AlarmType.VOLUME_COURANT_MAX])
 
             #(1/FR)/(1+IE) - VT/debit Max inspiratoire
-            IE = 1/self.data_controller.inputs.inputs[DataBackend.IE]
+            if  self.data_controller.inputs.inputs[DataBackend.IE] != 0:
+                IE = 1/self.data_controller.inputs.inputs[DataBackend.IE]
+            else:
+                IE = 0
             #VT mL >> convert in L
             VT = self.data_controller.settings[Data.VT].value / 1000
             #FR in cycle per min >> must be in cycle per sec
