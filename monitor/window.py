@@ -71,7 +71,7 @@ class Scope:
 
 class Window:
     
-    def __init__(self, fullscreen = False, mock = False, serial = None):
+    def __init__(self, fullscreen = False, mock = False, serial = None, prefix=""):
         self.timewindow=15
         self.freq=50
         self.timeresolution=1.0/self.freq
@@ -98,7 +98,7 @@ class Window:
         if mock:
             self.data_backend = SerialPortMock("in", "out")
         elif serial is not None:
-            self.data_backend = SerialPort(serial, self.app)
+            self.data_backend = SerialPort(serial, self.app, prefix)
         else:
             self.data_backend = DataBackendFromFile("tests/nominal_cycle.txt")
         self.data_controller = DataController(self.data_backend, self.app)

@@ -219,7 +219,7 @@ class SimpleWDG(Thread):
         self.start_time = time.time()
 
 class SerialPort(DataBackend):
-    def __init__(self, tty, app):
+    def __init__(self, tty, app, prefix):
         DataBackend.__init__(self)
         self.serialPort = serial.Serial(tty, 115200, timeout=1)
         msg = InitMsg("RecovidIHMV2")
@@ -229,6 +229,9 @@ class SerialPort(DataBackend):
         except:
             print("Exception when writting init message on the serial port")
         self.app = app
+        self.prefix=prefix
+        if prefix != "":
+            self.prefix = "_"+prefix
 
     def run(self):
         self.running=True
@@ -237,7 +240,7 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
-        basename = str(Path.home()) + datetime.now().strftime("/%Y%m%d_%H%M%S")
+        basename = str(Path.home()) + self.prefix + datetime.now().strftime("/%Y%m%d_%H%M%S")
         startTime = int(round(time.time() * 1000))
         tsiFound = Path('/dev/ttyUSB0').exists()
         if tsiFound:
