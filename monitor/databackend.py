@@ -166,6 +166,7 @@ def readTSI(self, dev, bdrate, startTime, tsiFile):
     ser.write(command.encode())
     ser.write(b'\r')
     line = str(ser.readline())[2:][:-5]
+    startread = True
     if line != 'OK':
         print("ERROR : TSI DIDN'T ACK COMMAND SET PERIOD TO", periodMs)
         return
@@ -192,7 +193,7 @@ def readTSI(self, dev, bdrate, startTime, tsiFile):
             if len(line) > 0:
                 Fslm_Tsi = float(line[2:][:-5])
                 millis = int(round(time.time() * 1000) - startTime)
-                writeBuffer += (str(millis) + "\t" + str(Fslm_Tsi) + "\n").encode("ascii")
+                writeBuffer += (str(millis) + "\t" + str(Fslm_Tsi) + "\t" + str(1 if counter == 0 else 0)  + "\n").encode("ascii")
 
 class SimpleWDG(Thread):
     def __init__(self, trig_time, func):

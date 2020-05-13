@@ -33,7 +33,7 @@ def main(argv):
                         if start_cycle:
                             start_cycle_bit = 1
                             start_cycle=False
-                        print(timestamp, msg.paw_mbar, msg.debit_lpm, msg.volume_ml, start_cycle_bit, file=csvfile, sep="\t")
+                        print(timestamp, msg.timestamp_ms, msg.paw_mbar, msg.debit_lpm, msg.volume_ml, start_cycle_bit, file=csvfile, sep="\t")
                     elif isinstance(msg, RespMsg):
                         start_cycle=True
             csvfile.close()
