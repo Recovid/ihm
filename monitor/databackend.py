@@ -231,7 +231,7 @@ class SerialPort(DataBackend):
         self.app = app
         self.prefix=prefix
         if prefix != "":
-            self.prefix = "_"+prefix
+            self.prefix = prefix+"_"
 
     def run(self):
         self.running=True
@@ -240,7 +240,7 @@ class SerialPort(DataBackend):
         prevTimestamp = 0
         toAdd = 0
         writeBuffer = b''
-        basename = str(Path.home()) + self.prefix + datetime.now().strftime("/%Y%m%d_%H%M%S")
+        basename = str(Path.home()) + "/" + self.prefix + datetime.now().strftime("%Y%m%d_%H%M%S")
         startTime = int(round(time.time() * 1000))
         tsiFound = Path('/dev/ttyUSB0').exists()
         if tsiFound:
