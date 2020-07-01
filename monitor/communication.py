@@ -36,12 +36,11 @@ class DataMsg(Msg):
 
     def __str__(self):
         if self.self.pplat_cmH2O is None:
-            args = (self.timestamp_ms % 1000000, self.volume_ml, '-' if self.debit_lpm < 0 else '+', self.debit_lpm, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
+            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
             return 'DATA msec_:%06d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
         else:
-            args = (self.timestamp_ms % 1000000, self.volume_ml, '-' if self.debit_lpm < 0 else '+', self.debit_lpm, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar), self.pplat_cmH2O, self.pep_cmH2O)
-            return 'DATA msec_:%06d Vol__:%04d Deb__:%s%03d Paw__:%s%03d PPLAT:%02d PEP__:%02d' % args
-
+            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar), self.pplat_cmH2O, self.pep_cmH2O)
+            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%03d PPLAT:%02d PEP__:%02d' % args
 
 class RespMsg(Msg):
     args_pattern = re.compile('^IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2})$')

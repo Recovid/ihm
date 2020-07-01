@@ -270,7 +270,7 @@ class SerialPort(DataBackend):
                         if isinstance(msg, DataMsg):
                             timestamp = msg.timestamp_ms
                             if prevTimestamp > timestamp:
-                                toAdd += 1000
+                                toAdd += (1 << 19) / 1000
                             self.handler.update_timedata(toAdd + timestamp / 1000, msg.paw_mbar, msg.debit_lpm, msg.volume_ml)
                             prevTimestamp = timestamp
                             if(msg.pplat_cmH2O is not None):
