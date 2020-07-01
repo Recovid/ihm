@@ -10,8 +10,8 @@ class Msg:
         return type(other) is type(self) and self.__dict__ == other.__dict__
 
 class DataMsg(Msg):
-    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3})$')
-    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{4}) Deb__:([+-]\d{3}) Paw__:([+-]\d{3}) PPLAT:(\d{2}) PEP__:(\d{2})$')
+    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{3})$')
+    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{3}) PPLAT:(\d{2}) PEP__:(\d{2})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar, *args):
         self.timestamp_ms = timestamp_ms
@@ -27,17 +27,22 @@ class DataMsg(Msg):
 
     def with_args(args_str):
         match = re.match(DataMsg.args_pattern, args_str)
-        if not match:
-            match = re.match(DataMsg.argsX_pattern, args_str)
-            if not match:
-                print("failed to parse DATA message", file=sys.stderr)
-            return DataMsg(*[int(g) for g in match.groups()[0:6]])
-        return DataMsg(*[int(g) for g in match.groups()[0:4]])
+        matchX = re.match(DataMsg.argsX_pattern, args_str)
+        if match:
+            argList = [int(g) for g in match.groups()[0:4]]
+        elif matchX:
+            argList = [int(g) for g in matchX.groups()[0:6]]
+        else:
+            print("failed to parse DATA message", file=sys.stderr)
+            return DataMsg([0,0,0,0]])
+        argList[1] /= 1000
+        argList[2] /= 1000
+        return DataMsg(*argList)
 
     def __str__(self):
         if self.self.pplat_cmH2O is None:
             args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar))
-            return 'DATA msec_:%06d Vol__:%04d Deb__:%s%03d Paw__:%s%03d' % args
+            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%03d' % args
         else:
             args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar), self.pplat_cmH2O, self.pep_cmH2O)
             return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%03d PPLAT:%02d PEP__:%02d' % args
