@@ -10,48 +10,54 @@ class Msg:
         return type(other) is type(self) and self.__dict__ == other.__dict__
 
 class DataMsg(Msg):
-    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6})$')
-    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) PPLAT:(\d{2}) PEP__:(\d{2})$')
+    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) State:\d slm__:([+-]\d{6})$')
+    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) PPLAT:(\d{2}) PEP__:(\d{2}) State:\d slm__:([+-]\d{6})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar, *args):
         self.timestamp_ms = timestamp_ms
         self.volume_ml = volume_ml
         self.debit_lpm = debit_lpm
         self.paw_mbar = paw_mbar
-        if(len(args)==2):
+        if(len(args)==4):
             self.pplat_cmH2O = args[0]
             self.pep_cmH2O = args[1]
+            self.state = args[2]
+            self.slm = args[3]
         else:
             self.pplat_cmH2O = None
             self.pep_cmH2O = None
+            self.state = args[0]
+            self.slm = args[1]
 
     def with_args(args_str):
         match = re.match(DataMsg.args_pattern, args_str)
         matchX = re.match(DataMsg.argsX_pattern, args_str)
         if match:
-            argList = [int(g) for g in match.groups()[0:4]]
+            argList = [int(g) for g in match.groups()[0:6]]
         elif matchX:
-            argList = [int(g) for g in matchX.groups()[0:6]]
+            argList = [int(g) for g in matchX.groups()[0:8]]
         else:
             print("failed to parse DATA message", file=sys.stderr)
-            return DataMsg(*[0,0,0,0]])
-        argList[1] /= 1000
-        argList[2] /= 1000
-        argList[3] /= 1000
+            return DataMsg(*[0,0,0,0,0,0]])
+        argList[1] /= 1000 # Vol__
+        argList[2] /= 1000 # Deb__
+        argList[3] /= 1000 # Paw__
+        argList[-1] /= 1000 # slm__
         return DataMsg(*argList)
 
     def __str__(self):
         if self.self.pplat_cmH2O is None:
-            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000))
-            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d' % args
+            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.state, '-' if self.slm < 0 else '+', self.slm * 1000)
+            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d State:%s slm__:%s%06d' % args
         else:
-            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar), self.pplat_cmH2O, self.pep_cmH2O)
-            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d PPLAT:%02d PEP__:%02d' % args
+            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.pplat_cmH2O, self.pep_cmH2O, '-' if self.slm < 0 else '+', self.slm * 1000)
+            return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d PPLAT:%02d PEP__:%02d State:%s slm__:%s%06d' % args
 
 class RespMsg(Msg):
-    args_pattern = re.compile('^IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2})$')
+    args_pattern = re.compile('^msec_:(\d{6}) IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2})$')
 
-    def __init__(self, ie_ratio, fr_pm, vte_ml, pcrete_cmH2O, vm_lpm, pplat_cmH2O, pep_cmH2O):
+    def __init__(self, timestamp_ms, ie_ratio, fr_pm, vte_ml, pcrete_cmH2O, vm_lpm, pplat_cmH2O, pep_cmH2O):
+        self.timestamp_ms = timestamp_ms
         self.ie_ratio = ie_ratio
         self.fr_pm = fr_pm
         self.vte_ml = vte_ml
@@ -65,12 +71,13 @@ class RespMsg(Msg):
         if not match:
             print("failed to parse RESP message", file=sys.stderr)
             return None
-        ie_ratio = round(int(match.group(1)) / 10, 1)
-        return RespMsg(ie_ratio, *[int(g) for g in match.groups()[1:7]])
+        ts = match.group(1)
+        ie_ratio = round(int(match.group(2)) / 10, 1)
+        return RespMsg(ts, ie_ratio, *[int(g) for g in match.groups()[2:8]])
 
     def __str__(self):
-        args = (self.ie_ratio * 10, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
-        return 'RESP IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%s%02d PPLAT:%02d PEP__:%02d' % args
+        args = (self.timestamp_ms, self.ie_ratio * 10, self.fr_pm, self.vte_ml, self.pcrete_cmH2O, '-' if self.vm_lpm < 0 else '+', self.vm_lpm, self.pplat_cmH2O, self.pep_cmH2O)
+        return 'RESP msec_:%06d IE___:%02d FR___:%02d VTe__:%03d PCRET:%02d VM___:%s%02d PPLAT:%02d PEP__:%02d' % args
 
 class SetMsg(Msg):
     args_pattern = re.compile('^(\w{5}):(\d{2,5})$')
