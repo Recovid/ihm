@@ -59,7 +59,7 @@ def main(argv):
                                 last_time_reco=msg.timestamp_ms
                                 last_time_rpi=timestamp
                             else:
-                                dt = (msg.timestamp_ms-last_time_reco + 1 << 19) % (1 << 19) # handle overflow
+                                dt = (msg.timestamp_ms-last_time_reco + (1 << 19)) % (1 << 19) # handle overflow
                                 last_time_reco=msg.timestamp_ms
                                 timestamp = last_time_rpi+dt
                                 last_time_rpi = timestamp

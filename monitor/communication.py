@@ -46,11 +46,11 @@ class DataMsg(Msg):
         return DataMsg(*argList)
 
     def __str__(self):
-        if self.self.pplat_cmH2O is None:
-            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.state, '-' if self.slm < 0 else '+', self.slm * 1000)
+        if self.pplat_cmH2O is None:
+            args = (self.timestamp_ms % (1 << 19), self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.state, '-' if self.slm < 0 else '+', self.slm * 1000)
             return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d State:%s slm__:%s%06d' % args
         else:
-            args = (self.timestamp_ms % 1 << 19, self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.pplat_cmH2O, self.pep_cmH2O, '-' if self.slm < 0 else '+', self.slm * 1000)
+            args = (self.timestamp_ms % (1 << 19), self.volume_ml * 1000, '-' if self.debit_lpm < 0 else '+', self.debit_lpm * 1000, '-' if self.paw_mbar < 0 else '+', abs(self.paw_mbar * 1000), self.pplat_cmH2O, self.pep_cmH2O, '-' if self.slm < 0 else '+', self.slm * 1000)
             return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d PPLAT:%02d PEP__:%02d State:%s slm__:%s%06d' % args
 
 class RespMsg(Msg):
