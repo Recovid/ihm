@@ -54,7 +54,7 @@ class DataMsg(Msg):
             return 'DATA msec_:%06d Vol__:%07d Deb__:%s%06d Paw__:%s%06d PPLAT:%02d PEP__:%02d State:%s slm__:%s%06d' % args
 
 class RespMsg(Msg):
-    args_pattern = re.compile('^msec_:(\d{6}) IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2}) Patmo:\d{4} TempC:\d{3}$')
+    args_pattern = re.compile('^msec_:(\d{6}) IE___:(\d{2}) FR___:(\d{2}) VTe__:(\d{3}) PCRET:(\d{2}) VM___:([+-]\d{2}) PPLAT:(\d{2}) PEP__:(\d{2}) Patmo:\d{4} Temp_:\d{3}$')
 
     def __init__(self, timestamp_ms, ie_ratio, fr_pm, vte_ml, pcrete_cmH2O, vm_lpm, pplat_cmH2O, pep_cmH2O):
         self.timestamp_ms = timestamp_ms
