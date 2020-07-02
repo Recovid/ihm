@@ -10,8 +10,8 @@ class Msg:
         return type(other) is type(self) and self.__dict__ == other.__dict__
 
 class DataMsg(Msg):
-    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) State:\d slm__:([+-]\d{6})$')
-    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) PPLAT:(\d{2}) PEP__:(\d{2}) State:\d slm__:([+-]\d{6})$')
+    args_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) State:(\d) slm__:([+-]\d{6})$')
+    argsX_pattern = re.compile('^msec_:(\d{6}) Vol__:(\d{7}) Deb__:([+-]\d{6}) Paw__:([+-]\d{6}) PPLAT:(\d{2}) PEP__:(\d{2}) State:(\d) slm__:([+-]\d{6})$')
 
     def __init__(self, timestamp_ms, volume_ml, debit_lpm, paw_mbar, *args):
         self.timestamp_ms = timestamp_ms
