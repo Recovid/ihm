@@ -34,6 +34,8 @@ def main(argv):
             print(name)
             csvfile = open(name+".csv", "w")
             start_cycle=False
+            Patmo = 0
+            TempC = 0
             last_time_reco=0
             last_time_rpi=0
             with open(name, "rb") as logfile:
@@ -63,8 +65,10 @@ def main(argv):
                                 last_time_reco=msg.timestamp_ms
                                 timestamp = last_time_rpi+dt
                                 last_time_rpi = timestamp
-                            print(timestamp, msg.paw_mbar, msg.debit_lpm, msg.volume_ml, start_cycle_bit, file=csvfile, sep="\t")
+                            print(timestamp, msg.paw_mbar, msg.debit_lpm, msg.volume_ml, msg.state, msg.slm, Patmo, TempC / 10., start_cycle_bit, file=csvfile, sep="\t")
                         elif isinstance(msg, RespMsg):
+                            Patmo = msg.Patmo
+                            TempC = msg.Temp
                             start_cycle=True
                 csvfile.close()
 
