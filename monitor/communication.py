@@ -38,7 +38,7 @@ class DataMsg(Msg):
             argList = [int(g) for g in matchX.groups()[0:8]]
         else:
             print("failed to parse DATA message", file=sys.stderr)
-            return DataMsg(*[0,0,0,0,0,0]])
+            return DataMsg(*[0,0,0,0,0,0])
         argList[1] /= 1000 # Vol__
         argList[2] /= 1000 # Deb__
         argList[3] /= 1000 # Paw__
