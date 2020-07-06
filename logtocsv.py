@@ -1,6 +1,5 @@
 
 # -*- coding: utf-8 -*-
-from monitor.window import Window
 from monitor.communication import *
 import sys, getopt
 
