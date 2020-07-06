@@ -14,6 +14,7 @@ def main(argv):
             csvfile = open(name+".csv", "w")
             last_time_rpi=0
             with open(name, "r") as logfile:
+                print('time', 'val', file=csvfile, sep="\t")
                 for line in logfile:
                     sline = line.split("\t")
                     if(len(sline)!=3):
@@ -38,6 +39,7 @@ def main(argv):
             last_time_reco=0
             last_time_rpi=0
             with open(name, "rb") as logfile:
+                print('timestamp', 'paw_mbar', 'debit_lpm', 'volume_ml', 'state', 'slm', 'Patmo', 'TempC', 'start_cycle_bit', file=csvfile, sep="\t")
                 for line in logfile:
                     try:
                         line = line.decode("ascii")
